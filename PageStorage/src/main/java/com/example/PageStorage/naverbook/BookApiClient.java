@@ -12,12 +12,8 @@ import org.springframework.web.client.RestTemplate;
 public class BookApiClient {
     private final RestTemplate restTemplate;
 
-    private final String CLIENT_ID =
-<<<<<<< Updated upstream
-    private final String CLIENT_SECRET = 
-=======
-    private final String CLIENT_SECRET =
->>>>>>> Stashed changes
+    private final String CLIENT_ID = "oTSUbB9ekW3z7u0rvr9Y";
+    private final String CLIENT_SECRET = "zJ1xg6VoiU";
 
     private  final String OpenNaverBookUrl_getBooks = "https://openapi.naver.com/v1/search/book_adv?d_titl={keyword}";
 
