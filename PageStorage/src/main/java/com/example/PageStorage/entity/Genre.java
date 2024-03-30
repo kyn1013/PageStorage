@@ -1,14 +1,14 @@
 package com.example.PageStorage.entity;
 
+import com.example.PageStorage.genre.dto.GenreUpdateRequestDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "genre")
@@ -20,30 +20,43 @@ public class Genre {
     @Column(name = "genre_seq")
     private Long genreSeq;
 
-    @Column(name = "novel") //소설
-    private String novel;
+    @Column(name = "genre_name")
+    private String genreName;
 
-    @Column(name = "poetry") //시
-    private String poetry;
-
-    @Column(name = "essay") //에세이
-    private String essay;
-
-    @Column(name = "romance") //로맨스
-    private String romance;
-
-    @Column(name = "thriller") //스릴러
-    private String thriller;
-
-    @Column(name = "mystery") //추리
-    private String mystery;
-
-    @Column(name = "selfHelp") //자기계발
-    private String selfHelp;
-
-    @Column(name = "fantasy") //판타지
-    private String fantasy;
+//    @Column(name = "novel") //소설
+//    private Boolean novel = false;
+//
+//    @Column(name = "poetry") //시
+//    private Boolean poetry = false;
+//
+//    @Column(name = "essay") //에세이
+//    private Boolean essay = false;
+//
+//    @Column(name = "romance") //로맨스
+//    private Boolean romance = false;
+//
+//    @Column(name = "thriller") //스릴러
+//    private Boolean thriller = false;
+//
+//    @Column(name = "mystery") //추리
+//    private Boolean mystery = false;
+//
+//    @Column(name = "selfHelp") //자기계발
+//    private Boolean selfHelp = false;
+//
+//    @Column(name = "fantasy") //판타지
+//    private Boolean fantasy = false;
 
     @OneToMany(mappedBy = "genre", cascade = CascadeType.ALL)
     private List<MemberGenre> memberGenres = new ArrayList<>();
+
+    @Builder
+    public Genre(String genreName) {
+        this.genreName = genreName;
+    }
+
+    public void changeInfo (GenreUpdateRequestDto genreUpdateRequestDto) {
+        this.genreName = genreUpdateRequestDto.getGenreName();
+    }
+
 }

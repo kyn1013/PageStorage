@@ -25,6 +25,7 @@ public class MemberServiceImpl implements MemberService{
     public Member saveMember(MemberSaveRequestDto memberSaveRequestDto) {
         Member member = Member.builder()
                 .name(memberSaveRequestDto.getName())
+                .nickName(memberSaveRequestDto.getNickName())
                 .phoneNumber(memberSaveRequestDto.getPhoneNumber())
                 .mail(memberSaveRequestDto.getMail())
                 .build();
@@ -43,31 +44,45 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public Member find(String userLoginId) {
-        return null;
+        Login login = loginDao.findByUserLoginId(userLoginId);
+        Member member = memberDao.find(login.getId());
+        return member;
     }
 
     @Override
     public Member find(Long memberSeq) {
-        return null;
+        return memberDao.find(memberSeq);
+    }
+
+    @Override
+    public Member findNickName(String nickName) {
+        return memberDao.find(nickName);
+    }
+
+    @Override
+    public Member findName(String name) {
+        return memberDao.findName(name);
     }
 
     @Override
     public List<Member> findAll() {
-        return null;
+        return memberDao.findAll();
     }
 
     @Override
     public Member update(MemberSaveRequestDto memberSaveRequestDto) {
-        return null;
+        Member member = memberDao.findName(memberSaveRequestDto.getName());
+        member.changeInfo(memberSaveRequestDto);
+        return member;
     }
 
     @Override
-    public void delete(String memberId) {
-
+    public Login delete(String userLoginId) {
+        return loginDao.delete(userLoginId);
     }
 
     @Override
     public void delete(Long memberSeq) {
-
+        memberDao.delete(memberSeq);
     }
 }

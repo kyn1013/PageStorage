@@ -27,9 +27,10 @@ public class LoginDao {
         return loginRepository.existsByUserLoginId(userLoginId);
     }
 
-    public void delete(String userLoginId) {
+    public Login delete(String userLoginId) {
         Login login = loginRepository.findByUserLoginId(userLoginId).orElseThrow(() -> new DataNotFoundException("존재하지 않는 회원입니다."));
         loginRepository.delete(login);
+        return login;
     }
 
 }

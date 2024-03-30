@@ -1,5 +1,6 @@
 package com.example.PageStorage.entity;
 
+import com.example.PageStorage.member.dto.MemberSaveRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,5 +52,11 @@ public class Member {
         this.nickName = nickName;
         this.phoneNumber = phoneNumber;
         this.mail = mail;
+    }
+
+    public void changeInfo (MemberSaveRequestDto memberSaveRequestDto) {
+        this.nickName = memberSaveRequestDto.getNickName();
+        this.phoneNumber = memberSaveRequestDto.getPhoneNumber();
+        this.mail = memberSaveRequestDto.getMail();
     }
 }

@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -37,13 +37,26 @@ public class ResponseMemberInfoDto {
                 .build();
     }
 
-    public static List<ResponseMemberInfoDto> buildMemberDtoList (List<Member> members) {
-        return members.stream().map(member -> {
-            return ResponseMemberInfoDto.builder()
+    public static List<ResponseMemberInfoDto> buildResponseMemberDtoList (List<Member> members) {
+//        return members.stream().map(member -> {
+//            return ResponseMemberInfoDto.builder()
+//                    .name(member.getName())
+//                    .phoneNumber(member.getPhoneNumber())
+//                    .mail(member.getMail())
+//                    .build();
+//        }).collect(Collectors.toList());
+
+        List<ResponseMemberInfoDto> responseMemberInfoDtos = new ArrayList<>();
+        for (Member member : members) {
+            ResponseMemberInfoDto responseMemberInfoDto = ResponseMemberInfoDto.builder()
                     .name(member.getName())
+                    .nickName(member.getNickName())
                     .phoneNumber(member.getPhoneNumber())
                     .mail(member.getMail())
                     .build();
-        }).collect(Collectors.toList());
+
+            responseMemberInfoDtos.add(responseMemberInfoDto);
+        }
+        return responseMemberInfoDtos;
     }
 }
