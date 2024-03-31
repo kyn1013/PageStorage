@@ -1,6 +1,6 @@
 package com.example.PageStorage.member.code;
 
-import com.example.PageStorage.code.BodyCode;
+import com.example.PageStorage.common.code.BodyCode;
 import lombok.Getter;
 
 @Getter

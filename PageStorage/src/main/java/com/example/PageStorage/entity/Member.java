@@ -38,7 +38,7 @@ public class Member {
     private Login login;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Board> boards = new ArrayList<>();
+    private List<History> histories = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<MemberGenre> memberGenres = new ArrayList<>();

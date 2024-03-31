@@ -1,6 +1,6 @@
 package com.example.PageStorage.common;
 
-import com.example.PageStorage.code.BodyCode;
+import com.example.PageStorage.common.code.BodyCode;
 import com.example.PageStorage.common.model.ResBodyModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;

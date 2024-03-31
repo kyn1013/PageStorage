@@ -1,10 +1,14 @@
 package com.example.PageStorage.membergenre.dao;
 
+import com.example.PageStorage.entity.Genre;
+import com.example.PageStorage.entity.Member;
 import com.example.PageStorage.entity.MemberGenre;
 import com.example.PageStorage.membergenre.repository.MemberGenreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -16,5 +20,24 @@ public class MemberGenreDao {
     public MemberGenre save(MemberGenre memberGenre) {
         return memberGenreRepository.save(memberGenre);
     }
-    
+
+    public List<MemberGenre> findByMember(Member member) {
+        return memberGenreRepository.findByMember(member);
+    }
+
+    public List<MemberGenre> findByGenre(Genre genre) {
+        return memberGenreRepository.findByGenre(genre);
+    }
+
+    public List<MemberGenre> findAll() {
+        return memberGenreRepository.findAll();
+    }
+
+    public MemberGenre findByMemberAndGenre(Member member, Genre genre) {
+        return memberGenreRepository.findByMemberAndGenre(member, genre);
+    }
+
+    public void delete(MemberGenre memberGenre) {
+        memberGenreRepository.delete(memberGenre);
+    }
 }

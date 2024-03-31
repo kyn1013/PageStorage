@@ -21,8 +21,8 @@ public class Comment {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_seq")
-    private Board board;
+    @JoinColumn(name = "history_seq")
+    private History history;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_seq")

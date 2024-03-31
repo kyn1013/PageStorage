@@ -9,7 +9,7 @@ import com.example.PageStorage.common.model.ResBodyModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.example.PageStorage.code.SuccessCode;
+import com.example.PageStorage.common.code.SuccessCode;
 
 import java.util.List;
 

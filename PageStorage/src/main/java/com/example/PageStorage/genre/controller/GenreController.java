@@ -1,6 +1,6 @@
 package com.example.PageStorage.genre.controller;
 
-import com.example.PageStorage.code.SuccessCode;
+import com.example.PageStorage.common.code.SuccessCode;
 import com.example.PageStorage.common.PsResponse;
 import com.example.PageStorage.common.model.ResBodyModel;
 import com.example.PageStorage.entity.Genre;

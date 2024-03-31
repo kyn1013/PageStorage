@@ -1,7 +1,7 @@
 package com.example.PageStorage.genre.dao;
 
 import com.example.PageStorage.entity.Genre;
-import com.example.PageStorage.exception.DataNotFoundException;
+import com.example.PageStorage.common.exception.DataNotFoundException;
 import com.example.PageStorage.genre.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -24,6 +24,6 @@ public class Tag {
     private String tagName;
 
     @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL)
-    private List<BoardTag> boardTags = new ArrayList<>();
+    private List<HistoryTag> historyTags = new ArrayList<>();
 
 }

@@ -61,8 +61,4 @@ public class GenreServiceImpl implements GenreService{
         genreDao.delete(genreSeq);
     }
 
-
-
-
-
 }

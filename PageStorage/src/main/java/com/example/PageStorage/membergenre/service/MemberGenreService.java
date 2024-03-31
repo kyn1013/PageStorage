@@ -13,6 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -34,6 +37,41 @@ public class MemberGenreService {
 
         return memberGenreDao.save(memberGenre);
     }
+
+    public List<Genre> findGenresByMemberName(String memberName) {
+        Member member = memberDao.findName(memberName);
+
+        List<Genre> preferredGenres = new ArrayList<>();
+        List<MemberGenre> memberGenres = memberGenreDao.findByMember(member);
+        for (MemberGenre memberGenre : memberGenres) {
+            preferredGenres.add(memberGenre.getGenre());
+        }
+        return preferredGenres;
+    }
+
+    public List<Member> findMembersByGenreName(String genreName) {
+        Genre genre = genreDao.find(genreName);
+
+        List<Member> members = new ArrayList<>();
+        List<MemberGenre> memberGenres = memberGenreDao.findByGenre(genre);
+        for (MemberGenre memberGenre : memberGenres) {
+            members.add(memberGenre.getMember());
+        }
+        return members;
+    }
+
+    public List<MemberGenre> findAll() {
+        return memberGenreDao.findAll();
+    }
+
+    public void delete(MemberGenreRequestDto memberGenreRequestDto) {
+        Member member = memberDao.findName(memberGenreRequestDto.getMemberName());
+        Genre genre = genreDao.find(memberGenreRequestDto.getGenreName());
+
+        MemberGenre memberGenre = memberGenreDao.findByMemberAndGenre(member, genre);
+        memberGenreDao.delete(memberGenre);
+    }
+
 
 
 }

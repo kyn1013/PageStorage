@@ -1,4 +1,4 @@
-package com.example.PageStorage.code;
+package com.example.PageStorage.common.code;
 
 import lombok.Getter;
 
