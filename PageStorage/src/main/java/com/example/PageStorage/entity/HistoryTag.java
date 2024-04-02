@@ -2,6 +2,7 @@ package com.example.PageStorage.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,4 +26,17 @@ public class HistoryTag {
     @JoinColumn(name = "tag_seq")
     private Tag tag;
 
+    public void addHistory(History history) {
+        this.history = history;
+    }
+
+    public void addTag(Tag tag) {
+        this.tag = tag;
+    }
+
+    @Builder
+    public HistoryTag(History history, Tag tag) {
+        this.history = history;
+        this.tag = tag;
+    }
 }

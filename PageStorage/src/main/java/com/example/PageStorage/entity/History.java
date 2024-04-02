@@ -9,7 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor
@@ -49,7 +51,7 @@ public class History extends BaseTimeEntity {
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "history", cascade = CascadeType.ALL)
-    private List<HistoryTag> historyTags = new ArrayList<>();
+    private Set<HistoryTag> historyTags = new HashSet<>();
 
     @Builder
     public History(String bookName, String historyContent, String phrase,

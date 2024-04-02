@@ -1,7 +1,10 @@
 package com.example.PageStorage.history.dto;
 
+import com.example.PageStorage.tag.dto.TagRequestDto;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -14,5 +17,6 @@ public class HistoryRequestDto {
     private String applicationToLife;
     private String bookRecommender;
     private String memberName;
+    private Set<TagRequestDto> tagRequestDtos;
 
 }

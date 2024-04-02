@@ -1,5 +1,6 @@
 package com.example.PageStorage.membergenre.dao;
 
+import com.example.PageStorage.common.exception.DataNotFoundException;
 import com.example.PageStorage.entity.Genre;
 import com.example.PageStorage.entity.Member;
 import com.example.PageStorage.entity.MemberGenre;
@@ -19,6 +20,10 @@ public class MemberGenreDao {
 
     public MemberGenre save(MemberGenre memberGenre) {
         return memberGenreRepository.save(memberGenre);
+    }
+
+    public MemberGenre findById(Long memberGenreSeq) {
+        return memberGenreRepository.findById(memberGenreSeq).orElseThrow(() -> new DataNotFoundException("사용자를 찾을 수 없습니다."));
     }
 
     public List<MemberGenre> findByMember(Member member) {

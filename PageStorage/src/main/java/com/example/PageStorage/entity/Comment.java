@@ -1,7 +1,10 @@
 package com.example.PageStorage.entity;
 
+import com.example.PageStorage.comment.dto.CommentRequestDto;
+import com.example.PageStorage.genre.dto.GenreUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +20,7 @@ public class Comment {
     @Column(name = "comment_seq")
     private Long commentSeq;
 
-    @Column(name = "content")
+    @Column(columnDefinition = "TEXT", name = "content")
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -27,6 +30,23 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_seq")
     private Member member;
+
+    @Builder
+    public Comment(String content) {
+        this.content = content;
+    }
+
+    public void addMember(Member member) {
+        this.member = member;
+    }
+
+    public void addHistory(History history) {
+        this.history = history;
+    }
+
+    public void changeInfo (CommentRequestDto commentRequestDto) {
+        this.content = commentRequestDto.getContent();
+    }
 
 
 }

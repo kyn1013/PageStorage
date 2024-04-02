@@ -1,6 +1,8 @@
 package com.example.PageStorage.history.dto.response;
 
+import com.example.PageStorage.entity.Comment;
 import com.example.PageStorage.entity.History;
+import com.example.PageStorage.entity.HistoryTag;
 import com.example.PageStorage.history.dto.HistoryRequestDto;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,7 +10,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,10 +26,13 @@ public class HistoryResponseDto {
     private String applicationToLife;
     private String bookRecommender;
     private String memberName;
+    private Set<String> tagNames;
+    private List<String> comments;
 
     @Builder
     public HistoryResponseDto(String bookName, String historyContent, String phrase,
-                             String difficulty, String applicationToLife, String bookRecommender, String memberName){
+                             String difficulty, String applicationToLife, String bookRecommender,
+                              String memberName, Set<String> tagNames, List<String> comments){
         this.bookName = bookName;
         this.historyContent = historyContent;
         this.phrase = phrase;
@@ -33,9 +40,21 @@ public class HistoryResponseDto {
         this.applicationToLife = applicationToLife;
         this.bookRecommender = bookRecommender;
         this.memberName = memberName;
+        this.tagNames = tagNames;
+        this.comments = comments;
     }
 
     public static HistoryResponseDto buildDto(History history) {
+        Set<String> tagNames = new HashSet<>(); // 태그 이름을 수집할 HashSet 초기화
+        for (HistoryTag historyTag : history.getHistoryTags()) {
+            tagNames.add(historyTag.getTag().getTagName()); // 태그 이름 추가
+        }
+
+        List<String> comments = new ArrayList<>();
+        for (Comment comment : history.getComments()) {
+            comments.add(comment.getContent());
+        }
+
         return HistoryResponseDto.builder()
                 .bookName(history.getBookName())
                 .historyContent(history.getHistoryContent())
@@ -44,10 +63,12 @@ public class HistoryResponseDto {
                 .applicationToLife(history.getApplicationToLife())
                 .bookRecommender(history.getBookRecommender())
                 .memberName(history.getMember().getName())
+                .comments(comments)
+                .tagNames(tagNames)
                 .build();
     }
 
-    public static List<HistoryResponseDto> buildDtoList(List<History> histories) { //오호라?
+    public static List<HistoryResponseDto> buildDtoList(List<History> histories) { //오호?
         List<HistoryResponseDto> dtoList = new ArrayList<>();
         for (History history : histories) {
             dtoList.add(buildDto(history));

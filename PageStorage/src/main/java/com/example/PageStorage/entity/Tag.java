@@ -1,12 +1,18 @@
 package com.example.PageStorage.entity;
 
+import com.example.PageStorage.genre.dto.GenreUpdateRequestDto;
+import com.example.PageStorage.tag.dto.TagRequestDto;
+import com.example.PageStorage.tag.dto.TagUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor
@@ -24,6 +30,15 @@ public class Tag {
     private String tagName;
 
     @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL)
-    private List<HistoryTag> historyTags = new ArrayList<>();
+    private Set<HistoryTag> historyTags = new HashSet<>();
+
+    @Builder
+    public Tag(String tagName) {
+        this.tagName = tagName;
+    }
+
+    public void changeInfo (TagUpdateRequestDto tagUpdateRequestDto) {
+        this.tagName = tagUpdateRequestDto.getTagName();
+    }
 
 }

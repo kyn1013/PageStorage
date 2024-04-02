@@ -8,11 +8,13 @@ import com.example.PageStorage.history.dto.HistoryDeleteDto;
 import com.example.PageStorage.history.dto.HistoryRequestDto;
 import com.example.PageStorage.history.dto.response.HistoryResponseDto;
 import com.example.PageStorage.history.service.HistoryService;
+import com.example.PageStorage.tag.dto.TagRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,6 +37,13 @@ public class HistoryController {
     /*
     히스토리 조회
      */
+    @GetMapping("/read/{historySeq}")
+    public ResponseEntity<ResBodyModel> findBySeq(@PathVariable Long historySeq) {
+        History history = historyService.find(historySeq);
+        HistoryResponseDto historyResponseDto = HistoryResponseDto.buildDto(history);
+        return PsResponse.toResponse(SuccessCode.SUCCES,historyResponseDto);
+    }
+
     @GetMapping("/{memberName}")
     public ResponseEntity<ResBodyModel> findByMemberName(@PathVariable String memberName) {
         List<History> histories = historyService.findHistoriesByMemberName(memberName);
