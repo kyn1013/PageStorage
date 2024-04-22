@@ -1,48 +1,76 @@
 package com.example.PageStorage.history.controller;
 
+import com.example.PageStorage.comment.dto.CommentRequestDto;
+import com.example.PageStorage.comment.dto.response.CommentResponseDto;
+import com.example.PageStorage.comment.service.CommentService;
 import com.example.PageStorage.common.PsResponse;
 import com.example.PageStorage.common.code.SuccessCode;
 import com.example.PageStorage.common.model.ResBodyModel;
+import com.example.PageStorage.entity.Comment;
 import com.example.PageStorage.entity.History;
 import com.example.PageStorage.history.dto.HistoryDeleteDto;
 import com.example.PageStorage.history.dto.HistoryRequestDto;
+import com.example.PageStorage.history.dto.response.HistoryDetailResponseDto;
 import com.example.PageStorage.history.dto.response.HistoryResponseDto;
 import com.example.PageStorage.history.service.HistoryService;
-import com.example.PageStorage.tag.dto.TagRequestDto;
+import com.example.PageStorage.security.login.dto.CustomUserDetails;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 @RequestMapping("/histories")
 public class HistoryController {
 
     private final HistoryService historyService;
+    private final CommentService commentService;
 
     /*
     히스토리 추가
      */
-    @PostMapping()
-    public ResponseEntity<ResBodyModel> historySave(@RequestBody HistoryRequestDto historyRequestDto) {
+    @GetMapping("/new")
+    public String createHistoryForm(Model model) {
 
-        History history = historyService.saveHistory(historyRequestDto);
-        HistoryResponseDto historyResponseDto = HistoryResponseDto.buildDto(history);
-        return PsResponse.toResponse(SuccessCode.SUCCES,historyResponseDto);
+        model.addAttribute("historyForm", new HistoryRequestDto());
+        return "createHistoryForm";
+    }
+
+    @PostMapping("/new")
+    public String createHistory(@ModelAttribute("historyForm") @Valid HistoryRequestDto historyRequestDto,
+                                BindingResult bindingResult, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        if (bindingResult.hasErrors()) {
+            return "createHistoryForm";
+        }
+
+        historyRequestDto.setUserLoginId(userDetails.getUsername());
+        historyService.saveHistory(historyRequestDto);
+        return "redirect:/histories/all";
     }
 
     /*
     히스토리 조회
      */
-    @GetMapping("/read/{historySeq}")
-    public ResponseEntity<ResBodyModel> findBySeq(@PathVariable Long historySeq) {
-        History history = historyService.find(historySeq);
-        HistoryResponseDto historyResponseDto = HistoryResponseDto.buildDto(history);
-        return PsResponse.toResponse(SuccessCode.SUCCES,historyResponseDto);
-    }
+//    @GetMapping("/read/{historySeq}")
+//    public ResponseEntity<ResBodyModel> findBySeq(@PathVariable Long historySeq) {
+//        History history = historyService.find(historySeq);
+//        HistoryResponseDto historyResponseDto = HistoryResponseDto.buildDto(history);
+//        return PsResponse.toResponse(SuccessCode.SUCCES,historyResponseDto);
+//    }
 
     @GetMapping("/{memberName}")
     public ResponseEntity<ResBodyModel> findByMemberName(@PathVariable String memberName) {
@@ -58,11 +86,49 @@ public class HistoryController {
         return PsResponse.toResponse(SuccessCode.SUCCES,historyResponseDtos);
     }
 
+//    @GetMapping("/all")
+//    public ResponseEntity<ResBodyModel> findAll () {
+//        List<History> histories = historyService.findAll();
+//        List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(histories);
+//        return PsResponse.toResponse(SuccessCode.SUCCES,historyResponseDtos);
+//    }
+
     @GetMapping("/all")
-    public ResponseEntity<ResBodyModel> findAll () {
+    public String findAll (@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         List<History> histories = historyService.findAll();
         List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(histories);
-        return PsResponse.toResponse(SuccessCode.SUCCES,historyResponseDtos);
+
+        model.addAttribute("history", historyResponseDtos);
+
+        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
+        GrantedAuthority auth = iter.next();
+        String role = auth.getAuthority();
+
+        model.addAttribute("id", id);
+        model.addAttribute("role", role);
+
+        String nickname = userDetails.getNickname();
+        model.addAttribute("nickName", nickname);
+
+        return "history_view"; // Thymeleaf 템플릿 파일 이름 반환
+    }
+
+    @GetMapping(value = "/read/{historySeq}")
+    public String findBySeq(Model model, @PathVariable Long historySeq, CommentRequestDto commentRequestDto) {
+        History history = historyService.find(historySeq);
+        List<Comment> comments = commentService.findByHistory(historySeq);
+        List<CommentResponseDto> commentResponseDtos = CommentResponseDto.buildDtoList(comments);
+
+        HistoryDetailResponseDto historyDetailResponseDto = HistoryDetailResponseDto.buildDto(history);
+        model.addAttribute("history", historyDetailResponseDto);
+        model.addAttribute("realComment", commentResponseDtos);
+        model.addAttribute("commentForm", commentRequestDto);
+        return "history_detail_view";
     }
 
     /*

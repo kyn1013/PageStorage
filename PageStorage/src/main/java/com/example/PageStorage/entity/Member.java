@@ -28,10 +28,10 @@ public class Member {
     @Column(name = "member_nickName")
     private String nickName;
 
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", unique = true)
     private String phoneNumber;
 
-    @Column(name = "member_mail")
+    @Column(name = "member_mail", unique = true)
     private String mail;
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)

@@ -10,6 +10,7 @@ import com.example.PageStorage.history.dao.HistoryDao;
 import com.example.PageStorage.history.dto.HistoryRequestDto;
 import com.example.PageStorage.member.dao.MemberDao;
 import com.example.PageStorage.member.dto.MemberSaveRequestDto;
+import com.example.PageStorage.security.login.dao.LoginDao;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,17 +26,18 @@ public class CommentService {
 
     private final CommentDao commentDao;
     private final MemberDao memberDao;
+    private final LoginDao loginDao;
     private final HistoryDao historyDao;
 
-    public Comment saveComment(CommentRequestDto commentRequestDto) {
+    public Comment saveComment(Long id, CommentRequestDto commentRequestDto) {
         Comment comment = Comment.builder()
                 .content(commentRequestDto.getContent())
                 .build();
 
-        Member member = memberDao.findName(commentRequestDto.getMemberName());
+        Member member = loginDao.findByUserLoginId(commentRequestDto.getUserLoginId());
         comment.addMember(member);
 
-        History history = historyDao.find(commentRequestDto.getHistorySeq());
+        History history = historyDao.find(id);
         comment.addHistory(history);
 
         return commentDao.save(comment);

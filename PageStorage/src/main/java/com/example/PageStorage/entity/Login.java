@@ -22,16 +22,19 @@ public class Login {
     @JoinColumn(name = "member_seq")
     private Member member;
 
-    @Column(name = "user_login_id")
+    @Column(name = "user_login_id", unique = true)
     private String userLoginId; //로그인 아이디
 
     @Column(name = "user_login_password")
     private String userLoginPassword; //로그인 비밀번호
 
+    private String role;
+
     @Builder
-    Login(String userLoginId, String userLoginPassword) {
+    Login(String userLoginId, String userLoginPassword, String role) {
         this.userLoginId = userLoginId;
         this.userLoginPassword = userLoginPassword;
+        this.role = role;
     }
 
     public void addMember(Member member) {

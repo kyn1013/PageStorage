@@ -7,6 +7,7 @@ import com.example.PageStorage.history.dto.HistoryDeleteDto;
 import com.example.PageStorage.history.dto.HistoryRequestDto;
 import com.example.PageStorage.historytag.dao.HistoryTagDao;
 import com.example.PageStorage.member.dao.MemberDao;
+import com.example.PageStorage.security.login.dao.LoginDao;
 import com.example.PageStorage.tag.dao.TagDao;
 import com.example.PageStorage.tag.dto.TagRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +15,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +29,7 @@ public class HistoryService {
     private final HistoryDao historyDao;
     private final HistoryTagDao historyTagDao;
     private final MemberDao memberDao;
+    private final LoginDao loginDao;
     private final TagDao tagDao;
 
     public History saveHistory(HistoryRequestDto historyRequestDto) {
@@ -37,16 +41,19 @@ public class HistoryService {
                 .applicationToLife(historyRequestDto.getApplicationToLife())
                 .bookRecommender(historyRequestDto.getBookRecommender())
                 .build();
-        Member member = memberDao.findName(historyRequestDto.getMemberName());
+        Member member = loginDao.findByUserLoginId(historyRequestDto.getUserLoginId());
         history.addMember(member);
 
-        Set<TagRequestDto> tagRequestDtos = historyRequestDto.getTagRequestDtos();
-        for (TagRequestDto tagRequestDto : tagRequestDtos) {
-            Tag tag = tagDao.findOrCreate(tagRequestDto.getTagName());
+        String tagString = historyRequestDto.getTagNames();
+        Set<String> tagsSet = Arrays.stream(tagString.split("#"))
+                .filter(tag -> !tag.isEmpty()) // 빈 태그 제거
+                .collect(Collectors.toSet());
+        for (String tag : tagsSet) {
+            Tag savedTag = tagDao.findOrCreate(tag);
 
             HistoryTag historyTag = HistoryTag.builder()
                     .history(history)
-                    .tag(tag)
+                    .tag(savedTag)
                     .build();
 
             history.getHistoryTags().add(historyTag);
@@ -69,12 +76,12 @@ public class HistoryService {
     }
 
     public List<History> findAll() {
-        return historyDao.findAll();
+        return historyDao.findAllByCreatedDate();
     }
 
     public History update(HistoryRequestDto historyRequestDto) {
         History history = historyDao.findByMemberNameAndBookName(
-                historyRequestDto.getMemberName(), historyRequestDto.getBookName());
+                historyRequestDto.getUserLoginId(), historyRequestDto.getBookName());
         history.changeInfo(historyRequestDto);
 
 
@@ -83,16 +90,18 @@ public class HistoryService {
         history.getHistoryTags().clear();
 //        historyTagDao.deleteHistorySeq(history.getHistorySeq());
 
-        // 새로운 태그 관계 추가
-        Set<TagRequestDto> tagRequestDtos = historyRequestDto.getTagRequestDtos();
-        for (TagRequestDto tagRequestDto : tagRequestDtos) {
-            Tag tag = tagDao.findOrCreate(tagRequestDto.getTagName());
+        String tagString = historyRequestDto.getTagNames();
+        Set<String> tagsSet = Arrays.stream(tagString.split("#"))
+                .filter(tag -> !tag.isEmpty()) // 빈 태그 제거
+                .collect(Collectors.toSet());
+        for (String tag : tagsSet) {
+            Tag savedTag = tagDao.findOrCreate(tag);
+
             HistoryTag historyTag = HistoryTag.builder()
                     .history(history)
-                    .tag(tag)
+                    .tag(savedTag)
                     .build();
 
-            // 연관 관계 설정
             history.getHistoryTags().add(historyTag);
         }
 

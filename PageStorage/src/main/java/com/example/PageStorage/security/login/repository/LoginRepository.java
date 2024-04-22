@@ -1,4 +1,4 @@
-package com.example.PageStorage.member.repository;
+package com.example.PageStorage.security.login.repository;
 
 import com.example.PageStorage.entity.Login;
 import com.example.PageStorage.entity.Member;

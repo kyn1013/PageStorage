@@ -6,14 +6,19 @@ import com.example.PageStorage.member.dto.MemberSaveRequestDto;
 import com.example.PageStorage.member.dto.response.ResponseMemberInfoDto;
 import com.example.PageStorage.member.service.MemberService;
 import com.example.PageStorage.common.model.ResBodyModel;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import com.example.PageStorage.common.code.SuccessCode;
 
 import java.util.List;
 
-@RestController
+//@RestController
+@Controller
 @RequiredArgsConstructor
 @RequestMapping("/members")
 public class MemberController {
@@ -23,13 +28,34 @@ public class MemberController {
     /*
     회원 가입
      */
-    @PostMapping("/join")
-    public ResponseEntity<ResBodyModel> joinMember(@RequestBody MemberSaveRequestDto memberSaveRequestDto) {
+//    @PostMapping("/join")
+//    public ResponseEntity<ResBodyModel> joinMember(@RequestBody MemberSaveRequestDto memberSaveRequestDto) {
+//
+//        Member member = memberService.saveMember(memberSaveRequestDto);
+//        ResponseMemberInfoDto memberResponseInfoDto = ResponseMemberInfoDto.buildDto(member);
+//        return PsResponse.toResponse(SuccessCode.SUCCES, memberResponseInfoDto);
+//    }
 
-        Member member = memberService.saveMember(memberSaveRequestDto);
-        ResponseMemberInfoDto memberResponseInfoDto = ResponseMemberInfoDto.buildDto(member);
-        return PsResponse.toResponse(SuccessCode.SUCCES, memberResponseInfoDto);
+    @GetMapping("/join")
+    public String createJoinForm(Model model) {
+        model.addAttribute("joinForm", new MemberSaveRequestDto());
+        return "members/createJoinForm";
     }
+
+    @PostMapping("/join")
+    public String join(@ModelAttribute("joinForm") @Valid MemberSaveRequestDto memberSaveRequestDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "members/createJoinForm";
+        }
+        memberService.saveMember(memberSaveRequestDto);
+        return "redirect:/members/login";
+    }
+
+    /*
+    로그인
+     */
+
+
 
     /*
     회원 조회

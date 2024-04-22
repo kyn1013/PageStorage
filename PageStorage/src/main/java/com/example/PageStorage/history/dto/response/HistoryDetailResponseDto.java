@@ -1,10 +1,8 @@
 package com.example.PageStorage.history.dto.response;
 
-import com.example.PageStorage.comment.dto.response.CommentResponseDto;
 import com.example.PageStorage.entity.Comment;
 import com.example.PageStorage.entity.History;
 import com.example.PageStorage.entity.HistoryTag;
-import com.example.PageStorage.history.dto.HistoryRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,11 +12,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 @Getter
 @Setter
 @NoArgsConstructor
-public class HistoryResponseDto {
+public class HistoryDetailResponseDto {
 
     private String historySeq;
     private String bookName;
@@ -32,8 +29,8 @@ public class HistoryResponseDto {
     private List<String> comments;
 
     @Builder
-    public HistoryResponseDto(String historySeq, String bookName, String historyContent, String phrase,
-                             String difficulty, String applicationToLife, String bookRecommender,
+    public HistoryDetailResponseDto(String historySeq, String bookName, String historyContent, String phrase,
+                              String difficulty, String applicationToLife, String bookRecommender,
                               String memberName, Set<String> tagNames, List<String> comments){
         this.historySeq = historySeq;
         this.bookName = bookName;
@@ -45,10 +42,9 @@ public class HistoryResponseDto {
         this.memberName = memberName;
         this.tagNames = tagNames;
         this.comments = comments;
-
     }
 
-    public static HistoryResponseDto buildDto(History history) {
+    public static HistoryDetailResponseDto buildDto(History history) {
         Set<String> tagNames = new HashSet<>(); // 태그 이름을 수집할 HashSet 초기화
         for (HistoryTag historyTag : history.getHistoryTags()) {
             tagNames.add(historyTag.getTag().getTagName()); // 태그 이름 추가
@@ -59,9 +55,7 @@ public class HistoryResponseDto {
             comments.add(comment.getContent());
         }
 
-
-
-        return HistoryResponseDto.builder()
+        return HistoryDetailResponseDto.builder()
                 .historySeq(String.valueOf(history.getHistorySeq()))
                 .bookName(history.getBookName())
                 .historyContent(history.getHistoryContent())
@@ -74,13 +68,4 @@ public class HistoryResponseDto {
                 .tagNames(tagNames)
                 .build();
     }
-
-    public static List<HistoryResponseDto> buildDtoList(List<History> histories) { //오호?
-        List<HistoryResponseDto> dtoList = new ArrayList<>();
-        for (History history : histories) {
-            dtoList.add(buildDto(history));
-        }
-        return dtoList;
-    }
-
 }

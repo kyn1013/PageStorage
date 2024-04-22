@@ -14,4 +14,7 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
     List<History> findByMember(Member member);
     @Query("select h from History h where h.member.name = :memberName and h.bookName = :bookName")
     Optional<History> findByMemberNameAndBookName(@Param("memberName") String memberName, @Param("bookName") String bookName);
+
+    @Query("SELECT h FROM History h ORDER BY h.createdDate DESC")
+    List<History> findAllOrderByCreatedDateDesc();
 }

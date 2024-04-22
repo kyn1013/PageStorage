@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>히스토리 전체 조회</title>
+</head>
+<body>
+<h1>히스토리 전체</h1>
+<div>ID: <span th:text="${id}"></span></div>
+<div>Role: <span th:text="${role}"></span></div>
+<div>Nickname: <span th:text="${nickName}"></span></div>
+
+<!-- 로그아웃 버튼 추가 -->
+<form th:action="@{http://localhost:8080/members/logout}" method="post">
+  <button type="submit">로그아웃</button>
+</form>
+
+<a th:href="@{/histories/new}" >질문 등록하기</a>
+
+<div th:each="history : ${history}">
+  <div>
+    <h3>글쓴이: <span th:text="${history.memberName}"></span></h3>
+    <h2>책 이름: <a th:href="@{|/histories/read/${history.historySeq}|}" th:text="${history.bookName}"></a></h2>
+    <p>내용: <span th:text="${history.historyContent}"></span></p>
+    <p>구절: <span th:text="${history.phrase}"></span></p>
+    <p>난이도: <span th:text="${history.difficulty}"></span></p>
+    <p>인생 적용: <span th:text="${history.applicationToLife}"></span></p>
+    <p>책 추천인: <span th:text="${history.bookRecommender}"></span></p>
+    <h3>태그</h3>
+    <ul>
+      <li th:each="tagName : ${history.tagNames}" th:text="${tagName}"></li>
+    </ul>
+    <h3>댓글</h3>
+    <ul>
+      <li th:each="comment : ${history.comments}" th:text="${comment}"></li>
+    </ul>
+  </div>
+  <hr/>
+</div>
+</body>
+</html>
+

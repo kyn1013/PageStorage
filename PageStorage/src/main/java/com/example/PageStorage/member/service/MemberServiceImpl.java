@@ -2,11 +2,13 @@ package com.example.PageStorage.member.service;
 
 import com.example.PageStorage.entity.Login;
 import com.example.PageStorage.entity.Member;
-import com.example.PageStorage.member.dao.LoginDao;
+import com.example.PageStorage.security.login.dao.LoginDao;
 import com.example.PageStorage.member.dao.MemberDao;
 import com.example.PageStorage.member.dto.MemberSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +19,8 @@ import java.util.List;
 @Slf4j
 @Transactional
 public class MemberServiceImpl implements MemberService{
+
+    private final PasswordEncoder passwordEncoder;
 
     private final MemberDao memberDao;
     private final LoginDao loginDao;
@@ -34,7 +38,8 @@ public class MemberServiceImpl implements MemberService{
 
         Login login = Login.builder()
                 .userLoginId(memberSaveRequestDto.getUserLoginId())
-                .userLoginPassword(memberSaveRequestDto.getUserLoginPassword())
+                .userLoginPassword(passwordEncoder.encode((memberSaveRequestDto.getUserLoginPassword())))
+                .role("ROLE_USER")
                 .build();
 
         login.addMember(savedMember);
@@ -44,8 +49,7 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public Member find(String userLoginId) {
-        Login login = loginDao.findByUserLoginId(userLoginId);
-        Member member = memberDao.find(login.getId());
+        Member member = loginDao.findByUserLoginId(userLoginId);
         return member;
     }
 

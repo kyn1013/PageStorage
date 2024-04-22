@@ -1,8 +1,9 @@
-package com.example.PageStorage.member.dao;
+package com.example.PageStorage.security.login.dao;
 
 import com.example.PageStorage.entity.Login;
 import com.example.PageStorage.common.exception.DataNotFoundException;
-import com.example.PageStorage.member.repository.LoginRepository;
+import com.example.PageStorage.entity.Member;
+import com.example.PageStorage.security.login.repository.LoginRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -18,8 +19,9 @@ public class LoginDao {
         return loginRepository.save(login);
     }
 
-    public Login findByUserLoginId(String userLoginId) {
-        return loginRepository.findByUserLoginId(userLoginId).orElseThrow(() -> new DataNotFoundException("존재하지 않은 회원입니다."));
+    public Member findByUserLoginId(String userLoginId) {
+        Login login = loginRepository.findByUserLoginId(userLoginId).orElseThrow(() -> new DataNotFoundException("존재하지 않은 회원아이디!!입니다."));
+        return login.getMember();
     }
 
     public Boolean existsByUserLoginId(String userLoginId) {

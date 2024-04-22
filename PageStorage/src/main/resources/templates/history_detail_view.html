@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>히스토리 상세 조회</title>
+</head>
+<body>
+<h1>히스토리 상세</h1>
+
+    <div>
+        <h3>글쓴이 <span th:text="${history.memberName}"></span></h3>
+        <h2>책 이름: <span th:text="${history.bookName}"></span></h2>
+        <p>내용: <span th:text="${history.historyContent}"></span></p>
+        <p>구절: <span th:text="${history.phrase}"></span></p>
+        <p>난이도: <span th:text="${history.difficulty}"></span></p>
+        <p>인생 적용: <span th:text="${history.applicationToLife}"></span></p>
+        <p>책 추천인: <span th:text="${history.bookRecommender}"></span></p>
+        <p>작성자: <span th:text="${history.memberName}"></span></p>
+        <h3>태그</h3>
+        <ul>
+            <li th:each="tagName : ${history.tagNames}" th:text="${tagName}"></li>
+        </ul>
+    </div>
+    <hr/>
+
+
+<h3>댓글</h3>
+    <h5 th:text="|${#lists.size(history.comments)}개의 답변이 있습니다.|"></h5>
+        <div>
+            <ul>
+                <li th:each="realComment : ${realComment}" th:text="|${realComment.content} - 글쓴이: ${realComment.memberName}|"></li>
+            </ul>
+        </div>
+
+    <form th:action="@{|/comments/create/${history.historySeq}|}" th:object="${commentForm}" method="post">
+        <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
+            <div th:each="err : ${#fields.allErrors()}" th:text="${err}" />
+        </div>
+        <textarea th:field="*{content}" rows="15"></textarea>
+        <input type="submit" value="답변등록">
+    </form>
+
+</body>
+</html>

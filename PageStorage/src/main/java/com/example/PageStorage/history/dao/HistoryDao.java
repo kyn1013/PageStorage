@@ -41,6 +41,11 @@ public class HistoryDao {
         return histories;
     }
 
+    public List<History> findAllByCreatedDate() {
+        List<History> histories = historyRepository.findAllOrderByCreatedDateDesc();
+        return histories;
+    }
+
 //    public void delete(String bookName) {
 //        History history = historyRepository.findByBookName(bookName).orElseThrow(() -> new DataNotFoundException("찾을 수 없습니다."));
 //        historyRepository.delete(history);

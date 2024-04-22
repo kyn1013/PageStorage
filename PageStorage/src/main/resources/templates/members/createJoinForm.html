@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>회원 가입</title>
+</head>
+<body>
+<h1>회원 가입</h1>
+<form th:action="@{/members/join}" th:object="${joinForm}" method="post">
+    <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
+        <div th:each="err : ${#fields.allErrors()}" th:text="${err}" />
+    </div>
+    <label for="userLoginId">로그인 ID:</label>
+    <input type="text" th:field="*{userLoginId}" ><br>
+
+    <label for="userLoginPassword">비밀번호:</label>
+    <input type="password" th:field="*{userLoginPassword}" ><br>
+
+    <label for="name">이름:</label>
+    <input type="text" th:field="*{name}" ><br>
+
+    <label for="nickName">닉네임:</label>
+    <input type="text" th:field="*{nickName}" ><br>
+
+    <label for="phoneNumber">전화번호:</label>
+    <input type="text" th:field="*{phoneNumber}" ><br>
+
+    <label for="mail">이메일:</label>
+    <input type="email" th:field="*{mail}" ><br>
+
+    <button type="submit">가입하기</button>
+</form>
+</body>
+</html>
