@@ -3,7 +3,7 @@
 <head>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <meta charset="UTF-8">
-  <title>히스토리 전체 조회</title>
+  <title>마이 히스토리</title>
   <style>
     /* 외부 폰트를 사용할 경우 */
     @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
@@ -139,8 +139,6 @@
 
 <div class="content">
   <div id="profile"><img th:src="@{/image/nn.jpeg}" alt="작성자 이미지" class="writer-image"/></div>
-  <div>ID: <span th:text="${id}"></span></div>
-  <div>Role: <span th:text="${role}"></span></div>
   <div>Nickname: <span th:text="${nickName}"></span></div>
 
   <form th:action="@{http://localhost:8080/members/logout}" method="post">
@@ -159,7 +157,7 @@
       <div class="a" id="a">
         <h2 id="bookName">
           <a th:href="@{|/histories/read/${history.historySeq}|}">
-            <img th:src="@{/image/book.png}" alt="책 이미지" style="width: 24px; height: 23px;"> <!-- 아이콘 -->
+            <img th:src="@{/image/book.png}" alt="책 이미지" style="width: 24px; height: 23px;"> <!-- 이미지로 변경 -->
             <span th:text="${history.bookName}">책 이름</span>
           </a>
         </h2>
@@ -173,7 +171,7 @@
           <img th:src="@{/image/ㅌ.jpeg}" alt="히스토리 책 이미지" class="book-image"/>
         </div>
         <div class="history-image">
-          <img th:src="@{/historyImage/{imageFile}(imageFile=${history.getHistoryImage()})}" alt="히스토리 이미지" class="history-image"/>
+          <img th:src="@{/image/pppp.jpeg}" alt="히스토리 이미지" class="history-image"/>
         </div>
         <div class="history-text">
           <p><i class="fas fa-book"></i> <!-- 책 아이콘 추가 -->구절: <span th:text="${history.phrase}">구절 내용</span></p>

@@ -32,7 +32,7 @@ public class MemberDao {
 
     }
 
-    public Member find(String nickName) {
+    public Member findNickName(String nickName) {
         Member member = memberRepository.findByNickName(nickName).orElseThrow(() -> new DataNotFoundException("사용자를 찾을 수 없습니다."));
         return member;
     }

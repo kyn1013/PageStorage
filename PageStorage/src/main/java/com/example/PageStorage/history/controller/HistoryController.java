@@ -27,6 +27,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.Iterator;
@@ -52,7 +53,7 @@ public class HistoryController {
 
     @PostMapping("/new")
     public String createHistory(@ModelAttribute("historyForm") @Valid HistoryRequestDto historyRequestDto,
-                                BindingResult bindingResult, @AuthenticationPrincipal CustomUserDetails userDetails) {
+                                BindingResult bindingResult, @AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
         if (bindingResult.hasErrors()) {
             return "createHistoryForm";
         }
@@ -72,11 +73,16 @@ public class HistoryController {
 //        return PsResponse.toResponse(SuccessCode.SUCCES,historyResponseDto);
 //    }
 
-    @GetMapping("/{memberName}")
-    public ResponseEntity<ResBodyModel> findByMemberName(@PathVariable String memberName) {
-        List<History> histories = historyService.findHistoriesByMemberName(memberName);
+    @GetMapping("/{nickName}")
+    public String myPage(@PathVariable String nickName, Model model) {
+        List<History> histories = historyService.findHistoriesByMemberNickName(nickName);
         List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(histories);
-        return PsResponse.toResponse(SuccessCode.SUCCES,historyResponseDtos);
+        model.addAttribute("history", historyResponseDtos);
+
+        String nickname = nickName;
+        model.addAttribute("nickName", nickname);
+
+        return "my_history_view"; // Thymeleaf 템플릿 파일 이름 반환
     }
 
     @GetMapping("/bookName/{bookName}")

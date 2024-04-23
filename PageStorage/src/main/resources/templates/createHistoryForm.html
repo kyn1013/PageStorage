@@ -11,7 +11,7 @@
 </head>
 <body>
 <h1>히스토리 상세 등록</h1>
-<form th:action="@{/histories/new}" th:object="${historyForm}" method="post">
+<form th:action="@{/histories/new}" th:object="${historyForm}" enctype="multipart/form-data" method="post">
   <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
     <div th:each="err : ${#fields.allErrors()}" th:text="${err}" />
   </div>
@@ -38,6 +38,10 @@
   <div>
     <label th:for="bookRecommender">책 추천인:</label>
     <input type="text" id="bookRecommender" th:field="*{bookRecommender}" >
+  </div>
+
+  <div>
+    <input type="file" name="imageFile">
   </div>
 
   <div>

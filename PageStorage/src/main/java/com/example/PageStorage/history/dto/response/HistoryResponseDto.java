@@ -3,12 +3,14 @@ package com.example.PageStorage.history.dto.response;
 import com.example.PageStorage.comment.dto.response.CommentResponseDto;
 import com.example.PageStorage.entity.Comment;
 import com.example.PageStorage.entity.History;
+import com.example.PageStorage.entity.HistoryImage;
 import com.example.PageStorage.entity.HistoryTag;
 import com.example.PageStorage.history.dto.HistoryRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -28,13 +30,14 @@ public class HistoryResponseDto {
     private String applicationToLife;
     private String bookRecommender;
     private String memberName;
+    private String historyImage;
     private Set<String> tagNames;
     private List<String> comments;
 
     @Builder
     public HistoryResponseDto(String historySeq, String bookName, String historyContent, String phrase,
                              String difficulty, String applicationToLife, String bookRecommender,
-                              String memberName, Set<String> tagNames, List<String> comments){
+                              String memberName, Set<String> tagNames, List<String> comments, String historyImage){
         this.historySeq = historySeq;
         this.bookName = bookName;
         this.historyContent = historyContent;
@@ -45,6 +48,7 @@ public class HistoryResponseDto {
         this.memberName = memberName;
         this.tagNames = tagNames;
         this.comments = comments;
+        this.historyImage = historyImage;
 
     }
 
@@ -72,6 +76,7 @@ public class HistoryResponseDto {
                 .memberName(history.getMember().getName())
                 .comments(comments)
                 .tagNames(tagNames)
+                .historyImage(history.getHistoryImage().getStoreFilename())
                 .build();
     }
 

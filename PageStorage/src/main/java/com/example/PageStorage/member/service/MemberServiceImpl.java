@@ -60,7 +60,7 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public Member findNickName(String nickName) {
-        return memberDao.find(nickName);
+        return memberDao.findNickName(nickName);
     }
 
     @Override

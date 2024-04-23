@@ -47,6 +47,9 @@ public class History extends BaseTimeEntity {
     @JoinColumn(name = "member_seq")
     private Member member;
 
+    @OneToOne(mappedBy = "history", cascade = CascadeType.ALL)
+    private HistoryImage historyImage;
+
     @OneToMany(mappedBy = "history", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
@@ -66,6 +69,10 @@ public class History extends BaseTimeEntity {
 
     public void addMember(Member member) {
         this.member = member;
+    }
+
+    public void addHistoryImage(HistoryImage historyImage) {
+        this.historyImage = historyImage;
     }
 
     public void changeInfo (HistoryRequestDto historyRequestDto) {
