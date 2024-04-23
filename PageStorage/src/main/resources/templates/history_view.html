@@ -1,42 +1,192 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <meta charset="UTF-8">
   <title>히스토리 전체 조회</title>
+  <style>
+    /* 외부 폰트를 사용할 경우 */
+    @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
+    .do-hyeon-regular {
+      font-family: "Do Hyeon", sans-serif;
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    body {
+      font-family: "Do Hyeon", sans-serif;
+      font-weight: 400;
+      font-style: normal;
+
+      display: flex;
+      margin: 0; /* 여백 제거 */
+      padding: 0; /* 여백 제거 */
+      /*height: 100vh; !* 전체 화면 높이 *!*/
+    }
+    .sidebar {
+      width: 200px; /* 사이드바 너비 고정 */
+      height: 100vh; /* 전체 화면 높이 */
+      background-color: #f0f0f0;
+      padding: 20px;
+      position: fixed;
+    }
+    .content {
+      flex-grow: 1; /* 나머지 공간 모두 사용 */
+      padding: 20px;
+      margin-left: 250px; /* 사이드바 너비만큼 왼쪽 여백 */
+      overflow: auto; /* 내용이 넘칠 경우 스크롤바 생성 */
+    }
+    .history{
+      margin-left: 200px; /* 왼쪽 여백 */
+      margin-right: 200px; /* 왼쪽 여백 */
+      /*background-color: #f0f0f0;*/
+      /*border-radius: 10%;*/
+    }
+    .history-content{
+      margin-bottom: 40px;
+      padding: 20px;
+      /*background-color: #f0f0f0;*/
+      border-radius: 40px;
+      border: 3px solid #B6B2E9;
+      width: 50vw; /* 뷰포트 너비의 80% */
+      height: 40vh; /* 뷰포트 높이의 30% */
+    }
+    .history-writer{
+      padding-left: 20px;
+      padding-right: 20px;
+      padding-bottom: 10px;
+      padding-top: 10px;
+      background-color: #f0f0f0;
+      border-radius: 40px;
+      display:inline-block;
+    }
+    .writer-image {
+      width: 50px; /* 이미지 크기 조정 */
+      height: 50px; /* 이미지 크기 조정 */
+      border-radius: 50%; /* 이미지를 원형으로 만듦 */
+      object-fit: cover; /* 이미지 비율을 유지하면서 요소에 맞춤 */
+      margin-right: 10px; /* 텍스트와의 여백 설정 */
+    }
+    .history-text{
+      flex: 1;
+      /*background: darkgray;*/
+    }
+    .history-image{
+      margin-right: 20px;
+      width: 200px; /* 이미지 크기 조정 */
+      height: 200px; /* 이미지 크기 조정 */
+      border-radius: 20%; /* 이미지를 원형으로 만듦 */
+      object-fit: cover;
+    }
+    .book-image{
+      margin-right: 10px;
+      width: 120px; /* 이미지 크기 조정 */
+      height: 200px; /* 이미지 크기 조정 */
+      border-radius: 2%; /* 이미지를 원형으로 만듦 */
+      object-fit:fill;
+    }
+    #nickname {
+      float: right;
+    }
+    #profile {
+      float: left;
+    }
+    #tags {
+      float: left;
+      margin-left: auto;
+    }
+    #b{
+      display: flex; /* 이 부분이 요소들을 가로로 나란히 배치함 */
+    }
+    #a{
+      display: flex; /* 이 부분이 요소들을 가로로 나란히 배치함 */
+    }
+    #bookName{
+      margin-right: 230px; /* 텍스트와의 여백 설정 */
+    }
+
+    a {
+      display: block;
+      margin-bottom: 10px;
+      text-decoration: none; /* 밑줄 제거 */
+      color: black;
+
+    }
+    ul.tag-list {
+      display: flex; /* 리스트 항목들을 가로로 나열 */
+      padding: 0; /* 기본 패딩 제거 */
+      list-style: none; /* 기본 목록 스타일 제거 */
+    }
+
+    ul.tag-list li {
+      margin-right: 10px; /* 태그 사이의 간격 */
+    }
+
+    ul.tag-list li::before {
+      content: "#"; /* 각 태그 앞에 # 추가 */
+      margin-right: 1px; /* #과 태그 이름 사이의 간격 */
+    }
+  </style>
 </head>
 <body>
-<h1>히스토리 전체</h1>
-<div>ID: <span th:text="${id}"></span></div>
-<div>Role: <span th:text="${role}"></span></div>
-<div>Nickname: <span th:text="${nickName}"></span></div>
 
-<!-- 로그아웃 버튼 추가 -->
-<form th:action="@{http://localhost:8080/members/logout}" method="post">
-  <button type="submit">로그아웃</button>
-</form>
-
-<a th:href="@{/histories/new}" >질문 등록하기</a>
-
-<div th:each="history : ${history}">
-  <div>
-    <h3>글쓴이: <span th:text="${history.memberName}"></span></h3>
-    <h2>책 이름: <a th:href="@{|/histories/read/${history.historySeq}|}" th:text="${history.bookName}"></a></h2>
-    <p>내용: <span th:text="${history.historyContent}"></span></p>
-    <p>구절: <span th:text="${history.phrase}"></span></p>
-    <p>난이도: <span th:text="${history.difficulty}"></span></p>
-    <p>인생 적용: <span th:text="${history.applicationToLife}"></span></p>
-    <p>책 추천인: <span th:text="${history.bookRecommender}"></span></p>
-    <h3>태그</h3>
-    <ul>
-      <li th:each="tagName : ${history.tagNames}" th:text="${tagName}"></li>
-    </ul>
-    <h3>댓글</h3>
-    <ul>
-      <li th:each="comment : ${history.comments}" th:text="${comment}"></li>
-    </ul>
-  </div>
-  <hr/>
+<div class="sidebar">
+  <h2>메뉴</h2>
+  <a th:href="@{/histories/{id}(id=${id})}">마이페이지</a>
+  <a href="/members" th:href="@{/histories/new}">히스토리 등록</a>
+  <a href="/books" th:href="@{/books}">책 추천받기</a>
 </div>
+
+<div class="content">
+  <div id="profile"><img th:src="@{/image/nn.jpeg}" alt="작성자 이미지" class="writer-image"/></div>
+  <div>ID: <span th:text="${id}"></span></div>
+  <div>Role: <span th:text="${role}"></span></div>
+  <div>Nickname: <span th:text="${nickName}"></span></div>
+
+  <form th:action="@{http://localhost:8080/members/logout}" method="post">
+    <button type="submit">로그아웃</button>
+  </form>
+
+  <hr/>
+  <div th:each="history : ${history}" class="history">
+
+    <div class="history-writer">
+      <div id="profile"><img th:src="@{/image/nn.jpeg}" alt="작성자 이미지" class="writer-image"/></div>
+      <div id="nickname"><p><span th:text="${history.memberName}">작성자 이름</span></p></div>
+    </div>
+
+    <div class="history-content">
+      <div class="a" id="a">
+        <h2 id="bookName">
+          <a th:href="@{|/histories/read/${history.historySeq}|}">
+            <img th:src="@{/image/book.png}" alt="책 이미지" style="width: 24px; height: 23px;"> <!-- 이미지로 변경 -->
+            <span th:text="${history.bookName}">책 이름</span>
+          </a>
+        </h2>
+        <ul class="tag-list" id="tags">
+          <li th:each="tagName : ${history.tagNames}" th:text="${tagName}">#태그명</li>
+        </ul>
+      </div>
+
+      <div class="b" id="b">
+        <div class="book-image">
+          <img th:src="@{/image/ㅌ.jpeg}" alt="히스토리 책 이미지" class="book-image"/>
+        </div>
+        <div class="history-image">
+          <img th:src="@{/image/pppp.jpeg}" alt="히스토리 이미지" class="history-image"/>
+        </div>
+        <div class="history-text">
+          <p><i class="fas fa-book"></i> <!-- 책 아이콘 추가 -->구절: <span th:text="${history.phrase}">구절 내용</span></p>
+          <p><i class="fas fa-book"></i> <!-- 책 아이콘 추가 -->난이도: <span th:text="${history.difficulty}">난이도</span></p>
+          <p><i class="fas fa-book"></i> <!-- 책 아이콘 추가 -->책을 추천하고 싶은 사람: <span th:text="${history.bookRecommender}">추천인</span></p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
 </body>
 </html>
 

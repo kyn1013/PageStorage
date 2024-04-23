@@ -57,7 +57,7 @@ public class HistoryController {
             return "createHistoryForm";
         }
 
-        historyRequestDto.setUserLoginId(userDetails.getUsername());
+        historyRequestDto.setUserLoginId( userDetails.getUsername());
         historyService.saveHistory(historyRequestDto);
         return "redirect:/histories/all";
     }
