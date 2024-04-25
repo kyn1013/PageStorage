@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>회원 정보 수정</title>
+</head>
+<body>
+<h1>회원 정보 수정</h1>
+<form th:action="@{/update/username}" th:object="${memberUpdateForm}" enctype="multipart/form-data" method="post">
+
+    <!-- 기존 닉네임 표시 -->
+    <label for="nickName">닉네임:</label>
+    <input type="text" id="nickName" name="nickName" th:value="${member.nickName}" required><br>
+
+    <div>
+        <input type="file" name="imageFile">
+    </div>
+
+    <button type="submit">수정하기</button>
+</form>
+</body>
+</html>

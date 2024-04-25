@@ -14,7 +14,6 @@ import java.util.List;
 @Slf4j
 public class MemberDao {
 
-
     private final MemberRepository memberRepository;
 
     public Member save(Member member) {

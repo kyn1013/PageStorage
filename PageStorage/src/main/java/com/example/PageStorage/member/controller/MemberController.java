@@ -2,19 +2,27 @@ package com.example.PageStorage.member.controller;
 
 import com.example.PageStorage.common.PsResponse;
 import com.example.PageStorage.entity.Member;
+import com.example.PageStorage.history.dto.HistoryRequestDto;
 import com.example.PageStorage.member.dto.MemberSaveRequestDto;
+import com.example.PageStorage.member.dto.MemberUpdateRequestDto;
+import com.example.PageStorage.member.dto.response.MemberResponseDTO;
 import com.example.PageStorage.member.dto.response.ResponseMemberInfoDto;
 import com.example.PageStorage.member.service.MemberService;
 import com.example.PageStorage.common.model.ResBodyModel;
+import com.example.PageStorage.security.login.dto.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import com.example.PageStorage.common.code.SuccessCode;
 
+import java.io.IOException;
 import java.util.List;
 
 //@RestController
@@ -52,6 +60,31 @@ public class MemberController {
     }
 
     /*
+    회원프로필 수정
+     */
+    @GetMapping("/update/username")
+    public String updateUsernameForm(Model model, @AuthenticationPrincipal CustomUserDetails userDetails) {
+//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        Member member = memberService.find(userDetails.getUsername());
+        MemberResponseDTO memberResponseDTO = MemberResponseDTO.buildDto(member);
+        model.addAttribute("member", memberResponseDTO);
+        model.addAttribute("memberUpdateForm", new MemberUpdateRequestDto());
+
+        return "members/updateForm";
+    }
+
+    @PostMapping("/update/username")
+    public String createHistory(@ModelAttribute("memberUpdateForm") MemberUpdateRequestDto memberUpdateRequestDto,
+                                @AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
+        memberUpdateRequestDto.setUserLoginId(userDetails.getUsername());
+        memberService.updateProfile(memberUpdateRequestDto);
+        String nickname = userDetails.getNickname();
+        return "redirect:/histories/" + nickname; // 여기서 문자열 연결을 사용
+    }
+
+
+
+    /*
     로그인
      */
 
@@ -84,7 +117,7 @@ public class MemberController {
     /*
     회원 수정
      */
-    @PatchMapping()
+    @PatchMapping("/")
     public ResponseEntity<ResBodyModel> updateMember(@RequestBody MemberSaveRequestDto memberSaveRequestDto){
         Member member = memberService.update(memberSaveRequestDto);
         ResponseMemberInfoDto memberResponseInfoDto = ResponseMemberInfoDto.buildDto(member);

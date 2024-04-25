@@ -1,6 +1,7 @@
 package com.example.PageStorage.entity;
 
 import com.example.PageStorage.member.dto.MemberSaveRequestDto;
+import com.example.PageStorage.member.dto.MemberUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,6 +47,9 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+    private MemberImage memberImage;
+
     @Builder
     public Member(String name, String nickName, String phoneNumber, String mail) {
         this.name = name;
@@ -59,4 +63,15 @@ public class Member {
         this.phoneNumber = memberSaveRequestDto.getPhoneNumber();
         this.mail = memberSaveRequestDto.getMail();
     }
+
+    public void addMemberImage(MemberImage memberImage) {
+        this.memberImage = memberImage;
+    }
+
+    public void changeProfile (MemberUpdateRequestDto memberUpdateRequestDto, MemberImage memberImage) {
+        this.nickName = memberUpdateRequestDto.getNickName();
+        this.memberImage = memberImage;
+    }
+
+
 }

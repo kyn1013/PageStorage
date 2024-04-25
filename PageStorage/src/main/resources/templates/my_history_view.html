@@ -145,6 +145,10 @@
     <button type="submit">로그아웃</button>
   </form>
 
+  <form th:action="@{http://localhost:8080/members/update/username}" method="get">
+    <button type="submit">프로필수정</button>
+  </form>
+
   <hr/>
   <div th:each="history : ${history}" class="history">
 
