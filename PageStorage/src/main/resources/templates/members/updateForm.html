@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>회원 정보 수정</h1>
-<form th:action="@{/update/username}" th:object="${memberUpdateForm}" enctype="multipart/form-data" method="post">
+<form th:action="@{/members/update/username}" th:object="${memberUpdateForm}" enctype="multipart/form-data" method="post">
 
     <!-- 기존 닉네임 표시 -->
     <label for="nickName">닉네임:</label>

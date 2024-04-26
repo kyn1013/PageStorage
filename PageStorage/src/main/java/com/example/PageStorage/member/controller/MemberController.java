@@ -79,7 +79,7 @@ public class MemberController {
         memberUpdateRequestDto.setUserLoginId(userDetails.getUsername());
         memberService.updateProfile(memberUpdateRequestDto);
         String nickname = userDetails.getNickname();
-        return "redirect:/histories/" + nickname; // 여기서 문자열 연결을 사용
+        return "redirect:/histories/all"; // 여기서 문자열 연결을 사용
     }
 
 

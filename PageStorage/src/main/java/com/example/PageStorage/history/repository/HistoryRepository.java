@@ -12,6 +12,8 @@ import java.util.Optional;
 public interface HistoryRepository extends JpaRepository<History, Long> {
     List<History> findByBookName(String bookName);
     List<History> findByMember(Member member);
+
+
     @Query("select h from History h where h.member.name = :memberName and h.bookName = :bookName")
     Optional<History> findByMemberNameAndBookName(@Param("memberName") String memberName, @Param("bookName") String bookName);
 

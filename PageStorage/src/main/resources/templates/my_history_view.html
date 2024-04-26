@@ -132,13 +132,25 @@
 
 <div class="sidebar">
   <h2>메뉴</h2>
-  <a th:href="@{/histories/{nickName}(nickName=${nickName})}">마이페이지</a>
+  <a th:href="@{/histories/myPage}">마이페이지</a>
   <a href="/members" th:href="@{/histories/new}">히스토리 등록</a>
-  <a href="/books" th:href="@{/books}">책 추천받기</a>
+  <a href="/books" th:href="@{/books/recommendations}">책 추천받기</a>
 </div>
 
 <div class="content">
-  <div id="profile"><img th:src="@{/image/nn.jpeg}" alt="작성자 이미지" class="writer-image"/></div>
+  <div id="profile">
+    <!-- 사용자 이미지가 존재하는 경우 -->
+    <img th:if="${member.getMemberImage() != null}"
+         th:src="@{/profileImage/{imageFile}(imageFile=${member.getMemberImage().getStoreFilename()})}"
+         alt="사용자 지정 프로필 이미지"
+         class="writer-image"/>
+
+    <!-- 사용자 이미지가 존재하지 않는 경우 -->
+    <img th:unless="${member.getMemberImage() != null}"
+         th:src="@{/image/nn.jpeg}"
+         alt="기본프로필 이미지"
+         class="writer-image"/>
+  </div>
   <div>Nickname: <span th:text="${nickName}"></span></div>
 
   <form th:action="@{http://localhost:8080/members/logout}" method="post">
@@ -153,8 +165,20 @@
   <div th:each="history : ${history}" class="history">
 
     <div class="history-writer">
-      <div id="profile"><img th:src="@{/image/nn.jpeg}" alt="작성자 이미지" class="writer-image"/></div>
-      <div id="nickname"><p><span th:text="${history.memberName}">작성자 이름</span></p></div>
+      <div id="profile">
+        <!-- 사용자 이미지가 존재하는 경우 -->
+        <img th:if="${history.getProfileImage() != null}"
+             th:src="@{/profileImage/{imageFile}(imageFile=${history.getProfileImage()})}"
+             alt="사용자 지정 프로필 이미지"
+             class="writer-image"/>
+
+        <!-- 사용자 이미지가 존재하지 않는 경우 -->
+        <img th:unless="${history.getProfileImage() != null}"
+             th:src="@{/image/nn.jpeg}"
+             alt="기본프로필 이미지"
+             class="writer-image"/>
+      </div>
+      <div id="nickname"><p><span th:text="${history.nickName}">작성자 이름</span></p></div>
     </div>
 
     <div class="history-content">

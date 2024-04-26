@@ -123,6 +123,12 @@ public class HistoryService {
         return historyDao.find(bookName);
     }
 
+    public List<History> findByMail(String mail) {
+        Member member = memberDao.findMail(mail);
+        return historyDao.findByMember(member);
+    }
+
+
     public List<History> findAll() {
         return historyDao.findAllByCreatedDate();
     }

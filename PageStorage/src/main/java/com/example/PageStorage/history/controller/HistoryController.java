@@ -8,11 +8,13 @@ import com.example.PageStorage.common.code.SuccessCode;
 import com.example.PageStorage.common.model.ResBodyModel;
 import com.example.PageStorage.entity.Comment;
 import com.example.PageStorage.entity.History;
+import com.example.PageStorage.entity.Member;
 import com.example.PageStorage.history.dto.HistoryDeleteDto;
 import com.example.PageStorage.history.dto.HistoryRequestDto;
 import com.example.PageStorage.history.dto.response.HistoryDetailResponseDto;
 import com.example.PageStorage.history.dto.response.HistoryResponseDto;
 import com.example.PageStorage.history.service.HistoryService;
+import com.example.PageStorage.member.service.MemberService;
 import com.example.PageStorage.security.login.dto.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +40,7 @@ import java.util.List;
 @RequestMapping("/histories")
 public class HistoryController {
 
+    private final MemberService memberService;
     private final HistoryService historyService;
     private final CommentService commentService;
 
@@ -73,14 +76,19 @@ public class HistoryController {
 //        return PsResponse.toResponse(SuccessCode.SUCCES,historyResponseDto);
 //    }
 
-    @GetMapping("/{nickName}")
-    public String myPage(@PathVariable String nickName, Model model) {
-        List<History> histories = historyService.findHistoriesByMemberNickName(nickName);
+    @GetMapping("/myPage")
+    public String myPage(Model model, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        String id = userDetails.getUsername();
+        String mail = userDetails.getMail();
+        String userNickName = userDetails.getNickname();
+
+        List<History> histories = historyService.findByMail(mail);
         List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(histories);
         model.addAttribute("history", historyResponseDtos);
+        model.addAttribute("nickName", userNickName);
 
-        String nickname = nickName;
-        model.addAttribute("nickName", nickname);
+        Member member = memberService.find(id);
+        model.addAttribute("member", member);
 
         return "my_history_view"; // Thymeleaf 템플릿 파일 이름 반환
     }
@@ -120,6 +128,9 @@ public class HistoryController {
 
         String nickname = userDetails.getNickname();
         model.addAttribute("nickName", nickname);
+
+        Member member = memberService.find(id);
+        model.addAttribute("member", member);
 
         return "history_view"; // Thymeleaf 템플릿 파일 이름 반환
     }

@@ -29,7 +29,8 @@ public class HistoryResponseDto {
     private String difficulty;
     private String applicationToLife;
     private String bookRecommender;
-    private String memberName;
+    private String nickName;
+    private String profileImage;
     private String historyImage;
     private Set<String> tagNames;
     private List<String> comments;
@@ -37,7 +38,7 @@ public class HistoryResponseDto {
     @Builder
     public HistoryResponseDto(String historySeq, String bookName, String historyContent, String phrase,
                              String difficulty, String applicationToLife, String bookRecommender,
-                              String memberName, Set<String> tagNames, List<String> comments, String historyImage){
+                              String nickName, Set<String> tagNames, List<String> comments, String historyImage, String profileImage){
         this.historySeq = historySeq;
         this.bookName = bookName;
         this.historyContent = historyContent;
@@ -45,11 +46,11 @@ public class HistoryResponseDto {
         this.difficulty = difficulty;
         this.applicationToLife = applicationToLife;
         this.bookRecommender = bookRecommender;
-        this.memberName = memberName;
+        this.nickName = nickName;
         this.tagNames = tagNames;
         this.comments = comments;
         this.historyImage = historyImage;
-
+        this.profileImage = profileImage;
     }
 
     public static HistoryResponseDto buildDto(History history) {
@@ -73,10 +74,11 @@ public class HistoryResponseDto {
                 .difficulty(history.getDifficulty())
                 .applicationToLife(history.getApplicationToLife())
                 .bookRecommender(history.getBookRecommender())
-                .memberName(history.getMember().getName())
+                .nickName(history.getMember().getNickName())
                 .comments(comments)
                 .tagNames(tagNames)
                 .historyImage(history.getHistoryImage().getStoreFilename())
+                .profileImage(history.getMember().getMemberImage().getStoreFilename())
                 .build();
     }
 

@@ -41,6 +41,11 @@ public class MemberDao {
         return member;
     }
 
+    public Member findMail(String mail) {
+        Member member = memberRepository.findByMail(mail).orElseThrow(() -> new DataNotFoundException("사용자를 찾을 수 없습니다."));
+        return member;
+    }
+
     public List<Member> findAll() {
         List<Member> members = memberRepository.findAll();
         return members;
