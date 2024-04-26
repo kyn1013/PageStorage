@@ -1,14 +1,18 @@
 package com.example.PageStorage.api.naverbook;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class BooksResponseDto {
     private int display;
     private Item[] items;
 
-    @Data
-    static class Item{
+    @Getter
+    @Setter
+    public static class Item{
         private String title;	//책 제목
         private String author;  //저자명
         private String image; //이미지

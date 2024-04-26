@@ -6,18 +6,35 @@
 </head>
 <body>
 <h1>추천받은 책 목록</h1>
+<!--<div th:if="${not #lists.isEmpty(books)}">-->
+<!--    <ul>-->
+<!--        &lt;!&ndash; 각 책에 대해 반복 &ndash;&gt;-->
+<!--        <li th:each="book : ${books}">-->
+<!--            <div th:each="item : ${book.items}">-->
+<!--                &lt;!&ndash; 각 책의 이미지를 표시 &ndash;&gt;-->
+<!--                <img th:src="${item.image}" alt="책 표지 이미지" style="width:100px; height:auto;"/>-->
+<!--                &lt;!&ndash; 각 책의 제목을 표시 &ndash;&gt;-->
+<!--                <h3 th:text="${item.title}">책 제목</h3>-->
+<!--                <p><strong>저자:</strong> <span th:text="${item.author}">저자명</span></p>-->
+<!--                <p><strong>출판사:</strong> <span th:text="${item.publisher}">출판사</span></p>-->
+<!--                <p th:text="${item.description}">책 설명</p>-->
+<!--                <hr> &lt;!&ndash; 각 책 정보 사이에 수평선 추가 &ndash;&gt;-->
+<!--            </div>-->
+<!--        </li>-->
+<!--    </ul>-->
+<!--</div>-->
 <div th:if="${not #lists.isEmpty(books)}">
     <ul>
         <!-- 각 책에 대해 반복 -->
         <li th:each="book : ${books}">
-            <div th:each="item : ${book.items}">
+            <div>
                 <!-- 각 책의 이미지를 표시 -->
-                <img th:src="${item.image}" alt="책 표지 이미지" style="width:100px; height:auto;"/>
+                <img th:src="${book.image}" alt="책 표지 이미지" style="width:100px; height:auto;"/>
                 <!-- 각 책의 제목을 표시 -->
-                <h3 th:text="${item.title}">책 제목</h3>
-                <p><strong>저자:</strong> <span th:text="${item.author}">저자명</span></p>
-                <p><strong>출판사:</strong> <span th:text="${item.publisher}">출판사</span></p>
-                <p th:text="${item.description}">책 설명</p>
+                <h3 th:text="${book.title}">책 제목</h3>
+                <p><strong>저자:</strong> <span th:text="${book.author}">저자명</span></p>
+                <p><strong>출판사:</strong> <span th:text="${book.publisher}">출판사</span></p>
+                <p th:text="${book.description}">책 설명</p>
                 <hr> <!-- 각 책 정보 사이에 수평선 추가 -->
             </div>
         </li>
