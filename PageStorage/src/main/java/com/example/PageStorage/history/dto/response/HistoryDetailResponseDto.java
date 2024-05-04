@@ -2,6 +2,7 @@ package com.example.PageStorage.history.dto.response;
 
 import com.example.PageStorage.entity.Comment;
 import com.example.PageStorage.entity.History;
+import com.example.PageStorage.entity.HistoryKeyword;
 import com.example.PageStorage.entity.HistoryTag;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,11 +28,12 @@ public class HistoryDetailResponseDto {
     private String memberName;
     private Set<String> tagNames;
     private List<String> comments;
+    private Set<String> keywords;
 
     @Builder
     public HistoryDetailResponseDto(String historySeq, String bookName, String historyContent, String phrase,
                               String difficulty, String applicationToLife, String bookRecommender,
-                              String memberName, Set<String> tagNames, List<String> comments){
+                              String memberName, Set<String> tagNames, List<String> comments, Set<String> keywords){
         this.historySeq = historySeq;
         this.bookName = bookName;
         this.historyContent = historyContent;
@@ -42,6 +44,7 @@ public class HistoryDetailResponseDto {
         this.memberName = memberName;
         this.tagNames = tagNames;
         this.comments = comments;
+        this.keywords = keywords;
     }
 
     public static HistoryDetailResponseDto buildDto(History history) {
@@ -55,6 +58,11 @@ public class HistoryDetailResponseDto {
             comments.add(comment.getContent());
         }
 
+        Set<String> keywords = new HashSet<>(); // 태그 이름을 수집할 HashSet 초기화
+        for (HistoryKeyword historyKeyword : history.getHistoryKeywords()) {
+            keywords.add(historyKeyword.getKeyword().getKeyword()); // 태그 이름 추가
+        }
+
         return HistoryDetailResponseDto.builder()
                 .historySeq(String.valueOf(history.getHistorySeq()))
                 .bookName(history.getBookName())
@@ -66,6 +74,7 @@ public class HistoryDetailResponseDto {
                 .memberName(history.getMember().getName())
                 .comments(comments)
                 .tagNames(tagNames)
+                .keywords(keywords)
                 .build();
     }
 }

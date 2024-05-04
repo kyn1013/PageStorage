@@ -19,6 +19,12 @@ import com.example.PageStorage.security.login.dto.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.json.JSONParser;
+import org.json.JSONObject;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,16 +34,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/histories")
+@Slf4j
 public class HistoryController {
 
     private final MemberService memberService;
@@ -62,8 +68,54 @@ public class HistoryController {
         }
 
         historyRequestDto.setUserLoginId( userDetails.getUsername());
-        historyService.saveHistory(historyRequestDto);
+//        historyService.saveHistory(historyRequestDto).getHistorySeq();
+        Long historySeq = historyService.saveHistory(historyRequestDto).getHistorySeq();
+
+        // 여기에서 sendText 메소드 호출
+        sendText(historyRequestDto.getHistoryContent(), historySeq); // 실제 전송할 텍스트는 적절히 조정 필요
+
         return "redirect:/histories/all";
+    }
+
+    //장고 서버로 보냄
+    @PostMapping("/sendText")
+    public ResponseEntity<String> sendText(String text, Long historySeq) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://localhost:8000/analyze"; // 장고 서버 URL
+
+        // HttpHeaders 객체 생성 및 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // JSONObject를 사용하여 JSON 형식의 데이터 생성
+        JSONObject json = new JSONObject();
+        json.put("text", text); // 'text'라는 키에 text 변수의 값을 할당
+
+        // JSON 문자열로 변환
+        String jsonString = json.toString();
+
+        // HttpEntity에 JSON 문자열과 헤더를 포함
+        HttpEntity<String> request = new HttpEntity<>(jsonString, headers);
+
+        // RestTemplate을 사용하여 POST 요청 전송 및 응답 수신
+        ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+        String keywordData = response.getBody();
+
+        JSONObject jsonObject = new JSONObject(keywordData);
+        log.info("응답내용 = {}", keywordData);
+        // Set 집합 생성
+        Set<String> keysSet = new HashSet<>();
+
+        // JSON 객체의 키 추출 및 Set에 추가
+        jsonObject.keys().forEachRemaining(keysSet::add);
+
+        // 추출된 키 출력
+        System.out.println("Extracted Keys: " + keysSet);
+
+        Long seq = historySeq;
+
+        historyService.saveKeyword(keysSet, seq);
+        return response;
     }
 
     /*

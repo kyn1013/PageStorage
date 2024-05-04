@@ -20,6 +20,10 @@
         <ul>
             <li th:each="tagName : ${history.tagNames}" th:text="${tagName}"></li>
         </ul>
+        <h3>추출된 핵심 키워드</h3>
+        <ul class="keyword-list" id="keywords">
+            <li th:each="keyword : ${history.keywords}" th:text="${keyword}">#키워드명</li>
+        </ul>
     </div>
     <hr/>
 

@@ -56,6 +56,9 @@ public class History extends BaseTimeEntity {
     @OneToMany(mappedBy = "history", cascade = CascadeType.ALL)
     private Set<HistoryTag> historyTags = new HashSet<>();
 
+    @OneToMany(mappedBy = "history", cascade = CascadeType.ALL)
+    private Set<HistoryKeyword> historyKeywords = new HashSet<>();
+
     @Builder
     public History(String bookName, String historyContent, String phrase,
                               String difficulty, String applicationToLife, String bookRecommender){

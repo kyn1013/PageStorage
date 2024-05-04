@@ -4,6 +4,8 @@ import com.example.PageStorage.entity.*;
 import com.example.PageStorage.genre.dto.GenreUpdateRequestDto;
 import com.example.PageStorage.history.dao.HistoryDao;
 import com.example.PageStorage.history.dao.HistoryImageDao;
+import com.example.PageStorage.history.dao.HistoryKeywordDao;
+import com.example.PageStorage.history.dao.KeywordDao;
 import com.example.PageStorage.history.dto.HistoryDeleteDto;
 import com.example.PageStorage.history.dto.HistoryRequestDto;
 import com.example.PageStorage.historytag.dao.HistoryTagDao;
@@ -37,6 +39,9 @@ public class HistoryService {
     private final LoginDao loginDao;
     private final TagDao tagDao;
 
+    private final KeywordDao keywordDao;
+    private final HistoryKeywordDao historyKeywordDao;
+
     private final String FOLDER_PATH="/Users/gim-yena/Desktop/history/";
 
     public History saveHistory(HistoryRequestDto historyRequestDto) throws IOException {
@@ -66,6 +71,8 @@ public class HistoryService {
             history.getHistoryTags().add(historyTag);
         }
 
+
+        //사진 저장 로직
         String originalFilename = historyRequestDto.getImageFile().getOriginalFilename();
         String storeFilename = createStoreFilename(originalFilename);
         String filePath = createPath(storeFilename);
@@ -85,6 +92,28 @@ public class HistoryService {
         historyRequestDto.getImageFile().transferTo(new File(filePath));
 
         return historyDao.save(history);
+    }
+
+    public void saveKeyword(Set<String> keywordSet, Long historySeq) {
+        History history = find(historySeq);
+
+        for (String keyword : keywordSet) {
+            Keyword savedKeyword = Keyword.builder()
+                    .keyword(keyword)
+                    .build();
+
+            keywordDao.save(savedKeyword);
+
+            HistoryKeyword historyKeyword = HistoryKeyword.builder()
+                    .history(history)
+                    .keyword(savedKeyword)
+                    .build();
+
+            historyKeywordDao.save(historyKeyword);
+
+            history.getHistoryKeywords().add(historyKeyword);
+        }
+
     }
 
     public String createPath(String storeFilename) {

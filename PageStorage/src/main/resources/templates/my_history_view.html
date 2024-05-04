@@ -104,6 +104,9 @@
     #bookName{
       margin-right: 230px; /* 텍스트와의 여백 설정 */
     }
+    #keywords{
+      color: darkgray;
+    }
 
     a {
       display: block;
@@ -191,6 +194,9 @@
         </h2>
         <ul class="tag-list" id="tags">
           <li th:each="tagName : ${history.tagNames}" th:text="${tagName}">#태그명</li>
+        </ul>
+        <ul class="tag-list" id="keywords">
+          <li th:each="keyword : ${history.keywords}" th:text="${keyword}">#키워드명</li>
         </ul>
       </div>
 

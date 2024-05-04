@@ -105,6 +105,10 @@
       margin-right: 230px; /* 텍스트와의 여백 설정 */
     }
 
+    #keywords{
+      color: darkgray;
+    }
+
     a {
       display: block;
       margin-bottom: 10px;
@@ -135,6 +139,7 @@
 <!--  <a th:href="@{/histories/{nickName}(nickName=${nickName})}">마이페이지</a>-->
   <a th:href="@{/histories/myPage}">마이페이지</a>
   <a href="/members" th:href="@{/histories/new}">히스토리 등록</a>
+  <a href="/books" th:href="@{/books/recommendations}">책 추천받기</a>
   <a href="/books" th:href="@{/books/recommendations}">책 추천받기</a>
 </div>
 
@@ -190,6 +195,9 @@
         </h2>
         <ul class="tag-list" id="tags">
           <li th:each="tagName : ${history.tagNames}" th:text="${tagName}">#태그명</li>
+        </ul>
+        <ul class="tag-list" id="keywords">
+          <li th:each="keyword : ${history.keywords}" th:text="${keyword}">#키워드명</li>
         </ul>
       </div>
 
