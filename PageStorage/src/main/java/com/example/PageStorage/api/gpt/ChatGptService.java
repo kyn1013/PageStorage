@@ -49,7 +49,28 @@ public class ChatGptService {
         List<ChatGptMessage> messages = new ArrayList<>();
         messages.add(ChatGptMessage.builder()
                 .role(ChatGptConfig.ROLE)
-                .content(questionRequest.getQuestion() + "[ 도서명 : 저자명 ] 형식으로 알려줘")
+                .content(questionRequest.getQuestion() + "책 추천해서 [ \"도서명\" ] 형식으로 리스트로 알려줘")
+                .build());
+        return this.getResponse(
+                this.buildHttpEntity(
+                        new ChatGptRequest(
+                                ChatGptConfig.CHAT_MODEL,
+                                ChatGptConfig.MAX_TOKEN,
+                                ChatGptConfig.TEMPERATURE,
+                                ChatGptConfig.STREAM,
+                                messages
+                                //ChatGptConfig.TOP_P
+                        )
+                )
+        );
+
+    }
+
+    public ChatGptResponse askKeywordQuestion(QuestionRequestDto questionRequest){
+        List<ChatGptMessage> messages = new ArrayList<>();
+        messages.add(ChatGptMessage.builder()
+                .role(ChatGptConfig.ROLE)
+                .content(questionRequest.getQuestion() + "이 키워드를 기반으로 책 추천해서 [ \"도서명\" ] 형식으로 리스트로 알려줘 ")
                 .build());
         return this.getResponse(
                 this.buildHttpEntity(

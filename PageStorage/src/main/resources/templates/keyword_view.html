@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<ul>
+  <li th:each="keyword : ${keywords}" th:text="${keyword}">
+    <!-- 키워드가 여기에 표시될 것입니다. -->
+  </li>
+</ul>
+<h1>추천받은 책 목록</h1>
+<div>
+  <ul>
+    <!-- 각 책에 대해 반복 -->
+    <li th:each="book : ${books}">
+      <div>
+        <!-- 각 책의 이미지를 표시 -->
+        <img th:src="${book.image}" alt="책 표지 이미지" style="width:100px; height:auto;"/>
+        <!-- 각 책의 제목을 표시 -->
+        <h3 th:text="${book.title}">책 제목</h3>
+        <p><strong>저자:</strong> <span th:text="${book.author}">저자명</span></p>
+        <p><strong>출판사:</strong> <span th:text="${book.publisher}">출판사</span></p>
+        <p th:text="${book.description}">책 설명</p>
+        <hr> <!-- 각 책 정보 사이에 수평선 추가 -->
+      </div>
+    </li>
+  </ul>
+</div>
+</body>
+</html>

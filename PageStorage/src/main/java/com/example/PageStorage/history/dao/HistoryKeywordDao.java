@@ -20,6 +20,8 @@ public class HistoryKeywordDao {
         return historyKeywordRepository.save(historyKeyword);
     }
 
+
+
     public List<HistoryKeyword> findByHistorySeq(Long historySeq) {
         return historyKeywordRepository.findByHistoryHistorySeq(historySeq);
     }
