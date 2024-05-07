@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>히스토리 수정 등록</title>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<h1>히스토리 수정 등록</h1>
+<form th:action="@{|/histories/update/${historyForm.getUpdateSeq()}|}" th:object="${historyForm}" enctype="multipart/form-data" method="post">
+    <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
+        <div th:each="err : ${#fields.allErrors()}" th:text="${err}" />
+    </div>
+    <div>
+        <label for="bookName">책 이름:</label>
+        <input type="text" id="bookName" th:field="*{bookName}">
+    </div>
+    <div>
+        <label th:for="historyContent">내용:</label>
+        <textarea id="historyContent" th:field="*{historyContent}" rows="5"></textarea>
+    </div>
+    <div>
+        <label th:for="phrase">구절:</label>
+        <input type="text" id="phrase" th:field="*{phrase}">
+    </div>
+    <div>
+        <label th:for="difficulty">난이도:</label>
+        <input type="text" id="difficulty" th:field="*{difficulty}" >
+    </div>
+    <div>
+        <label th:for="applicationToLife">인생에의 적용:</label>
+        <textarea id="applicationToLife" th:field="*{applicationToLife}" rows="3" ></textarea>
+    </div>
+    <div>
+        <label th:for="bookRecommender">책 추천인:</label>
+        <input type="text" id="bookRecommender" th:field="*{bookRecommender}" >
+    </div>
+
+    <div>
+        <input type="file" name="imageFile">
+        <h6 th:text="*{fileName}"></h6>
+    </div>
+
+    <div>
+        <label th:for="tagNames">태그 (#으로 구분):</label>
+        <input type="text" id="tagNames" th:field="*{tagNames}" placeholder="예: #역사#과학">
+    </div>
+    <input type="submit" value="저장하기">
+</form>
+</body>
+</html>

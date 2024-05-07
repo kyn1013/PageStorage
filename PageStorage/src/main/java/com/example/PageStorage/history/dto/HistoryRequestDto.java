@@ -24,8 +24,10 @@ public class HistoryRequestDto {
     private String applicationToLife;
     private String bookRecommender;
     private MultipartFile imageFile;
+    private String fileName;
 //    private Set<TagRequestDto> tagRequestDtos;
     private String tagNames;
     private String userLoginId;
+    private Long updateSeq;
 
 }

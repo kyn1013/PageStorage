@@ -22,10 +22,7 @@ import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.json.JSONParser;
 import org.json.JSONObject;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,6 +32,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -49,6 +47,68 @@ public class HistoryController {
     private final MemberService memberService;
     private final HistoryService historyService;
     private final CommentService commentService;
+
+    /*
+    히스토리 수정
+     */
+    @GetMapping("/update/{id}")
+    public String updateHistory(@ModelAttribute("historyForm") HistoryRequestDto historyRequestDto
+    ,@PathVariable("id") Long id, Principal principal ){
+        History history = historyService.find(id);
+        HistoryResponseDto historyResponseDto = HistoryResponseDto.buildDto(history);
+        log.info("name={}", principal.getName());
+//        if(!history.getMember().getLogin().getUserLoginId().equals(principal.getName())) { //login id?
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+//        }
+        historyRequestDto.setBookName(history.getBookName());
+        historyRequestDto.setHistoryContent(history.getHistoryContent());
+        historyRequestDto.setPhrase(history.getPhrase());
+        historyRequestDto.setDifficulty(history.getDifficulty());
+        historyRequestDto.setBookRecommender(history.getBookRecommender());
+        historyRequestDto.setApplicationToLife(history.getApplicationToLife());
+        historyRequestDto.setUpdateSeq(history.getHistorySeq());
+
+        // 태그 리스트 가져오기
+        Set<String> tags = historyResponseDto.getTagNames();
+
+        // StringBuilder를 사용하여 문자열 생성
+        StringBuilder result = new StringBuilder();
+        for (String tag : tags) {
+            result.append("#").append(tag);
+        }
+
+        // 최종 결과 문자열
+        String finalTags = result.toString();
+
+        historyRequestDto.setTagNames(finalTags);
+        historyRequestDto.setFileName(history.getHistoryImage().getOriginFilename());
+
+        return "history_modify_view";
+
+//        History history = historyService.update(historyRequestDto);
+//        HistoryResponseDto historyResponseDto = HistoryResponseDto.buildDto(history);
+//        return PsResponse.toResponse(SuccessCode.SUCCES,historyResponseDto);
+    }
+
+    @PostMapping("/update/{id}")
+    public String updateToHistory(@PathVariable Long id, @ModelAttribute("historyForm") @Valid HistoryRequestDto historyRequestDto,
+                                BindingResult bindingResult, @AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
+        if (bindingResult.hasErrors()) {
+            return "history_modify_view";
+        }
+
+        historyRequestDto.setUserLoginId( userDetails.getUsername());
+//        historyService.saveHistory(historyRequestDto).getHistorySeq();
+        History savedHistory = historyService.update(historyRequestDto, id);
+        Long historySeq = savedHistory.getHistorySeq();
+
+//        // 여기에서 sendText 메소드 호출
+//        sendText(historyRequestDto.getHistoryContent(), historySeq); // 실제 전송할 텍스트는 적절히 조정 필요
+
+        return "redirect:/histories/all";
+    }
+
+
 
     /*
     히스토리 추가
@@ -69,7 +129,8 @@ public class HistoryController {
 
         historyRequestDto.setUserLoginId( userDetails.getUsername());
 //        historyService.saveHistory(historyRequestDto).getHistorySeq();
-        Long historySeq = historyService.saveHistory(historyRequestDto).getHistorySeq();
+        History savedHistory = historyService.saveHistory(historyRequestDto);
+        Long historySeq = savedHistory.getHistorySeq();
 
         // 여기에서 sendText 메소드 호출
         sendText(historyRequestDto.getHistoryContent(), historySeq); // 실제 전송할 텍스트는 적절히 조정 필요
@@ -188,27 +249,22 @@ public class HistoryController {
     }
 
     @GetMapping(value = "/read/{historySeq}")
-    public String findBySeq(Model model, @PathVariable Long historySeq, CommentRequestDto commentRequestDto) {
+    public String findBySeq(Model model, @PathVariable Long historySeq, CommentRequestDto commentRequestDto,@AuthenticationPrincipal CustomUserDetails userDetails) {
+        String userNickName = userDetails.getNickname();
+
         History history = historyService.find(historySeq);
         List<Comment> comments = commentService.findByHistory(historySeq);
         List<CommentResponseDto> commentResponseDtos = CommentResponseDto.buildDtoList(comments);
 
         HistoryDetailResponseDto historyDetailResponseDto = HistoryDetailResponseDto.buildDto(history);
+        model.addAttribute("userNickName", userNickName);
         model.addAttribute("history", historyDetailResponseDto);
         model.addAttribute("realComment", commentResponseDtos);
         model.addAttribute("commentForm", commentRequestDto);
         return "history_detail_view";
     }
 
-    /*
-    히스토리 수정
-     */
-    @PatchMapping("/update")
-    public ResponseEntity<ResBodyModel> updateHistory(@RequestBody HistoryRequestDto historyRequestDto){
-        History history = historyService.update(historyRequestDto);
-        HistoryResponseDto historyResponseDto = HistoryResponseDto.buildDto(history);
-        return PsResponse.toResponse(SuccessCode.SUCCES,historyResponseDto);
-    }
+
 
     /*
     히스토리 삭제

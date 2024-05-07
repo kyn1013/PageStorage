@@ -19,4 +19,8 @@ public class HistoryImageDao {
         return historyImageRepository.save(historyImage);
     }
 
+    public void delete(Long historyId) {
+        historyImageRepository.deleteByHistoryHistorySeq(historyId);
+    }
+
 }

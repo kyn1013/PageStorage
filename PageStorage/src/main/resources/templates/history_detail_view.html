@@ -8,14 +8,14 @@
 <h1>히스토리 상세</h1>
 
     <div>
-        <h3>글쓴이 <span th:text="${history.memberName}"></span></h3>
+        <h3>글쓴이 <span th:text="${history.memberNickname}"></span></h3>
         <h2>책 이름: <span th:text="${history.bookName}"></span></h2>
         <p>내용: <span th:text="${history.historyContent}"></span></p>
         <p>구절: <span th:text="${history.phrase}"></span></p>
         <p>난이도: <span th:text="${history.difficulty}"></span></p>
         <p>인생 적용: <span th:text="${history.applicationToLife}"></span></p>
         <p>책 추천인: <span th:text="${history.bookRecommender}"></span></p>
-        <p>작성자: <span th:text="${history.memberName}"></span></p>
+        <p>작성자: <span th:text="${history.memberNickname}"></span></p>
         <h3>태그</h3>
         <ul>
             <li th:each="tagName : ${history.tagNames}" th:text="${tagName}"></li>
@@ -25,6 +25,13 @@
             <li th:each="keyword : ${history.keywords}" th:text="${keyword}">#키워드명</li>
         </ul>
     </div>
+
+    <div class="my-3">
+    <a th:href="@{|/histories/update/${history.historySeq}|}" class="btn btn-sm btn-outline-secondary"
+       th:if="${ userNickName == history.memberNickname}"
+       th:text="수정"></a>
+    </div>
+
     <hr/>
 
 

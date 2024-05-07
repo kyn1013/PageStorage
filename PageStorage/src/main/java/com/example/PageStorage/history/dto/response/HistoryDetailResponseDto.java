@@ -25,7 +25,7 @@ public class HistoryDetailResponseDto {
     private String difficulty;
     private String applicationToLife;
     private String bookRecommender;
-    private String memberName;
+    private String memberNickname;
     private Set<String> tagNames;
     private List<String> comments;
     private Set<String> keywords;
@@ -33,7 +33,7 @@ public class HistoryDetailResponseDto {
     @Builder
     public HistoryDetailResponseDto(String historySeq, String bookName, String historyContent, String phrase,
                               String difficulty, String applicationToLife, String bookRecommender,
-                              String memberName, Set<String> tagNames, List<String> comments, Set<String> keywords){
+                              String memberNickname, Set<String> tagNames, List<String> comments, Set<String> keywords){
         this.historySeq = historySeq;
         this.bookName = bookName;
         this.historyContent = historyContent;
@@ -41,7 +41,7 @@ public class HistoryDetailResponseDto {
         this.difficulty = difficulty;
         this.applicationToLife = applicationToLife;
         this.bookRecommender = bookRecommender;
-        this.memberName = memberName;
+        this.memberNickname = memberNickname;
         this.tagNames = tagNames;
         this.comments = comments;
         this.keywords = keywords;
@@ -71,7 +71,7 @@ public class HistoryDetailResponseDto {
                 .difficulty(history.getDifficulty())
                 .applicationToLife(history.getApplicationToLife())
                 .bookRecommender(history.getBookRecommender())
-                .memberName(history.getMember().getName())
+                .memberNickname(history.getMember().getNickName())
                 .comments(comments)
                 .tagNames(tagNames)
                 .keywords(keywords)

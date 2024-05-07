@@ -1,13 +1,10 @@
 package com.example.PageStorage.history.dto.response;
 
-import com.example.PageStorage.comment.dto.response.CommentResponseDto;
 import com.example.PageStorage.entity.*;
-import com.example.PageStorage.history.dto.HistoryRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.HashSet;

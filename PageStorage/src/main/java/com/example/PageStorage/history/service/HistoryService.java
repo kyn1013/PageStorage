@@ -20,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -43,6 +45,62 @@ public class HistoryService {
     private final HistoryKeywordDao historyKeywordDao;
 
     private final String FOLDER_PATH="/Users/gim-yena/Desktop/history/";
+
+    public History update(HistoryRequestDto historyRequestDto, Long historySeq) throws IOException {
+        History history = find(historySeq);
+        history.changeInfo(historyRequestDto);
+
+        /*
+        태그 지우기
+         */
+        historyTagDao.deleteHistorySeq(history.getHistorySeq());
+        // 기존 태그 관계 모두 삭제 (단순 예제, 실제로는 보다 세심한 접근 방식이 필요할 수 있음)
+        history.getHistoryTags().clear();
+//        historyTagDao.deleteHistorySeq(history.getHistorySeq());
+
+        /*
+        태그 다시 만들기
+         */
+        String tagString = historyRequestDto.getTagNames();
+        Set<String> tagsSet = Arrays.stream(tagString.split("#"))
+                .filter(tag -> !tag.isEmpty()) // 빈 태그 제거
+                .collect(Collectors.toSet());
+        for (String tag : tagsSet) {
+            Tag savedTag = tagDao.findOrCreate(tag);
+
+            HistoryTag historyTag = HistoryTag.builder()
+                    .history(history)
+                    .tag(savedTag)
+                    .build();
+
+            history.getHistoryTags().add(historyTag);
+        }
+
+        //저장된 이미지 삭제
+        Files.deleteIfExists(Paths.get(history.getHistoryImage().getFilePath()));
+//        historyDao.delete(historySeq);
+
+        String originalFilename = historyRequestDto.getImageFile().getOriginalFilename();
+        String storeFilename = createStoreFilename(originalFilename);
+        String filePath = createPath(storeFilename);
+
+        HistoryImage historyImage = HistoryImage.builder()
+                .originFilename(originalFilename)
+                .storeFilename(storeFilename)
+                .type(historyRequestDto.getImageFile().getContentType())
+                .filePath(filePath)
+                .history(history)
+                .build();
+
+        // 새 이미지 정보 추가 및 파일 저장
+        history.addHistoryImage(historyImage);
+        historyImageDao.save(historyImage);
+        historyRequestDto.getImageFile().transferTo(new File(filePath));
+
+
+
+        return history;
+    }
 
     public History saveHistory(HistoryRequestDto historyRequestDto) throws IOException {
         History history = History.builder()
@@ -162,34 +220,34 @@ public class HistoryService {
         return historyDao.findAllByCreatedDate();
     }
 
-    public History update(HistoryRequestDto historyRequestDto) {
-        History history = historyDao.findByMemberNameAndBookName(
-                historyRequestDto.getUserLoginId(), historyRequestDto.getBookName());
-        history.changeInfo(historyRequestDto);
-
-
-        historyTagDao.deleteHistorySeq(history.getHistorySeq());
-        // 기존 태그 관계 모두 삭제 (단순 예제, 실제로는 보다 세심한 접근 방식이 필요할 수 있음)
-        history.getHistoryTags().clear();
+//    public History update(HistoryRequestDto historyRequestDto) {
+//        History history = historyDao.findByMemberNameAndBookName(
+//                historyRequestDto.getUserLoginId(), historyRequestDto.getBookName());
+//        history.changeInfo(historyRequestDto);
+//
+//
 //        historyTagDao.deleteHistorySeq(history.getHistorySeq());
-
-        String tagString = historyRequestDto.getTagNames();
-        Set<String> tagsSet = Arrays.stream(tagString.split("#"))
-                .filter(tag -> !tag.isEmpty()) // 빈 태그 제거
-                .collect(Collectors.toSet());
-        for (String tag : tagsSet) {
-            Tag savedTag = tagDao.findOrCreate(tag);
-
-            HistoryTag historyTag = HistoryTag.builder()
-                    .history(history)
-                    .tag(savedTag)
-                    .build();
-
-            history.getHistoryTags().add(historyTag);
-        }
-
-        return history;
-    }
+//        // 기존 태그 관계 모두 삭제 (단순 예제, 실제로는 보다 세심한 접근 방식이 필요할 수 있음)
+//        history.getHistoryTags().clear();
+////        historyTagDao.deleteHistorySeq(history.getHistorySeq());
+//
+//        String tagString = historyRequestDto.getTagNames();
+//        Set<String> tagsSet = Arrays.stream(tagString.split("#"))
+//                .filter(tag -> !tag.isEmpty()) // 빈 태그 제거
+//                .collect(Collectors.toSet());
+//        for (String tag : tagsSet) {
+//            Tag savedTag = tagDao.findOrCreate(tag);
+//
+//            HistoryTag historyTag = HistoryTag.builder()
+//                    .history(history)
+//                    .tag(savedTag)
+//                    .build();
+//
+//            history.getHistoryTags().add(historyTag);
+//        }
+//
+//        return history;
+//    }
 
 
 
