@@ -80,21 +80,25 @@ public class HistoryService {
         Files.deleteIfExists(Paths.get(history.getHistoryImage().getFilePath()));
 //        historyDao.delete(historySeq);
 
+
         String originalFilename = historyRequestDto.getImageFile().getOriginalFilename();
         String storeFilename = createStoreFilename(originalFilename);
         String filePath = createPath(storeFilename);
 
-        HistoryImage historyImage = HistoryImage.builder()
-                .originFilename(originalFilename)
-                .storeFilename(storeFilename)
-                .type(historyRequestDto.getImageFile().getContentType())
-                .filePath(filePath)
-                .history(history)
-                .build();
+        HistoryImage historyImagee = historyImageDao.findByHistorySeq(historySeq);
+        historyImagee.changeInfo(originalFilename, storeFilename, historyRequestDto.getImageFile().getContentType(), filePath);
+
+//        HistoryImage historyImage = HistoryImage.builder()
+//                .originFilename(originalFilename)
+//                .storeFilename(storeFilename)
+//                .type(historyRequestDto.getImageFile().getContentType())
+//                .filePath(filePath)
+//                .history(history)
+//                .build();
 
         // 새 이미지 정보 추가 및 파일 저장
-        history.addHistoryImage(historyImage);
-        historyImageDao.save(historyImage);
+        history.addHistoryImage(historyImagee);
+        historyImageDao.save(historyImagee);
         historyRequestDto.getImageFile().transferTo(new File(filePath));
 
 
@@ -121,10 +125,17 @@ public class HistoryService {
         for (String tag : tagsSet) {
             Tag savedTag = tagDao.findOrCreate(tag);
 
+//            HistoryTag historyTag = HistoryTag.builder()
+//                    .history(history)
+//                    .tag(savedTag)
+//                    .build();
+
             HistoryTag historyTag = HistoryTag.builder()
                     .history(history)
                     .tag(savedTag)
                     .build();
+
+            historyTagDao.save(historyTag);
 
             history.getHistoryTags().add(historyTag);
         }
@@ -259,6 +270,10 @@ public class HistoryService {
 
     public void delete(Long historySeq) {
         historyDao.delete(historySeq);
+    }
+
+    public void deleteImage(Long imageSeq) {
+        historyImageDao.delete(imageSeq);
     }
 
 

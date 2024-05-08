@@ -281,4 +281,12 @@ public class HistoryController {
         return PsResponse.toResponse(SuccessCode.SUCCES);
     }
 
+    /*
+    이미지 삭제
+     */
+    @DeleteMapping("/image/{imageSeq}")
+    public ResponseEntity<ResBodyModel> deleteByImageSeq(@PathVariable Long imageSeq) {
+        historyService.deleteImage(imageSeq);
+        return PsResponse.toResponse(SuccessCode.SUCCES);
+    }
 }

@@ -65,6 +65,13 @@ public class HistoryResponseDto {
             keywords.add(historyKeyword.getKeyword().getKeyword()); // 태그 이름 추가
         }
 
+        String profileFilename = null;
+
+        // Member 객체와 MemberImage 객체가 null이 아닌지 확인
+        if (history.getMember() != null && history.getMember().getMemberImage() != null) {
+            profileFilename = history.getMember().getMemberImage().getStoreFilename();
+        }
+
         return HistoryResponseDto.builder()
                 .historySeq(String.valueOf(history.getHistorySeq()))
                 .bookName(history.getBookName())
@@ -77,7 +84,7 @@ public class HistoryResponseDto {
                 .comments(comments)
                 .tagNames(tagNames)
                 .historyImage(history.getHistoryImage().getStoreFilename())
-                .profileImage(history.getMember().getMemberImage().getStoreFilename())
+                .profileImage(profileFilename)
                 .keywords(keywords)
                 .build();
     }

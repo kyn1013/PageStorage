@@ -19,8 +19,17 @@ public class HistoryImageDao {
         return historyImageRepository.save(historyImage);
     }
 
-    public void delete(Long historyId) {
+    //히스토리아이디로 히스토리 이미지 찾기
+    public HistoryImage findByHistorySeq(Long historySeq) {
+        return historyImageRepository.findByHistoryHistorySeq(historySeq);
+    }
+
+    public void deleteByHistoryId(Long historyId) {
         historyImageRepository.deleteByHistoryHistorySeq(historyId);
+    }
+
+    public void delete(Long historyImageSeq) {
+        historyImageRepository.deleteById(historyImageSeq);
     }
 
 }

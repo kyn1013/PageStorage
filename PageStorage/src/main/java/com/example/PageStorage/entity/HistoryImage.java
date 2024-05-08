@@ -19,7 +19,7 @@ public class HistoryImage {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "history_id")
+    @JoinColumn(name = "history_seq")
     private History history;
 
     private String originFilename; //원본 이름
@@ -34,5 +34,12 @@ public class HistoryImage {
         this.type = type;
         this.filePath = filePath;
         this.history = history;
+    }
+
+    public void changeInfo(String originFilename, String storeFilename, String type, String filePath) {
+        this.originFilename = originFilename;
+        this.storeFilename = storeFilename;
+        this.type = type;
+        this.filePath = filePath;
     }
 }

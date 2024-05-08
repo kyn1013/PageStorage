@@ -47,16 +47,16 @@ public class History extends BaseTimeEntity {
     @JoinColumn(name = "member_seq")
     private Member member;
 
-    @OneToOne(mappedBy = "history", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "history", cascade = {CascadeType.PERSIST, CascadeType.REMOVE},orphanRemoval = true)
     private HistoryImage historyImage;
 
-    @OneToMany(mappedBy = "history", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "history", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "history", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "history", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private Set<HistoryTag> historyTags = new HashSet<>();
 
-    @OneToMany(mappedBy = "history", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "history", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private Set<HistoryKeyword> historyKeywords = new HashSet<>();
 
     @Builder
