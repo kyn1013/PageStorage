@@ -102,8 +102,8 @@ public class HistoryController {
         History savedHistory = historyService.update(historyRequestDto, id);
         Long historySeq = savedHistory.getHistorySeq();
 
-//        // 여기에서 sendText 메소드 호출
-//        sendText(historyRequestDto.getHistoryContent(), historySeq); // 실제 전송할 텍스트는 적절히 조정 필요
+        // 여기에서 sendText 메소드 호출
+        sendTextUpdate(historyRequestDto.getHistoryContent(), historySeq); // 실제 전송할 텍스트는 적절히 조정 필요
 
         return "redirect:/histories/all";
     }
@@ -178,6 +178,47 @@ public class HistoryController {
         historyService.saveKeyword(keysSet, seq);
         return response;
     }
+
+    @PostMapping("/sendTextUpdate")
+    public ResponseEntity<String> sendTextUpdate(String text, Long historySeq) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://localhost:8000/analyze"; // 장고 서버 URL
+
+        // HttpHeaders 객체 생성 및 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // JSONObject를 사용하여 JSON 형식의 데이터 생성
+        JSONObject json = new JSONObject();
+        json.put("text", text); // 'text'라는 키에 text 변수의 값을 할당
+
+        // JSON 문자열로 변환
+        String jsonString = json.toString();
+
+        // HttpEntity에 JSON 문자열과 헤더를 포함
+        HttpEntity<String> request = new HttpEntity<>(jsonString, headers);
+
+        // RestTemplate을 사용하여 POST 요청 전송 및 응답 수신
+        ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+        String keywordData = response.getBody();
+
+        JSONObject jsonObject = new JSONObject(keywordData);
+        log.info("응답내용 = {}", keywordData);
+        // Set 집합 생성
+        Set<String> keysSet = new HashSet<>();
+
+        // JSON 객체의 키 추출 및 Set에 추가
+        jsonObject.keys().forEachRemaining(keysSet::add);
+
+        // 추출된 키 출력
+        System.out.println("Extracted Keys: " + keysSet);
+
+        Long seq = historySeq;
+
+        historyService.updateKeyword(keysSet, seq);
+        return response;
+    }
+
 
     /*
     히스토리 조회
@@ -269,10 +310,10 @@ public class HistoryController {
     /*
     히스토리 삭제
      */
-    @DeleteMapping("/{historySeq}")
-    public ResponseEntity<ResBodyModel> deleteBySeq(@PathVariable Long historySeq) {
+    @GetMapping("/delete/{historySeq}")
+    public String deleteBySeq(@PathVariable Long historySeq) {
         historyService.delete(historySeq);
-        return PsResponse.toResponse(SuccessCode.SUCCES);
+        return "redirect:/histories/all";
     }
 
     @DeleteMapping()

@@ -103,6 +103,8 @@ public class HistoryService {
 
 
 
+
+
         return history;
     }
 
@@ -117,6 +119,9 @@ public class HistoryService {
                 .build();
         Member member = loginDao.findByUserLoginId(historyRequestDto.getUserLoginId());
         history.addMember(member);
+
+        // History 객체 먼저 저장
+        history = historyDao.save(history);
 
         String tagString = historyRequestDto.getTagNames();
         Set<String> tagsSet = Arrays.stream(tagString.split("#"))
@@ -160,11 +165,40 @@ public class HistoryService {
 
         historyRequestDto.getImageFile().transferTo(new File(filePath));
 
-        return historyDao.save(history);
+        return history;
     }
 
     public void saveKeyword(Set<String> keywordSet, Long historySeq) {
         History history = find(historySeq);
+
+        for (String keyword : keywordSet) {
+            Keyword savedKeyword = Keyword.builder()
+                    .keyword(keyword)
+                    .build();
+
+            keywordDao.save(savedKeyword);
+
+            HistoryKeyword historyKeyword = HistoryKeyword.builder()
+                    .history(history)
+                    .keyword(savedKeyword)
+                    .build();
+
+            historyKeywordDao.save(historyKeyword);
+
+            history.getHistoryKeywords().add(historyKeyword);
+        }
+
+    }
+
+    public void updateKeyword(Set<String> keywordSet, Long historySeq) {
+        History history = find(historySeq);
+
+        /*
+        태그 지우기
+         */
+        historyKeywordDao.deleteHistorySeq(history.getHistorySeq());
+        // 기존 태그 관계 모두 삭제 (단순 예제, 실제로는 보다 세심한 접근 방식이 필요할 수 있음)
+        history.getHistoryKeywords().clear();
 
         for (String keyword : keywordSet) {
             Keyword savedKeyword = Keyword.builder()

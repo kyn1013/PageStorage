@@ -32,6 +32,12 @@
        th:text="수정"></a>
     </div>
 
+    <div class="my-3">
+    <a th:href="@{|/histories/delete/${history.historySeq}|}" class="btn btn-sm btn-outline-secondary"
+       th:if="${ userNickName == history.memberNickname}"
+       th:text="삭제"></a>
+    </div>
+
     <hr/>
 
 
