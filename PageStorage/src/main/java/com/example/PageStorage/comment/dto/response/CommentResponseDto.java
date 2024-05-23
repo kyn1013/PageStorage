@@ -18,12 +18,14 @@ public class CommentResponseDto {
     private String content;
     private Long historySeq;
     private String memberName;
+    private Long commentSeq;
 
     @Builder
-    public CommentResponseDto(String content, Long historySeq, String memberName){
+    public CommentResponseDto(String content, Long historySeq, String memberName, Long commentSeq){
         this.content = content;
         this.historySeq = historySeq;
         this.memberName = memberName;
+        this.commentSeq = commentSeq;
     }
 
     public static CommentResponseDto buildDto(Comment comment){
@@ -31,6 +33,7 @@ public class CommentResponseDto {
                 .content(comment.getContent())
                 .historySeq(comment.getHistory().getHistorySeq())
                 .memberName(comment.getMember().getName())
+                .commentSeq(comment.getCommentSeq())
                 .build();
     }
 

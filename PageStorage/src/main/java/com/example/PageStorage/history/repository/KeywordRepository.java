@@ -2,10 +2,12 @@ package com.example.PageStorage.history.repository;
 
 import com.example.PageStorage.entity.History;
 import com.example.PageStorage.entity.Keyword;
+import com.example.PageStorage.entity.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface KeywordRepository extends JpaRepository<Keyword, Long> {
 
@@ -15,4 +17,6 @@ public interface KeywordRepository extends JpaRepository<Keyword, Long> {
             "JOIN h.member m " +
             "WHERE m.mail = :memberMail")
     List<String> findKeywordsByMemberMail(String memberMail);
+
+    Optional<Keyword> findByKeyword(String keyword);
 }

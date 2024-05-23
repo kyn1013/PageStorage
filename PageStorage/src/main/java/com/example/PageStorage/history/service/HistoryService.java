@@ -172,11 +172,12 @@ public class HistoryService {
         History history = find(historySeq);
 
         for (String keyword : keywordSet) {
-            Keyword savedKeyword = Keyword.builder()
-                    .keyword(keyword)
-                    .build();
-
-            keywordDao.save(savedKeyword);
+//            Keyword savedKeyword = Keyword.builder()
+//                    .keyword(keyword)
+//                    .build();
+//
+//            keywordDao.save(savedKeyword);
+            Keyword savedKeyword = keywordDao.findOrCreate(keyword);
 
             HistoryKeyword historyKeyword = HistoryKeyword.builder()
                     .history(history)
@@ -308,6 +309,10 @@ public class HistoryService {
 
     public void deleteImage(Long imageSeq) {
         historyImageDao.delete(imageSeq);
+    }
+
+    public void deleteKeyword() {
+        keywordDao.deleteAll();
     }
 
 

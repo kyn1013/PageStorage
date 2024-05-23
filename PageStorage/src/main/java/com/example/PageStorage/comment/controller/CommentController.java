@@ -100,10 +100,10 @@ public class CommentController {
     /*
     삭제
      */
-    @DeleteMapping("/delete/{commentSeq}")
-    public ResponseEntity<ResBodyModel> delete(@PathVariable Long commentSeq) {
+    @GetMapping("/delete/{commentSeq}")
+    public String delete(@PathVariable Long commentSeq) {
         commentService.delete(commentSeq);
-        return PsResponse.toResponse(SuccessCode.SUCCES);
+        return "redirect:/histories/all";
     }
 
 }

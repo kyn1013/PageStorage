@@ -127,7 +127,7 @@ public class HistoryController {
             return "createHistoryForm";
         }
 
-        historyRequestDto.setUserLoginId( userDetails.getUsername());
+        historyRequestDto.setUserLoginId(userDetails.getUsername());
 //        historyService.saveHistory(historyRequestDto).getHistorySeq();
         History savedHistory = historyService.saveHistory(historyRequestDto);
         Long historySeq = savedHistory.getHistorySeq();
@@ -328,6 +328,12 @@ public class HistoryController {
     @DeleteMapping("/image/{imageSeq}")
     public ResponseEntity<ResBodyModel> deleteByImageSeq(@PathVariable Long imageSeq) {
         historyService.deleteImage(imageSeq);
+        return PsResponse.toResponse(SuccessCode.SUCCES);
+    }
+
+    @DeleteMapping("/delete/keyword")
+    public ResponseEntity<ResBodyModel> deleteKeyword() {
+        historyService.deleteKeyword();
         return PsResponse.toResponse(SuccessCode.SUCCES);
     }
 }

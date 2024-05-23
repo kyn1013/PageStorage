@@ -44,8 +44,11 @@
 <h3>댓글</h3>
     <h5 th:text="|${#lists.size(history.comments)}개의 답변이 있습니다.|"></h5>
         <div>
-            <ul>
-                <li th:each="realComment : ${realComment}" th:text="|${realComment.content} - 글쓴이: ${realComment.memberName}|"></li>
+            <ul th:each="realComments : ${realComment}">
+                <li th:text="|${realComments.content} - 글쓴이: ${realComments.memberName}|"></li>
+                <a th:href="@{|/comments/delete/${realComments.getCommentSeq()}|}" class="btn btn-sm btn-outline-secondary"
+                   th:if="${ userNickName == history.memberNickname}"
+                   th:text="삭제"></a>
             </ul>
         </div>
 
