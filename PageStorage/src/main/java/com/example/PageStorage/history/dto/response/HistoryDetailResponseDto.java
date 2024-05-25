@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -29,11 +31,16 @@ public class HistoryDetailResponseDto {
     private Set<String> tagNames;
     private List<String> comments;
     private Set<String> keywords;
+    private LocalDateTime createdDate;
+    private String historyImage;
+    private String profileImage;
+
 
     @Builder
     public HistoryDetailResponseDto(String historySeq, String bookName, String historyContent, String phrase,
                               String difficulty, String applicationToLife, String bookRecommender,
-                              String memberNickname, Set<String> tagNames, List<String> comments, Set<String> keywords){
+                              String memberNickname, Set<String> tagNames, List<String> comments, Set<String> keywords,
+                                    LocalDateTime createdDate, String historyImage, String profileImage){
         this.historySeq = historySeq;
         this.bookName = bookName;
         this.historyContent = historyContent;
@@ -45,6 +52,9 @@ public class HistoryDetailResponseDto {
         this.tagNames = tagNames;
         this.comments = comments;
         this.keywords = keywords;
+        this.createdDate = createdDate;
+        this.historyImage = historyImage;
+        this.profileImage = profileImage;
     }
 
     public static HistoryDetailResponseDto buildDto(History history) {
@@ -63,6 +73,13 @@ public class HistoryDetailResponseDto {
             keywords.add(historyKeyword.getKeyword().getKeyword()); // 태그 이름 추가
         }
 
+        String profileFilename = null;
+
+        // Member 객체와 MemberImage 객체가 null이 아닌지 확인
+        if (history.getMember() != null && history.getMember().getMemberImage() != null) {
+            profileFilename = history.getMember().getMemberImage().getStoreFilename();
+        }
+
         return HistoryDetailResponseDto.builder()
                 .historySeq(String.valueOf(history.getHistorySeq()))
                 .bookName(history.getBookName())
@@ -75,6 +92,9 @@ public class HistoryDetailResponseDto {
                 .comments(comments)
                 .tagNames(tagNames)
                 .keywords(keywords)
+                .createdDate(history.getCreatedDate())
+                .historyImage(history.getHistoryImage().getStoreFilename())
+                .profileImage(profileFilename)
                 .build();
     }
 }

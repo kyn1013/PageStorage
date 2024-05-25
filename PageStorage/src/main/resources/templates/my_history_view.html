@@ -133,12 +133,7 @@
 </head>
 <body>
 
-<div class="sidebar">
-  <h2>메뉴</h2>
-  <a th:href="@{/histories/myPage}">마이페이지</a>
-  <a href="/members" th:href="@{/histories/new}">히스토리 등록</a>
-  <a href="/books" th:href="@{/books/recommendations}">책 추천받기</a>
-</div>
+<div th:replace="~{sidebar :: sidevarFragment}"></div>
 
 <div class="content">
   <div id="profile">

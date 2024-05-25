@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Sidebar</title>
+  <style>
+    .sidebar {
+      width: 200px;
+      height: 100vh;
+      background-color: #f0f0f0;
+      padding: 20px;
+      position: fixed;
+    }
+    a {
+      display: block;
+      margin-bottom: 10px;
+      text-decoration: none;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+<div class="sidebar" th:fragment="sidevarFragment">
+  <h2>메뉴</h2>
+  <a th:href="@{/histories/myPage}">마이페이지</a>
+  <a href="/members" th:href="@{/histories/new}">히스토리 등록</a>
+  <a href="/books" th:href="@{/books/recommendations}">무엇이든 추천해줌</a>
+  <a href="/books" th:href="@{/books/keyword}">사용자 맞춤 책 추천</a>
+</div>
+</body>
+</html>

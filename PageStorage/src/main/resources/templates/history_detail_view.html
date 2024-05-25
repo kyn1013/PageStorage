@@ -3,19 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <title>히스토리 상세 조회</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
+        .do-hyeon-regular {
+            font-family: "Do Hyeon", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        body {
+            font-family: "Do Hyeon", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            display: flex;
+            margin: 0; /* 여백 제거 */
+            padding: 0; /* 여백 제거 */
+        }
+
+        .content {
+            flex-grow: 1; /* 나머지 공간 모두 사용 */
+            padding: 20px;
+            margin-left: 250px; /* 사이드바 너비만큼 왼쪽 여백 */
+            overflow: auto; /* 내용이 넘칠 경우 스크롤바 생성 */
+        }
+
+        .sidebar {
+            width: 200px;
+            height: 100vh;
+            background-color: #f0f0f0;
+            padding: 20px;
+            position: fixed;
+        }
+
+        .history-image {
+            margin-right: 20px;
+            width: 400px; /* 이미지 크기 조정 */
+            height: 400px; /* 이미지 크기 조정 */
+            border-radius: 20%; /* 이미지를 원형으로 만듦 */
+            object-fit: cover;
+        }
+
+        .history-writer {
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-bottom: 10px;
+            padding-top: 10px;
+            background-color: #f0f0f0;
+            border-radius: 40px;
+            display: inline-block;
+        }
+
+        .time {
+            background-color: red;
+            text-align: right; /* 텍스트를 오른쪽 정렬 */
+            border-radius: 40px;
+            padding-left: 8px;
+            padding-right: 8px;
+
+
+            /*display: inline-block;*/
+            float: right; /* 오른쪽으로 정렬 */
+            /*line-height: 1.2; !* 줄 간격 조정 *!*/
+            height: auto; /* 높이를 자동으로 설정하여 내용에 맞춤 */
+        }
+
+
+        .writer-image {
+            width: 50px; /* 이미지 크기 조정 */
+            height: 50px; /* 이미지 크기 조정 */
+            border-radius: 50%; /* 이미지를 원형으로 만듦 */
+            object-fit: cover; /* 이미지 비율을 유지하면서 요소에 맞춤 */
+            margin-right: 10px; /* 텍스트와의 여백 설정 */
+        }
+
+        .bookname {
+            padding: 10px;
+            margin-top: 30px; /* 등록시간과의 간격 설정 */
+        }
+
+        .history-text {
+            flex: 1;
+        }
+
+
+        #nickname {
+            float: right;
+        }
+
+        #profile {
+            float: left;
+        }
+
+        #blank {
+            color: white;
+        }
+
+        #aaa {
+            float: right;
+        }
+
+        a {
+            display: block;
+            margin-bottom: 10px;
+            text-decoration: none;
+            color: black;
+        }
+
+        .history_content > * {
+            margin-bottom: 10px; /* 각 요소 간의 간격 설정 */
+        }
+    </style>
 </head>
 <body>
-<h1>히스토리 상세</h1>
+<div th:replace="~{sidebar :: sidevarFragment}"></div>
 
-    <div>
-        <h3>글쓴이 <span th:text="${history.memberNickname}"></span></h3>
-        <h2>책 이름: <span th:text="${history.bookName}"></span></h2>
-        <p>내용: <span th:text="${history.historyContent}"></span></p>
+<div class="content">
+    <div class="history-writer">
+        <div id="profile">
+            <!-- 사용자 이미지가 존재하는 경우 -->
+            <img th:if="${history.getProfileImage() != null}"
+                 th:src="@{/profileImage/{imageFile}(imageFile=${history.getProfileImage()})}"
+                 alt="사용자 지정 프로필 이미지"
+                 class="writer-image"/>
+            <!-- 사용자 이미지가 존재하지 않는 경우 -->
+            <img th:unless="${history.getProfileImage() != null}"
+                 th:src="@{/image/nn.jpeg}"
+                 alt="기본프로필 이미지"
+                 class="writer-image"/>
+        </div>
+        <div id="nickname"><p><span th:text="${history.memberNickname}">작성자 이름</span></p></div>
+    </div>
+
+    <div class="history_content">
+
+        <div class="time">
+            <h4> <span th:text="${#temporals.format(history.createdDate, 'yyyy-MM-dd HH:mm')}"></span></h4>
+        </div>
+
+        <div id="blank">
+            여백용
+        </div>
+
+        <div class="bookname">
+
+            <h2>책 이름: <span th:text="${history.bookName}"></span></h2>
+        </div>
+
+
+        <div class="history-text">
+            <p>내용: <span th:text="${history.historyContent}"></span></p>
+        </div>
+
         <p>구절: <span th:text="${history.phrase}"></span></p>
         <p>난이도: <span th:text="${history.difficulty}"></span></p>
         <p>인생 적용: <span th:text="${history.applicationToLife}"></span></p>
         <p>책 추천인: <span th:text="${history.bookRecommender}"></span></p>
-        <p>작성자: <span th:text="${history.memberNickname}"></span></p>
+
+        <div class="history-image">
+            <img th:src="@{/historyImage/{imageFile}(imageFile=${history.getHistoryImage()})}" alt="히스토리 이미지" class="history-image"/>
+        </div>
+
         <h3>태그</h3>
         <ul>
             <li th:each="tagName : ${history.tagNames}" th:text="${tagName}"></li>
@@ -27,30 +175,30 @@
     </div>
 
     <div class="my-3">
-    <a th:href="@{|/histories/update/${history.historySeq}|}" class="btn btn-sm btn-outline-secondary"
-       th:if="${ userNickName == history.memberNickname}"
-       th:text="수정"></a>
+        <a th:href="@{|/histories/update/${history.historySeq}|}" class="btn btn-sm btn-outline-secondary"
+           th:if="${ userNickName == history.memberNickname}"
+           th:text="수정"></a>
     </div>
 
     <div class="my-3">
-    <a th:href="@{|/histories/delete/${history.historySeq}|}" class="btn btn-sm btn-outline-secondary"
-       th:if="${ userNickName == history.memberNickname}"
-       th:text="삭제"></a>
+        <a th:href="@{|/histories/delete/${history.historySeq}|}" class="btn btn-sm btn-outline-secondary"
+           th:if="${ userNickName == history.memberNickname}"
+           th:text="삭제"></a>
     </div>
+
 
     <hr/>
 
-
-<h3>댓글</h3>
+    <h3>댓글</h3>
     <h5 th:text="|${#lists.size(history.comments)}개의 답변이 있습니다.|"></h5>
-        <div>
-            <ul th:each="realComments : ${realComment}">
-                <li th:text="|${realComments.content} - 글쓴이: ${realComments.memberName}|"></li>
-                <a th:href="@{|/comments/delete/${realComments.getCommentSeq()}|}" class="btn btn-sm btn-outline-secondary"
-                   th:if="${ userNickName == history.memberNickname}"
-                   th:text="삭제"></a>
-            </ul>
-        </div>
+    <div>
+        <ul th:each="realComments : ${realComment}">
+            <li th:text="|${realComments.content} - 글쓴이: ${realComments.memberName}|"></li>
+            <a th:href="@{|/comments/delete/${realComments.getCommentSeq()}|}" class="btn btn-sm btn-outline-secondary"
+               th:if="${ userNickName == history.memberNickname}"
+               th:text="삭제"></a>
+        </ul>
+    </div>
 
     <form th:action="@{|/comments/create/${history.historySeq}|}" th:object="${commentForm}" method="post">
         <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
@@ -59,6 +207,7 @@
         <textarea th:field="*{content}" rows="15"></textarea>
         <input type="submit" value="답변등록">
     </form>
+</div>
 
 </body>
 </html>

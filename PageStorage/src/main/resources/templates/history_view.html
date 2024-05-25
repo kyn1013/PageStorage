@@ -134,14 +134,7 @@
 </head>
 <body>
 
-<div class="sidebar">
-  <h2>메뉴</h2>
-<!--  <a th:href="@{/histories/{nickName}(nickName=${nickName})}">마이페이지</a>-->
-  <a th:href="@{/histories/myPage}">마이페이지</a>
-  <a href="/members" th:href="@{/histories/new}">히스토리 등록</a>
-  <a href="/books" th:href="@{/books/recommendations}">무엇이든 추천해줌</a>
-  <a href="/books" th:href="@{/books/keyword}">사용자 맞춤 책 추천</a>
-</div>
+<div th:replace="~{sidebar :: sidevarFragment}"></div>
 
 <div class="content">
   <div id="profile">
@@ -209,8 +202,11 @@
           <img th:src="@{/historyImage/{imageFile}(imageFile=${history.getHistoryImage()})}" alt="히스토리 이미지" class="history-image"/>
         </div>
         <div class="history-text">
-          <p><i class="fas fa-book"></i> <!-- 책 아이콘 추가 -->구절: <span th:text="${history.phrase}">구절 내용</span></p>
-          <p><i class="fas fa-book"></i> <!-- 책 아이콘 추가 -->난이도: <span th:text="${history.difficulty}">난이도</span></p>
+          <p><i class="fa-solid fa-book fa-bounce" style="color: #63E6BE;"></i>구절: <span th:text="${history.phrase}">구절 내용</span></p>
+          <p>
+            <img th:src="@{/image/bookicon.png}" alt="책 이미지" style="width: 24px; height: 25px; display: inline-block; vertical-align: middle;">
+            난이도: <span th:text="${history.difficulty}" style="display: inline-block; vertical-align: middle;">난이도</span>
+          </p>
           <p><i class="fas fa-book"></i> <!-- 책 아이콘 추가 -->책을 추천하고 싶은 사람: <span th:text="${history.bookRecommender}">추천인</span></p>
         </div>
       </div>
