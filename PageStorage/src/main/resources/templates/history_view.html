@@ -85,6 +85,18 @@
       border-radius: 2%; /* 이미지를 원형으로 만듦 */
       object-fit:fill;
     }
+
+    .inline-icon {
+      width: 24px;
+      height: 25px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .inline-text {
+      display: inline-block;
+      vertical-align: middle;
+    }
     #nickname {
       float: right;
     }
@@ -204,8 +216,8 @@
         <div class="history-text">
           <p><i class="fa-solid fa-book fa-bounce" style="color: #63E6BE;"></i>구절: <span th:text="${history.phrase}">구절 내용</span></p>
           <p>
-            <img th:src="@{/image/bookicon.png}" alt="책 이미지" style="width: 24px; height: 25px; display: inline-block; vertical-align: middle;">
-            난이도: <span th:text="${history.difficulty}" style="display: inline-block; vertical-align: middle;">난이도</span>
+            <img th:src="@{/image/bookicon.png}" alt="책 이미지" class="inline-icon">
+            난이도: <span th:text="${history.difficulty}" class="inline-text">난이도</span>
           </p>
           <p><i class="fas fa-book"></i> <!-- 책 아이콘 추가 -->책을 추천하고 싶은 사람: <span th:text="${history.bookRecommender}">추천인</span></p>
         </div>
