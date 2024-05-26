@@ -194,8 +194,8 @@
       <div class="a" id="a">
         <h2 id="bookName">
           <a th:href="@{|/histories/read/${history.historySeq}|}">
-            <img th:src="@{/image/book.png}" alt="책 이미지" style="width: 24px; height: 23px;"> <!-- 아이콘 -->
-            <span th:text="${history.bookName}">책 이름</span>
+            <img th:src="@{/image/bookicon.png}" alt="책 이미지" class="inline-icon">
+            <span th:text="${history.bookName}" class="inline-text">책 이름</span>
           </a>
         </h2>
         <ul class="tag-list" id="tags">
@@ -214,12 +214,16 @@
           <img th:src="@{/historyImage/{imageFile}(imageFile=${history.getHistoryImage()})}" alt="히스토리 이미지" class="history-image"/>
         </div>
         <div class="history-text">
-          <p><i class="fa-solid fa-book fa-bounce" style="color: #63E6BE;"></i>구절: <span th:text="${history.phrase}">구절 내용</span></p>
+          <p>
+            <img th:src="@{/image/bookicon.png}" alt="책 이미지" class="inline-icon">
+            구절: <span th:text="${history.phrase}" class="inline-text">구절 내용</span></p>
           <p>
             <img th:src="@{/image/bookicon.png}" alt="책 이미지" class="inline-icon">
             난이도: <span th:text="${history.difficulty}" class="inline-text">난이도</span>
           </p>
-          <p><i class="fas fa-book"></i> <!-- 책 아이콘 추가 -->책을 추천하고 싶은 사람: <span th:text="${history.bookRecommender}">추천인</span></p>
+          <p>
+            <img th:src="@{/image/bookicon.png}" alt="책 이미지" class="inline-icon">
+            책을 추천하고 싶은 사람: <span th:text="${history.bookRecommender}" class="inline-text">추천인</span></p>
         </div>
       </div>
 
