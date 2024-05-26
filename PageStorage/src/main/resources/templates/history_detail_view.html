@@ -23,7 +23,10 @@
 
         .content {
             flex-grow: 1; /* 나머지 공간 모두 사용 */
-            padding: 20px;
+            padding-top: 40px;
+            padding-bottom: 40px;
+            padding-left: 80px; /* 왼쪽 패딩 */
+            padding-right: 80px; /* 오른쪽 패딩 */
             margin-left: 250px; /* 사이드바 너비만큼 왼쪽 여백 */
             overflow: auto; /* 내용이 넘칠 경우 스크롤바 생성 */
         }
@@ -37,7 +40,9 @@
         }
 
         .history-image {
-            margin-right: 20px;
+            /*margin-right: 20px;*/
+            margin-top: 10px;
+            margin-left: 180px; /* 왼쪽 여백 추가 */
             width: 400px; /* 이미지 크기 조정 */
             height: 400px; /* 이미지 크기 조정 */
             border-radius: 20%; /* 이미지를 원형으로 만듦 */
@@ -49,18 +54,22 @@
             padding-right: 20px;
             padding-bottom: 10px;
             padding-top: 10px;
-            background-color: #f0f0f0;
+            background-color: #A281C3;
+            font-style: italic;
+            color: #E6EAF4;
             border-radius: 40px;
             display: inline-block;
         }
 
         .time {
-            background-color: red;
             text-align: right; /* 텍스트를 오른쪽 정렬 */
             border-radius: 40px;
             padding-left: 8px;
             padding-right: 8px;
 
+            background-color: #A281C3;
+            font-style: italic;
+            color: #E6EAF4;
 
             /*display: inline-block;*/
             float: right; /* 오른쪽으로 정렬 */
@@ -87,8 +96,8 @@
         }
 
         .inline-icon {
-            width: 24px;
-            height: 25px;
+            width: 27px;
+            height: 27px;
             display: inline-block;
             vertical-align: middle;
         }
@@ -96,6 +105,17 @@
         .inline-text {
             display: inline-block;
             vertical-align: middle;
+            margin-left: 30px;
+            font-size: 1.1em;
+        }
+
+        .inline-text-difficulty {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .subtitle-label {
+            font-size: 1.4em; /* "책 추천인:" 텍스트의 글씨 크기 증가 */
         }
 
 
@@ -157,20 +177,32 @@
             여백용
         </div>
 
-        <p>
-            <img th:src="@{/image/bookicon.png}" alt="책 이미지" class="inline-icon">
-            책을 추천하고 싶은 사람: <span th:text="${history.bookName}" class="inline-text">추천인</span></p>
+        <p class="subtitle-label"><img th:src="@{/image/bookicon.png}" alt="책 이미지" class="inline-icon">
+            <span th:text="${history.bookName}" class="inline-text-difficulty">책제목</span></p>
 
-
-
-        <div class="history-text">
-            <p>내용: <span th:text="${history.historyContent}"></span></p>
+        <p class="subtitle-label"><img th:src="@{/image/phrase.png}" alt="책 이미지" class="inline-icon">
+            인상깊은 구절 </p>
+        <div th:with="quotedPhrase='&quot;' + ${history.phrase} + '&quot;'">
+            <div class="inline-text" th:text="${quotedPhrase}"></div>
         </div>
 
-        <p>구절: <span th:text="${history.phrase}"></span></p>
-        <p>난이도: <span th:text="${history.difficulty}"></span></p>
-        <p>인생 적용: <span th:text="${history.applicationToLife}"></span></p>
-        <p>책 추천인: <span th:text="${history.bookRecommender}"></span></p>
+
+        <p class="subtitle-label"><img th:src="@{/image/difficulty.png}" alt="책 이미지" class="inline-icon">
+            독서 난이도 : <span th:text="${history.difficulty}" class="inline-text-difficulty"></span></p>
+
+        <p class="subtitle-label"><img th:src="@{/image/applicationToLife.png}" alt="책 이미지" class="inline-icon">
+            삶에 적용할 점</p>
+        <span th:text="${history.applicationToLife}" class="inline-text"></span>
+
+        <p class="subtitle-label"><img th:src="@{/image/bookRecommender.png}" alt="책 이미지" class="inline-icon">
+            이 책을 추천하고 싶은 사람</p>
+        <div class="inline-text" th:text="${history.bookRecommender}"></div>
+
+        <p class="subtitle-label"><img th:src="@{/image/historyContent.png}" alt="책 이미지" class="inline-icon">
+            기록</p>
+        <div th:text="${history.historyContent}" class="inline-text"></div>
+
+
 
         <div class="history-image">
             <img th:src="@{/historyImage/{imageFile}(imageFile=${history.getHistoryImage()})}" alt="히스토리 이미지" class="history-image"/>
