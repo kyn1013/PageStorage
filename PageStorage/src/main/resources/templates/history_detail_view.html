@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>히스토리 상세 조회</title>
-
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
         .do-hyeon-regular {
@@ -40,7 +39,6 @@
         }
 
         .history-image {
-            /*margin-right: 20px;*/
             margin-top: 10px;
             margin-left: 180px; /* 왼쪽 여백 추가 */
             width: 400px; /* 이미지 크기 조정 */
@@ -66,17 +64,12 @@
             border-radius: 40px;
             padding-left: 8px;
             padding-right: 8px;
-
             background-color: #A281C3;
             font-style: italic;
             color: #E6EAF4;
-
-            /*display: inline-block;*/
             float: right; /* 오른쪽으로 정렬 */
-            /*line-height: 1.2; !* 줄 간격 조정 *!*/
             height: auto; /* 높이를 자동으로 설정하여 내용에 맞춤 */
         }
-
 
         .writer-image {
             width: 50px; /* 이미지 크기 조정 */
@@ -118,6 +111,46 @@
             font-size: 1.4em; /* "책 추천인:" 텍스트의 글씨 크기 증가 */
         }
 
+        ul.tag-list {
+            display: flex; /* 리스트 항목들을 가로로 나열 */
+            padding: 0; /* 기본 패딩 제거 */
+            list-style: none; /* 기본 목록 스타일 제거 */
+            margin: 0; /* 태그 리스트의 모든 여백 제거 */
+            font-size: 1.3em; /* "책 추천인:" 텍스트의 글씨 크기 증가 */
+            flex-wrap: wrap; /* 화면에 맞춰 줄 바꿈 */
+        }
+
+        ul.tag-list li {
+            margin: 0 5px 0 0; /* 태그 사이의 간격만 유지 */
+            padding: 0; /* 리스트 항목의 패딩 제거 */
+        }
+
+        ul.tag-list li::before {
+            content: "#"; /* 각 태그 앞에 # 추가 */
+        }
+
+        ul.keyword-list {
+            display: flex; /* 리스트 항목들을 가로로 나열 */
+            padding: 0; /* 기본 패딩 제거 */
+            list-style: none; /* 기본 목록 스타일 제거 */
+            font-size: 1.5em; /* "책 추천인:" 텍스트의 글씨 크기 증가 */
+            margin: 0; /* 키워드 리스트의 모든 여백 제거 */
+            flex-wrap: wrap; /* 화면에 맞춰 줄 바꿈 */
+        }
+
+        ul.keyword-list li {
+            margin: 0 5px 0 0; /* 키워드 사이의 간격만 유지 */
+            padding: 0; /* 리스트 항목의 패딩 제거 */
+        }
+
+        ul.keyword-list li::before {
+            content: "#"; /* 각 키워드 앞에 # 추가 */
+        }
+
+        .keyword-list + .tag-list {
+            margin-top: 5px; /* 키워드 리스트와 태그 리스트 사이의 간격을 줄임 */
+        }
+
 
         #nickname {
             float: right;
@@ -131,8 +164,12 @@
             color: white;
         }
 
-        #aaa {
-            float: right;
+        #keywords {
+            color: #611DA5;
+        }
+
+        #tags {
+            color: #837AB9;
         }
 
         a {
@@ -145,13 +182,19 @@
         .history_content > * {
             margin-bottom: 10px; /* 각 요소 간의 간격 설정 */
         }
+
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
     </style>
 </head>
 <body>
 <div th:replace="~{sidebar :: sidevarFragment}"></div>
 
 <div class="content">
-    <div class="history-writer">
+    <div class="history-writer clearfix">
         <div id="profile">
             <!-- 사용자 이미지가 존재하는 경우 -->
             <img th:if="${history.getProfileImage() != null}"
@@ -168,9 +211,8 @@
     </div>
 
     <div class="history_content">
-
-        <div class="time">
-            <h4> <span th:text="${#temporals.format(history.createdDate, 'yyyy-MM-dd HH:mm')}"></span></h4>
+        <div class="time clearfix">
+            <h4><span th:text="${#temporals.format(history.createdDate, 'yyyy-MM-dd HH:mm')}"></span></h4>
         </div>
 
         <div id="blank">
@@ -181,11 +223,10 @@
             <span th:text="${history.bookName}" class="inline-text-difficulty">책제목</span></p>
 
         <p class="subtitle-label"><img th:src="@{/image/phrase.png}" alt="책 이미지" class="inline-icon">
-            인상깊은 구절 </p>
+            인상깊은 구절</p>
         <div th:with="quotedPhrase='&quot;' + ${history.phrase} + '&quot;'">
             <div class="inline-text" th:text="${quotedPhrase}"></div>
         </div>
-
 
         <p class="subtitle-label"><img th:src="@{/image/difficulty.png}" alt="책 이미지" class="inline-icon">
             독서 난이도 : <span th:text="${history.difficulty}" class="inline-text-difficulty"></span></p>
@@ -202,20 +243,23 @@
             기록</p>
         <div th:text="${history.historyContent}" class="inline-text"></div>
 
-
-
         <div class="history-image">
             <img th:src="@{/historyImage/{imageFile}(imageFile=${history.getHistoryImage()})}" alt="히스토리 이미지" class="history-image"/>
         </div>
 
-        <h3>태그</h3>
-        <ul>
-            <li th:each="tagName : ${history.tagNames}" th:text="${tagName}"></li>
-        </ul>
-        <h3>추출된 핵심 키워드</h3>
+
+
         <ul class="keyword-list" id="keywords">
             <li th:each="keyword : ${history.keywords}" th:text="${keyword}">#키워드명</li>
         </ul>
+
+        <ul class="tag-list" id="tags">
+            <li th:each="tagName : ${history.tagNames}" th:text="${tagName}"></li>
+        </ul>
+
+
+
+
     </div>
 
     <div class="my-3">
@@ -229,7 +273,6 @@
            th:if="${ userNickName == history.memberNickname}"
            th:text="삭제"></a>
     </div>
-
 
     <hr/>
 
@@ -246,12 +289,11 @@
 
     <form th:action="@{|/comments/create/${history.historySeq}|}" th:object="${commentForm}" method="post">
         <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
-            <div th:each="err : ${#fields.allErrors()}" th:text="${err}" />
+            <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
         </div>
         <textarea th:field="*{content}" rows="15"></textarea>
         <input type="submit" value="답변등록">
     </form>
 </div>
-
 </body>
 </html>
