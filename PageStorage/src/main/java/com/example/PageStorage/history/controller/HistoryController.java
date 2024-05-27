@@ -291,14 +291,14 @@ public class HistoryController {
 
     @GetMapping(value = "/read/{historySeq}")
     public String findBySeq(Model model, @PathVariable Long historySeq, CommentRequestDto commentRequestDto,@AuthenticationPrincipal CustomUserDetails userDetails) {
-//        String userNickName = userDetails.getNickname();
-        String userNickName = "mm";
+        String userNickName = userDetails.getNickname();
+//        String userNickName = "mm";
 
         History history = historyService.find(historySeq);
         List<Comment> comments = commentService.findByHistory(historySeq);
         List<CommentResponseDto> commentResponseDtos = CommentResponseDto.buildDtoList(comments);
-
         HistoryDetailResponseDto historyDetailResponseDto = HistoryDetailResponseDto.buildDto(history);
+
         model.addAttribute("userNickName", userNickName);
         model.addAttribute("history", historyDetailResponseDto);
         model.addAttribute("realComment", commentResponseDtos);
