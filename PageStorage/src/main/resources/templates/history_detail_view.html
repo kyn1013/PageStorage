@@ -186,6 +186,10 @@
             color: #837AB9;
         }
 
+        #deleteIcon {
+            /*margin-left: 400px;*/
+        }
+
         .profile {
             float: left;
         }
@@ -218,10 +222,10 @@
 
         /* Comments Section */
         .comments-section {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 10px;
+            /*margin-top: 10px;*/
+            padding: 10px;
+            /*background-color: #f9f9f9;*/
+            /*border-radius: 10px;*/
         }
 
         .comments-section h3 {
@@ -238,26 +242,29 @@
             display: flex;
             align-items: center;
             background-color: #eee6ff;
-            border-radius: 25px;
-            padding: 10px 15px;
-            margin-bottom: 10px;
+            border-radius: 40px;
+            /*margin-left: 20px;*/
+            /*padding: 10px 15px;*/
+            /*margin-bottom: 10px;*/
         }
 
         .comment img {
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            margin-right: 15px;
+            /*margin-left: 120px;*/
         }
 
         .comment-content {
             flex-grow: 1;
             display: flex;
             align-items: center;
+            justify-content: space-between;
         }
 
         .comment-text {
             font-size: 1.1em;
+            margin-left:20px;
             color: #333;
         }
 
@@ -267,18 +274,20 @@
         }
 
         .comment-actions img {
-            width: 30px;
-            height: 30px;
+            width: 50px;
+            height: 50px;
             cursor: pointer;
+            margin-right: 20px;
+            margin-top: 13px;
         }
 
         .comment-form {
             display: flex;
             align-items: center;
             background-color: #eee6ff;
-            border-radius: 25px;
-            padding: 10px 15px;
-            margin-bottom: 20px;
+            border-radius: 40px;
+            /*padding: 10px 15px;*/
+            /*margin-bottom: 20px;*/
         }
 
         .comment-form img {
@@ -290,14 +299,20 @@
 
         .comment-form textarea {
             flex-grow: 1;
-            padding: 10px;
-            font-size: 1em;
+            padding: 13px;
+            font-size: 1.5em;
             border-radius: 10px;
             border: none;
             outline: none;
             resize: none;
             height: 50px;
+            color: black;
+            background: #eee6ff;
         }
+
+        /*.comment-form textarea::placeholder {*/
+        /*    color: transparent; !* 플레이스홀더 텍스트 숨기기 *!*/
+        /*}*/
 
         .comment-form button {
             background-color: transparent;
@@ -306,9 +321,10 @@
         }
 
         .comment-form button img {
-            width: 30px;
-            height: 30px;
+            width: 50px;
+            height: 50px;
         }
+
     </style>
 </head>
 <body>
@@ -389,17 +405,17 @@
 
     <div class="comments-section">
 
-        <h5 th:text="|${#lists.size(history.comments)}개의 답변이 있습니다.|"></h5>
+        <!--        <h5 th:text="|${#lists.size(history.comments)}개의 답변이 있습니다.|"></h5>-->
 
         <form class="comment-form" th:action="@{|/comments/create/${history.historySeq}|}" th:object="${commentForm}" method="post">
 
-<!--            <img th:if="${history.getProfileImage() != null}"-->
-<!--                 th:src="@{/profileImage/{imageFile}(imageFile=${history.getProfileImage()})}"-->
-<!--                 alt="지정 프로필 이미지">-->
+            <!--            <img th:if="${history.getProfileImage() != null}"-->
+            <!--                 th:src="@{/profileImage/{imageFile}(imageFile=${history.getProfileImage()})}"-->
+            <!--                 alt="지정 프로필 이미지">-->
 
-<!--            <img th:unless="${history.getProfileImage() != null}"-->
-<!--                 th:src="@{/image/nn.jpeg}"-->
-<!--                 alt="기본 프로필 이미지">-->
+            <!--            <img th:unless="${history.getProfileImage() != null}"-->
+            <!--                 th:src="@{/image/nn.jpeg}"-->
+            <!--                 alt="기본 프로필 이미지">-->
             <div class="history-writer clearfix">
                 <div class="profile">
                     <img th:if="${history.getProfileImage() != null}"
@@ -415,7 +431,7 @@
             </div>
 
 
-            <textarea th:field="*{content}" rows="5" placeholder="댓글을 입력하세요..."></textarea>
+            <textarea th:field="*{content}" rows="5" ></textarea>
             <button type="submit">
                 <img th:src="@{/image/upload.png}" alt="댓글 제출">
             </button>
@@ -425,13 +441,13 @@
             <ul class="comments-list" th:each="realComments : ${realComment}">
                 <li class="comment">
 
-<!--                    <img th:if="${realComments.getProfileImage() != null}"-->
-<!--                         th:src="@{/profileImage/{imageFile}(imageFile=${realComments.getProfileImage()})}"-->
-<!--                         alt="사용자 지정 프로필 이미지">-->
+                    <!--                    <img th:if="${realComments.getProfileImage() != null}"-->
+                    <!--                         th:src="@{/profileImage/{imageFile}(imageFile=${realComments.getProfileImage()})}"-->
+                    <!--                         alt="사용자 지정 프로필 이미지">-->
 
-<!--                    <img th:unless="${realComments.getProfileImage() != null}"-->
-<!--                         th:src="@{/image/nn.jpeg}"-->
-<!--                         alt="기본 프로필 이미지">-->
+                    <!--                    <img th:unless="${realComments.getProfileImage() != null}"-->
+                    <!--                         th:src="@{/image/nn.jpeg}"-->
+                    <!--                         alt="기본 프로필 이미지">-->
                     <div class="history-writer clearfix">
                         <div class="profile">
                             <img th:if="${realComments.getProfileImage() != null}"
@@ -447,11 +463,12 @@
                     </div>
 
                     <div class="comment-content">
-                        <span class="comment-text" th:text="|${realComments.content} - 글쓴이: ${realComments.memberName}|"></span>
+                        <span class="comment-text" th:text="${realComments.content}"></span>
                         <div class="comment-actions">
                             <a th:href="@{|/comments/delete/${realComments.getCommentSeq()}|}"
-                               th:if="${ userNickName == history.memberNickname}"
-                               th:text="삭제버튼"></a>
+                               th:if="${ userNickName == history.memberNickname}">
+                                <img th:src="@{/image/delete.png}" alt="댓글 삭제">
+                            </a>
                         </div>
                     </div>
                 </li>

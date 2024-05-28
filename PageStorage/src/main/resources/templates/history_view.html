@@ -56,7 +56,9 @@
       padding-right: 20px;
       padding-bottom: 10px;
       padding-top: 10px;
-      background-color: #f0f0f0;
+      background-color: #A281C3;
+      font-style: italic;
+      color: #E6EAF4;
       border-radius: 40px;
       display:inline-block;
     }
@@ -106,6 +108,7 @@
     #tags {
       float: left;
       margin-left: auto;
+      color: #837AB9;
     }
     #b{
       display: flex; /* 이 부분이 요소들을 가로로 나란히 배치함 */
@@ -118,7 +121,7 @@
     }
 
     #keywords{
-      color: darkgray;
+      color: #611DA5;
     }
 
     a {
@@ -216,14 +219,14 @@
         </div>
         <div class="history-text">
           <p>
-            <img th:src="@{/image/bookicon.png}" alt="책 이미지" class="inline-icon">
+            <img th:src="@{/image/phrase.png}" alt="구절 이미지" class="inline-icon">
             구절: <span th:text="${history.phrase}" class="inline-text">구절 내용</span></p>
           <p>
-            <img th:src="@{/image/bookicon.png}" alt="책 이미지" class="inline-icon">
+            <img th:src="@{/image/difficulty.png}" alt="난이도 이미지" class="inline-icon">
             난이도: <span th:text="${history.difficulty}" class="inline-text">난이도</span>
           </p>
           <p>
-            <img th:src="@{/image/bookicon.png}" alt="책 이미지" class="inline-icon">
+            <img th:src="@{/image/bookRecommender.png}" alt="추천인 이미지" class="inline-icon">
             책을 추천하고 싶은 사람: <span th:text="${history.bookRecommender}" class="inline-text">추천인</span></p>
         </div>
       </div>
