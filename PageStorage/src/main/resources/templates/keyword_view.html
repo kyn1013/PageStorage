@@ -2,31 +2,261 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>책 추천 받기</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
+    .do-hyeon-regular {
+      font-family: "Do Hyeon", sans-serif;
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    body {
+      font-family: "Do Hyeon", sans-serif;
+      font-weight: 400;
+      font-style: normal;
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+
+    a {
+      display: block;
+      margin-bottom: 10px;
+      text-decoration: none;
+      color: black;
+    }
+
+    .sidebar {
+      width: 200px;
+      height: 100vh;
+      background-color: #f0f0f0;
+      padding: 20px;
+      position: fixed;
+    }
+
+    .content {
+      flex-grow: 1;
+      padding-top: 40px;
+      padding-bottom: 40px;
+      padding-left: 90px;
+      padding-right: 90px;
+      margin-left: 200px; /* 사이드바 너비만큼 왼쪽 여백 */
+      overflow: auto;
+    }
+
+    h1 {
+      font-size: 1.8em;
+      color: #4A3F8C;
+      margin: 0; /* 모든 방향의 마진을 0으로 설정 */
+      padding: 0; /* 모든 방향의 패딩을 0으로 설정 */
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 1.2em;
+      color: #6E4A9E;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .input-container-wrapper {
+      display: flex;
+      justify-content: center; /* 중앙 정렬 */
+    }
+
+    .input-container {
+      display: flex;
+      align-items: center;
+      background-color: #f0f0f0;
+      border-radius: 30px;
+      padding: 10px 20px;
+      margin-bottom: 20px;
+      max-width: 600px; /* 최대 너비 설정 */
+      width: 100%; /* 최대 너비 설정 내에서 전체 너비 사용 */
+    }
+
+    .input-container input {
+      flex-grow: 1;
+      border: none;
+      outline: none;
+      background: none;
+      font-size: 1em;
+      color: #333;
+      padding: 10px;
+      border-radius: 30px;
+    }
+
+    .input-container input::placeholder {
+      color: #bbb;
+    }
+
+    .input-container button {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .input-container img {
+      width: 40px;
+      height: 35px;
+    }
+
+    .book-list {
+      list-style: none;
+      padding-left: 0;
+      padding-right: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* 아이템들을 가운데 정렬 */
+    }
+
+    .book-item {
+      display: flex;
+      align-items: flex-start;
+      border: 4px solid #B6B2E9;
+      border-radius: 40px;
+      padding: 20px;
+      margin-bottom: 20px;
+      background-color: white;
+      width: 630px;
+    }
+
+    .book-icon {
+      margin-right: 10px;
+      margin-left: 10px;
+      width: 24px;
+      height: 24px;
+    }
+
+    .book-info {
+      flex-grow: 1;
+    }
+
+    .book-info h3 {
+      display: flex;
+      align-items: center;
+      margin-top: 5px; /* 상단 여백을 5px로 설정 */
+      font-size: 1.5em;
+      color: #4A3F8C;
+      margin-bottom: 10px;
+      justify-content: flex-start; /* 왼쪽 정렬 */
+    }
+
+    .book-info p {
+      margin: 5px 0;
+      color: #333;
+      text-align: left; /* 왼쪽 정렬 */
+    }
+
+    .book-info .publisher-info {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start; /* 왼쪽 정렬 */
+    }
+
+    .publisher-info img {
+      margin-right: 10px;
+      margin-left: 13px;
+      width: 20px;
+      height: 20px;
+    }
+
+    .book-info hr {
+      border: 0;
+      border-top: 1px solid #dcdcdc;
+      margin: 10px 0;
+    }
+
+    ul.tag-list {
+      display: flex; /* 리스트 항목들을 가로로 나열 */
+      padding: 0; /* 기본 패딩 제거 */
+      list-style: none; /* 기본 목록 스타일 제거 */
+      justify-content: center;
+    }
+
+    ul.tag-list li {
+      margin-right: 10px; /* 태그 사이의 간격 */
+      background-color: #f0f0f0;
+      border-radius: 20px;
+      padding: 5px 10px;
+      font-weight: bold;
+    }
+
+    ul.tag-list li::before {
+      content: "#"; /* 각 태그 앞에 # 추가 */
+      margin-right: 1px; /* #과 태그 이름 사이의 간격 */
+    }
+
+    #tags {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    #book-image {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 170px;
+      height: auto;
+      border: 1px solid #dcdcdc;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .keyword-banner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #6E4A9E;
+      border-radius: 20px;
+      padding: 10px 10px;
+      color: white;
+      margin: 10px auto;
+      width: fit-content;
+    }
+
+  </style>
 </head>
 <body>
-<ul>
-  <li th:each="keyword : ${keywords}" th:text="${keyword}">
-    <!-- 키워드가 여기에 표시될 것입니다. -->
-  </li>
-</ul>
-<h1>추천받은 책 목록</h1>
-<div>
-  <ul>
-    <!-- 각 책에 대해 반복 -->
-    <li th:each="book : ${books}">
-      <div>
-        <!-- 각 책의 이미지를 표시 -->
-        <img th:src="${book.image}" alt="책 표지 이미지" style="width:100px; height:auto;"/>
-        <!-- 각 책의 제목을 표시 -->
-        <h3 th:text="${book.title}">책 제목</h3>
-        <p><strong>저자:</strong> <span th:text="${book.author}">저자명</span></p>
-        <p><strong>출판사:</strong> <span th:text="${book.publisher}">출판사</span></p>
-        <p th:text="${book.description}">책 설명</p>
-        <hr> <!-- 각 책 정보 사이에 수평선 추가 -->
-      </div>
-    </li>
-  </ul>
+<div th:replace="~{sidebar :: sidevarFragment}"></div>
+
+<div class="content">
+  <h1><span th:text="${nickName}"></span>님의 </h1>
+  <h1>히스토리를 기반으로 추천하는 책🥳</h1>
+
+  <div class="keyword-banner">
+    맞춤 키워드🍀
+  </div>
+
+  <div id="tags">
+    <ul class="tag-list">
+      <li th:each="keyword : ${keywords}" th:text="${keyword}">
+        <!-- 키워드가 여기에 표시될 것입니다. -->
+      </li>
+    </ul>
+  </div>
+
+  <div>
+    <ul class="book-list">
+      <li class="book-item" th:each="book : ${books}">
+        <div class="book-info">
+          <h3>
+            <img th:src="@{/image/bookicon.png}" alt="책 아이콘" class="book-icon"> <!-- 책 아이콘 추가 -->
+            <span th:text="${book.title}">책 제목</span>
+          </h3>
+          <p class="publisher-info">
+            <img th:src="@{/image/publisher.png}" alt="출판사 아이콘"> <!-- 출판사 왼쪽에 아이콘 이미지 추가 -->
+            <span th:text="${book.publisher}">출판사</span>
+          </p>
+          <img th:src="${book.image}" alt="책 표지 이미지" id="book-image"> <!-- 책 이미지가 출판사 아래에 배치 -->
+          <p th:text="${book.description}">책 설명</p>
+        </div>
+      </li>
+    </ul>
+  </div>
 </div>
 </body>
 </html>

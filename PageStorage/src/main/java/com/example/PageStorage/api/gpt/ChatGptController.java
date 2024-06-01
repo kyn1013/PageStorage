@@ -111,8 +111,11 @@ public class ChatGptController {
     @GetMapping("/keyword")
     public String keyword(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         String mail = userDetails.getMail();
+        String userNickName = userDetails.getNickname();
+
         List<String> keywordList = keywordService.getKeywordsForMember(mail);
         model.addAttribute("keywords", keywordList);
+        model.addAttribute("nickName", userNickName);
 
         ChatGptResponse chatGptResponse = null;
 //
