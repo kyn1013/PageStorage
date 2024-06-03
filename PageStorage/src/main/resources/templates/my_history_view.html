@@ -5,7 +5,6 @@
   <meta charset="UTF-8">
   <title>마이 히스토리</title>
   <style>
-    /* 외부 폰트를 사용할 경우 */
     @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
     .do-hyeon-regular {
       font-family: "Do Hyeon", sans-serif;
@@ -17,100 +16,116 @@
       font-family: "Do Hyeon", sans-serif;
       font-weight: 400;
       font-style: normal;
+      margin: 0;
+      padding: 0;
       display: flex;
-      margin: 0; /* 여백 제거 */
-      padding: 0; /* 여백 제거 */
     }
 
     .sidebar {
-      width: 200px; /* 사이드바 너비 고정 */
-      height: 100vh; /* 전체 화면 높이 */
+      width: 200px;
+      height: 100vh;
       background-color: #f0f0f0;
       padding: 20px;
       position: fixed;
+      top: 0;
+      left: 0;
     }
 
     .main-content {
-      flex-grow: 1; /* 나머지 공간 모두 사용 */
-      margin-left: 250px; /* 사이드바 너비만큼 왼쪽 여백 */
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
+      flex-grow: 1;
+      padding-top: 40px;
+      padding-bottom: 40px;
+      padding-left: 70px;
+      padding-right: 60px;
+      margin-left: 200px; /* 사이드바 너비만큼 왼쪽 여백 */
+      overflow: auto;
     }
 
     .profile-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       margin-bottom: 20px;
+    }
+
+    .writer-image {
+      width: 150px;
+      height: 150px;
+      border-radius: 45%;
+      object-fit: cover;
+      margin-bottom: 10px;
+      border: 3px solid #E4D8D8;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .nickname {
+      font-size: 1.5em;
+      margin-bottom: 10px;
+    }
+
+    .tags {
+      display: flex;
+      gap: 10px;
+    }
+
+    .tag {
+      display: flex;
+      align-items: center;
+      background-color: #f0f0f0;
+      border-radius: 20px;
+      padding: 5px 10px;
+      font-size: 1em;
     }
 
     .content {
       display: flex;
-      flex-wrap: wrap; /* 줄 바꿈 */
+      flex-wrap: wrap;
       justify-content: center;
+      width: 100%;
     }
 
     .history-content {
-      margin: 20px; /* 여백 설정 */
+      margin: 15px;
       padding: 20px;
       border-radius: 40px;
       border: 3px solid #B6B2E9;
       width: 280px;
       height: 300px;
-      box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 설정 */
-    }
-
-    .writer-image {
-      width: 50px; /* 이미지 크기 조정 */
-      height: 50px; /* 이미지 크기 조정 */
-      border-radius: 50%; /* 이미지를 원형으로 만듦 */
-      object-fit: cover; /* 이미지 비율을 유지하면서 요소에 맞춤 */
-      margin-right: 10px; /* 텍스트와의 여백 설정 */
+      box-sizing: border-box;
     }
 
     .history-image {
-      margin-top: 3px; /* 추가된 간격 조정 */
-      margin-left: 15px; /* 오른쪽으로 이동 */
-      width: 200px; /* 이미지 크기 조정 */
-      height: 200px; /* 이미지 크기 조정 */
+      margin-top: 3px;
+      margin-left: 8px;
+      width: 200px;
+      height: 200px;
       object-fit: cover;
     }
 
-    #nickname {
-      float: right;
-    }
-
-    #profile {
-      /*float: left;*/
-    }
-
-    #tags {
-      float: left;
-      margin-left: auto;
-    }
-
     #a {
-      display: flex; /* 이 부분이 요소들을 가로로 나란히 배치함 */
-      flex-direction: column; /* 세로로 나열 */
-      margin-left: 20px; /* 오른쪽으로 이동 */
+      display: flex;
+      flex-direction: column;
+      margin-left: 20px;
     }
 
     #a h2,
     #a ul {
-      margin: 0; /* 마진 제거 */
-      padding: 0; /* 패딩 제거 */
+      margin: 0;
+      padding: 0;
     }
 
     #bookName {
-      margin-left: 20px; /* 오른쪽으로 이동 */
+      margin-left: 20px;
     }
 
     #keywords {
       color: darkgray;
-      margin-left: 20px; /* 오른쪽으로 이동 */
+      margin-left: 20px;
     }
 
     a {
       display: block;
-      text-decoration: none; /* 밑줄 제거 */
+      text-decoration: none;
       color: black;
     }
 
@@ -120,49 +135,67 @@
     }
 
     ul.tag-list {
-      display: flex; /* 리스트 항목들을 가로로 나열 */
-      padding: 0; /* 기본 패딩 제거 */
-      list-style: none; /* 기본 목록 스타일 제거 */
+      display: flex;
+      padding: 0;
+      list-style: none;
     }
 
     ul.tag-list li {
-      margin-right: 10px; /* 태그 사이의 간격 */
+      margin-right: 10px;
     }
 
     ul.tag-list li::before {
-      content: "#"; /* 각 태그 앞에 # 추가 */
-      margin-right: 1px; /* #과 태그 이름 사이의 간격 */
+      content: "#";
+      margin-right: 1px;
+    }
+
+    hr {
+      border: none;
+      border-top: 2px solid #D7D1D1;
+      margin: 20px 0;
+      width: 100%;
+    }
+
+    .profile-button {
+      display: flex;
+      align-items: center;
+      background-color: #f0f0f0;
+      border-radius: 20px;
+      padding: 5px 10px;
+      font-size: 1em;
+      text-decoration: none;
+      color: black;
+      margin-top: 10px;
+    }
+
+    .profile-button i {
+      margin-right: 5px;
     }
   </style>
 </head>
 <body>
-
-<div th:replace="~{sidebar :: sidevarFragment}"></div>
+<div class="sidebar" th:replace="~{sidebar :: sidevarFragment}"></div>
 
 <div class="main-content">
   <div class="profile-section" id="profile">
-    <!-- 사용자 이미지가 존재하는 경우 -->
     <img th:if="${member.getMemberImage() != null}"
          th:src="@{/profileImage/{imageFile}(imageFile=${member.getMemberImage().getStoreFilename()})}"
          alt="사용자 지정 프로필 이미지"
          class="writer-image"/>
-
-    <!-- 사용자 이미지가 존재하지 않는 경우 -->
     <img th:unless="${member.getMemberImage() != null}"
          th:src="@{/image/nn.jpeg}"
          alt="기본프로필 이미지"
          class="writer-image"/>
-    <div>Nickname: <span th:text="${nickName}"></span></div>
-
+    <div class="nickname"><span th:text="${nickName}"></span></div>
+<!--    <div class="tags">-->
+<!--      <div class="tag"><i class="fas fa-pencil-alt"></i> 소설</div>-->
+<!--      <div class="tag"><i class="fas fa-ghost"></i> 미스터리</div>-->
+<!--      <div class="tag"><i class="fas fa-heart"></i> 로맨스</div>-->
+<!--    </div>-->
+    <a th:href="@{http://localhost:8080/members/update/username}" class="profile-button">
+      <i class="fas fa-user-edit"></i> 프로필수정
+    </a>
   </div>
-
-  <form th:action="@{http://localhost:8080/members/logout}" method="post">
-    <button type="submit">로그아웃</button>
-  </form>
-
-  <form th:action="@{http://localhost:8080/members/update/username}" method="get">
-    <button type="submit">프로필수정</button>
-  </form>
 
   <hr/>
 
@@ -171,7 +204,7 @@
       <div class="a" id="a">
         <h2 id="bookName">
           <a th:href="@{|/histories/read/${history.historySeq}|}">
-            <img th:src="@{/image/book.png}" alt="책 제목 아이콘" class="book-icon">
+            <img th:src="@{/image/bookicon.png}" alt="책 제목 아이콘" class="book-icon">
             <span th:text="${history.bookName}">책 이름</span>
           </a>
         </h2>
