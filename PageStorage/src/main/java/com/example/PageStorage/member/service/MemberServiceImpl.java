@@ -109,6 +109,7 @@ public class MemberServiceImpl implements MemberService{
         //멤버에 이미지 정보 추가
         member.changeProfile(memberUpdateRequestDto, memberImage);
         memberImageDao.save(memberImage);
+        memberDao.save(member);
 
         memberUpdateRequestDto.getImageFile().transferTo(new File(filePath));
 

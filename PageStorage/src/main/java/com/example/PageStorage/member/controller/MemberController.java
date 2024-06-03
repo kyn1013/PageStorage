@@ -63,23 +63,20 @@ public class MemberController {
     회원프로필 수정
      */
     @GetMapping("/update/username")
-    public String updateUsernameForm(Model model, @AuthenticationPrincipal CustomUserDetails userDetails) {
-//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        Member member = memberService.find(userDetails.getUsername());
-        MemberResponseDTO memberResponseDTO = MemberResponseDTO.buildDto(member);
-        model.addAttribute("member", memberResponseDTO);
+    public String updateUsernameForm(Model model) {
         model.addAttribute("memberUpdateForm", new MemberUpdateRequestDto());
-
+        System.out.println("sssssss");
         return "members/updateForm";
     }
 
     @PostMapping("/update/username")
     public String createHistory(@ModelAttribute("memberUpdateForm") MemberUpdateRequestDto memberUpdateRequestDto,
                                 @AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
-        memberUpdateRequestDto.setUserLoginId(userDetails.getUsername());
+
+        memberUpdateRequestDto.setUserLoginId(userDetails.getMail());
         memberService.updateProfile(memberUpdateRequestDto);
-        String nickname = userDetails.getNickname();
-        return "redirect:/histories/all"; // 여기서 문자열 연결을 사용
+        System.out.println("afdasfad");
+        return "redirect:/histories/all";
     }
 
 

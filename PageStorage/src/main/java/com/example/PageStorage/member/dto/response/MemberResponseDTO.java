@@ -17,22 +17,33 @@ public class MemberResponseDTO {
     private String nickName;
     private String phoneNumber;
     private String mail;
+    private String profileImage;
 
     @Builder
-    public MemberResponseDTO(String name,  String nickName, String phoneNumber, String mail) {
+    public MemberResponseDTO(String name, String nickName, String phoneNumber, String mail, String profileImage) {
         this.name = name;
         this.nickName = nickName;
         this.phoneNumber = phoneNumber;
         this.mail = mail;
+        this.profileImage = profileImage;
     }
 
     //entity에서 Dto로
     public static MemberResponseDTO buildDto (Member member) {
+
+        String profileFilename = null;
+
+        // Member 객체와 MemberImage 객체가 null이 아닌지 확인
+        if (member.getMemberImage() != null) {
+            profileFilename = member.getMemberImage().getOriginFilename();
+        }
+
         return MemberResponseDTO.builder()
                 .name(member.getName())
                 .nickName(member.getNickName())
                 .phoneNumber(member.getPhoneNumber())
                 .mail(member.getMail())
+                .profileImage(profileFilename)
                 .build();
     }
 

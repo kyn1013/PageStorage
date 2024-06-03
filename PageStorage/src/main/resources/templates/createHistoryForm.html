@@ -1,54 +1,195 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <meta charset="UTF-8">
   <title>히스토리 상세 등록</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
+    .do-hyeon-regular {
+      font-family: "Do Hyeon", sans-serif;
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    body {
+      font-family: "Do Hyeon", sans-serif;
+      font-weight: 400;
+      font-style: normal;
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+
+    a {
+      display: block;
+      margin-bottom: 10px;
+      text-decoration: none;
+      color: black;
+    }
+
+    .sidebar {
+      width: 200px;
+      height: 100vh;
+      background-color: #f0f0f0;
+      padding: 20px;
+      position: fixed;
+    }
+
+    .content {
+      flex-grow: 1;
+      padding-top: 40px;
+      padding-bottom: 40px;
+      padding-left: 90px;
+      padding-right: 90px;
+      margin-left: 200px;
+      overflow: auto;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      /*display: block;*/
+      /*font-weight: bold;*/
+      margin-bottom: 5px;
+      display: inline-flex; /* inline-flex로 설정 */
+      align-items: center;
+      font-size: 1em;
+      background-color: #A281C3; /* 배경색 설정 */
+      padding: 7px 13px; /* 내부 여백 설정 */
+      border-radius: 20px; /* 둥근 테두리 설정 */
+      color: white;
+      white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 30px;
+      border: 1px solid #F0DFDF;
+      background-color: #F4F1FF;
+      font-size: 1em;
+      box-sizing: border-box;
+    }
+
+    .form-group input[type="file"] {
+      padding: 0;
+      background-color: transparent;
+      width: 200px;
+      border-radius: 0px;
+    }
+
+    h1 {
+      font-size: 1.8em;
+      color: #4A3F8C;
+      text-align: center;
+    }
+
+    .tag-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      border-radius: 30px;
+      background-color: #f0f0f0;
+      margin-top: 20px;
+    }
+
+    .tag-group input[type="text"] {
+      border: none;
+      background-color: transparent;
+      width: 100%;
+    }
+
+    .tag-group .icon {
+      margin-right: 10px;
+    }
+
+    .tag-group .icon::before {
+      content: "#";
+    }
+
+    .tag-group input[type="text"]::placeholder {
+      color: #aaa;
+    }
+
+    #submit-button {
+      width: 40px;
+      height: 40px;
+      border: none; /* 버튼 테두리 제거 */
+      background-color: transparent; /* 버튼 배경 제거 */
+      cursor: pointer;
+      padding-top: 17px;
+      display: block;
+      margin: 0 auto; /* 버튼을 가운데 정렬 */
+    }
+
+    .form-group label i {
+      margin-right: 10px; /* 아이콘과 텍스트 사이의 간격 */
+    }
+
     .error {
       color: red;
     }
+
   </style>
 </head>
 <body>
-<h1>히스토리 상세 등록</h1>
-<form th:action="@{/histories/new}" th:object="${historyForm}" enctype="multipart/form-data" method="post">
-  <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
-    <div th:each="err : ${#fields.allErrors()}" th:text="${err}" />
-  </div>
-  <div>
-    <label for="bookName">책 이름:</label>
-    <input type="text" id="bookName" th:field="*{bookName}">
-  </div>
-  <div>
-    <label th:for="historyContent">내용:</label>
-    <textarea id="historyContent" th:field="*{historyContent}" rows="5"></textarea>
-  </div>
-  <div>
-    <label th:for="phrase">구절:</label>
-    <input type="text" id="phrase" th:field="*{phrase}">
-  </div>
-  <div>
-    <label th:for="difficulty">난이도:</label>
-    <input type="text" id="difficulty" th:field="*{difficulty}" >
-  </div>
-  <div>
-    <label th:for="applicationToLife">인생에의 적용:</label>
-    <textarea id="applicationToLife" th:field="*{applicationToLife}" rows="3" ></textarea>
-  </div>
-  <div>
-    <label th:for="bookRecommender">책 추천인:</label>
-    <input type="text" id="bookRecommender" th:field="*{bookRecommender}" >
-  </div>
+<div th:replace="~{sidebar :: sidevarFragment}"></div>
 
-  <div>
-    <input type="file" name="imageFile">
-  </div>
+<div class="content">
+  <h1>히스토리를 기록해보세요🥰</h1>
+  <form th:action="@{/histories/new}" th:object="${historyForm}" enctype="multipart/form-data" method="post">
+    <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
+      <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
+    </div>
 
-  <div>
-    <label th:for="tagNames">태그 (#으로 구분):</label>
-    <input type="text" id="tagNames" th:field="*{tagNames}" placeholder="예: #역사#과학">
-  </div>
-  <input type="submit" value="저장하기">
-</form>
+    <div class="form-group">
+      <label for="bookName"><i class="fas fa-pencil-alt"></i> 책 이름</label>
+      <input type="text" id="bookName" th:field="*{bookName}">
+    </div>
+
+    <div class="form-group">
+      <label for="historyContent"><i class="fas fa-book"></i>기록내용</label>
+      <textarea id="historyContent" th:field="*{historyContent}" rows="5"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="phrase"><i class="fas fa-quote-right"></i>인상깊은 구절</label>
+      <input type="text" id="phrase" th:field="*{phrase}">
+    </div>
+
+    <div class="form-group">
+      <label for="difficulty"><i class="fas fa-signal"></i>독서 난이도</label>
+      <input type="text" id="difficulty" th:field="*{difficulty}">
+    </div>
+
+    <div class="form-group">
+      <label for="applicationToLife"><i class="fas fa-heart"></i>삶에 적용할 점</label>
+      <textarea id="applicationToLife" th:field="*{applicationToLife}" rows="3"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="bookRecommender"><i class="fas fa-user"></i>책을 추천하고 싶은 사람</label>
+      <input type="text" id="bookRecommender" th:field="*{bookRecommender}">
+    </div>
+
+    <div class="form-group">
+      <label for="imageFile"><i class="fas fa-upload"></i> 이미지 업로드</label>
+      <input type="file" name="imageFile" th:field="*{imageFile}">
+    </div>
+
+    <div class="tag-group">
+      <div class="icon"></div>
+      <input type="text" id="tagNames" th:field="*{tagNames}" placeholder="#으로 입력하세요">
+    </div>
+
+    <input type="image" th:src="@{/image/post.png}" alt="제출 버튼" id="submit-button">
+
+  </form>
+</div>
 </body>
 </html>
