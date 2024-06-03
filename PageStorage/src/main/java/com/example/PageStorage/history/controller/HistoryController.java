@@ -236,6 +236,10 @@ public class HistoryController {
         String mail = userDetails.getMail();
         String userNickName = userDetails.getNickname();
 
+//        String id = "mm";
+//        String mail = "mm";
+//        String userNickName = "mm";
+
         List<History> histories = historyService.findByMail(mail);
         List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(histories);
         model.addAttribute("history", historyResponseDtos);
