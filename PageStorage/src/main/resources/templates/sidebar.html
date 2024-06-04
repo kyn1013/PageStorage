@@ -7,7 +7,7 @@
     .sidebar {
       width: 200px;
       height: 100vh;
-      background-color: #f0f0f0;
+      background-color: white;
       padding: 20px;
       position: fixed;
     }
@@ -21,12 +21,12 @@
 </head>
 <body>
 <div class="sidebar" th:fragment="sidevarFragment">
-  <h2>메뉴</h2>
-  <a th:href="@{/histories/myPage}">마이페이지</a>
-  <a th:href="@{/histories/all}">히스토리</a>
-  <a href="/members" th:href="@{/histories/new}">히스토리 등록</a>
-  <a href="/books" th:href="@{/books/recommendations}">무엇이든 추천해줌</a>
-  <a href="/books" th:href="@{/books/keyword}">사용자 맞춤 책 추천</a>
+  <img th:src="@{/image/logo.png}" alt="책 이미지" class="logo">
+  <a th:href="@{/histories/all}"><img th:src="@{/image/var1.png}" alt="Icon">Storage</a>
+  <a th:href="@{/histories/myPage}"><img th:src="@{/image/var3.png}" alt="Icon">MyStorage</a>
+  <a th:href="@{/histories/new}"><img th:src="@{/image/var2.png}" alt="Icon">Add History</a>
+  <a th:href="@{/books/recommendations}"><img th:src="@{/image/var4.png}" alt="Icon">Book Recommendations</a>
+  <a th:href="@{/books/keyword}"><img th:src="@{/image/var5.png}" alt="Icon">Personalized Picks</a>
 </div>
 </body>
 </html>

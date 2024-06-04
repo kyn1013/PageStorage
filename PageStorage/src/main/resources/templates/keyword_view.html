@@ -27,13 +27,13 @@
       color: black;
     }
 
-    .sidebar {
-      width: 200px;
-      height: 100vh;
-      background-color: #f0f0f0;
-      padding: 20px;
-      position: fixed;
-    }
+    /*.sidebar {*/
+    /*  width: 200px;*/
+    /*  height: 100vh;*/
+    /*  background-color: #f0f0f0;*/
+    /*  padding: 20px;*/
+    /*  position: fixed;*/
+    /*}*/
 
     .content {
       flex-grow: 1;
@@ -172,6 +172,7 @@
 
     ul.tag-list {
       display: flex; /* 리스트 항목들을 가로로 나열 */
+      flex-wrap: wrap; /* 줄바꿈 활성화 */
       padding: 0; /* 기본 패딩 제거 */
       list-style: none; /* 기본 목록 스타일 제거 */
       justify-content: center;
@@ -216,6 +217,41 @@
       color: white;
       margin: 10px auto;
       width: fit-content;
+    }
+
+    .sidebar {
+      flex-direction: column;
+      display: flex;
+      align-items: center;
+      width: 200px;
+      height: 100vh;
+      background-color: white;
+      padding: 20px;
+      position: fixed;
+      color: #384459;
+      font-style: italic;
+      border-right: 1px solid #DEE1EB; /* 오른쪽 테두리 추가 */
+    }
+    .logo {
+      width: 180px; /* Adjusted size for better visibility */
+      height: 40px;
+      object-fit: cover;
+      padding-bottom: 20px;
+      /*display: block;*/
+      /*margin: 0 auto 20px;*/
+    }
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+      text-decoration: none;
+      color: #384459;
+      font-weight: bold;
+    }
+    .sidebar a img {
+      margin-right: 10px;
+      width: 20px; /* Icon size */
+      height: 20px; /* Icon size */
     }
 
   </style>
