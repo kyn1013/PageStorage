@@ -1,34 +1,129 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>회원 가입</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
+        .do-hyeon-regular {
+            font-family: "Do Hyeon", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+        body {
+            font-family: "Do Hyeon", sans-serif;
+            background: linear-gradient(222.64deg, #dacde8 9.54%, rgba(77,61,93,0.15) 89.92%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .signup-container {
+            background: white;
+            padding: 2em;
+            border-radius: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px; /* Set the max width for larger screens */
+        }
+        .form-group {
+            margin-bottom: 1em;
+        }
+        .form-group label,
+        .form-group input,
+        .form-group button {
+            display: block;
+            width: 100%;
+            border-radius: 20px;
+        }
+        .form-group input,
+        .form-group button {
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 20px;
+        }
+        .form-group input {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-group button {
+            border: none;
+            border-radius: 20px;
+            background-color: #a281c3;
+            color: white;
+            margin-top: 20px; /* Spacing above the button */
+        }
+        .small-button {
+            background-color: #a281c3;
+            color: white;
+            padding: 5px;
+            font-size: 12px;
+            border-radius: 20px;
+            margin-top: 5px !important; /* Reduced top margin */
+            display: inline-block;
+            width: 83px !important; /* Force the width */
+            height: auto; /* Set the desired height */
+            text-align: center;
+        }
+
+        .form-group-inline {
+            border-radius: 4px;
+        }
+
+        .logo {
+            width: 140px;
+            height: 40px;
+            object-fit: fill;
+            display: block; /* Block level element */
+            margin: 0 auto; /* Center horizontally */
+        }
+
+    </style>
 </head>
 <body>
-<h1>회원 가입</h1>
-<form th:action="@{/members/join}" th:object="${joinForm}" method="post">
-    <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
-        <div th:each="err : ${#fields.allErrors()}" th:text="${err}" />
-    </div>
-    <label for="userLoginId">로그인 ID:</label>
-    <input type="text" th:field="*{userLoginId}" ><br>
-
-    <label for="userLoginPassword">비밀번호:</label>
-    <input type="password" th:field="*{userLoginPassword}" ><br>
-
-    <label for="name">이름:</label>
-    <input type="text" th:field="*{name}" ><br>
-
-    <label for="nickName">닉네임:</label>
-    <input type="text" th:field="*{nickName}" ><br>
-
-    <label for="phoneNumber">전화번호:</label>
-    <input type="text" th:field="*{phoneNumber}" ><br>
-
-    <label for="mail">이메일:</label>
-    <input type="email" th:field="*{mail}" ><br>
-
-    <button type="submit">가입하기</button>
-</form>
+<div class="signup-container">
+    <img th:src="@{/image/logo.png}" alt="책 이미지" class="logo">
+    <form th:action="@{/members/join}" th:object="${joinForm}" method="post">
+        <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
+            <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
+        </div>
+        <div class="form-group">
+            <label for="userLoginId"></label>
+            <input type="text" id="userLoginId" th:field="*{userLoginId}" placeholder="Enter your ID" required>
+            <div style="display: flex; justify-content: flex-end;">
+                <button type="button" class="small-button" >Check ID</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="userLoginPassword"></label>
+            <input type="password" id="userLoginPassword" th:field="*{userLoginPassword}" placeholder="Enter your password" required>
+        </div>
+        <div class="form-group">
+            <label for="name"></label>
+            <input type="text" id="name" th:field="*{name}" placeholder="Enter your name" required>
+        </div>
+        <div class="form-group">
+            <label for="nickName"></label>
+            <input type="text" id="nickName" th:field="*{nickName}" placeholder="Enter your nickname" required>
+        </div>
+        <div class="form-group">
+            <label for="phoneNumber"></label>
+            <input type="text" id="phoneNumber" th:field="*{phoneNumber}" placeholder="Enter your phone number" required>
+        </div>
+        <div class="form-group">
+            <label for="mail"></label>
+            <input type="email" id="mail" th:field="*{mail}" placeholder="Enter your email" required>
+            <div style="display: flex; justify-content: flex-end;">
+                <button type="button" class="small-button">Check Email</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit">Sign Up</button>
+        </div>
+    </form>
+</div>
 </body>
 </html>
