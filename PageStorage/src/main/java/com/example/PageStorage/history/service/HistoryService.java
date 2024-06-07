@@ -22,10 +22,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,6 +43,8 @@ public class HistoryService {
     private final HistoryKeywordDao historyKeywordDao;
 
     private final String FOLDER_PATH="/Users/gim-yena/Desktop/history/";
+
+
 
     public History update(HistoryRequestDto historyRequestDto, Long historySeq) throws IOException {
         History history = find(historySeq);
@@ -315,5 +315,43 @@ public class HistoryService {
         keywordDao.deleteAll();
     }
 
+    public List<String> readBookRanking() {
+        // 시간 범위 설정
+        LocalDateTime startDate24Hours = LocalDateTime.now().minusHours(24);
+        LocalDateTime startDate168Hours = LocalDateTime.now().minusHours(168);
+        LocalDateTime startDate720Hours = LocalDateTime.now().minusHours(720);
+
+        // 각 시간 범위별로 책 제목 조회
+        List<String> bookRankList24Hours = historyDao.findTopBookNamesLast24Hours(startDate24Hours);
+        List<String> bookRankList168Hours = historyDao.findTopBookNamesLast24Hours(startDate168Hours);
+        List<String> bookRankList720Hours = historyDao.findTopBookNamesLast24Hours(startDate720Hours);
+
+        // 하나의 리스트에 모든 결과 합치기
+        List<String> bookRankList = new ArrayList<>();
+        bookRankList.addAll(bookRankList24Hours);
+        bookRankList.addAll(bookRankList168Hours);
+        bookRankList.addAll(bookRankList720Hours);
+
+        return bookRankList;
+    }
+
+    public List<String> getTopBookNamesLast168Hours() {
+        LocalDateTime startDate = LocalDateTime.now().minusHours(168);
+        return historyDao.findTopBookNamesLast24Hours(startDate);
+    }
+
+    public List<String> getTopBookNamesLast720Hours() {
+        LocalDateTime startDate = LocalDateTime.now().minusHours(720);
+        return historyDao.findTopBookNamesLast24Hours(startDate);
+    }
+
+    public List<String> getTopBookNamesLast24Hours() {
+        LocalDateTime startDate = LocalDateTime.now().minusHours(24);
+        return historyDao.findTopBookNamesLast24Hours(startDate);
+    }
+
+    public List<String> getTop3Books() {
+        return historyDao.getTop3Books();
+    }
 
 }

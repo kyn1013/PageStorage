@@ -6,8 +6,12 @@ import com.example.PageStorage.common.exception.DataNotFoundException;
 import com.example.PageStorage.entity.History;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -63,6 +67,16 @@ public class HistoryDao {
     public List<History> findByMember(Member member) {
         List<History> histories = historyRepository.findByMember(member);
         return histories;
+    }
+
+    public List<String> findTopBookNamesLast24Hours(LocalDateTime startDate){
+        PageRequest pageRequest = PageRequest.of(0, 3); // 상위 3개 결과만 가져오기 위한 페이지 요청
+        return historyRepository.findTopBookNamesLast24Hours(startDate, pageRequest);
+    }
+
+    public List<String> getTop3Books(){
+        Pageable topThree = PageRequest.of(0, 3);
+        return historyRepository.findTop3BookNames(topThree);
     }
 
 

@@ -108,6 +108,8 @@ public class ChatGptController {
         return "recommendationForm";  // 같은 페이지로 리디렉트하지 않고, 뷰 이름 반환
     }
 
+
+
     @GetMapping("/keyword")
     public String keyword(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         String mail = userDetails.getMail();

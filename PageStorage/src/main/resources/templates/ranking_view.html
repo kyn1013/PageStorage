@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>책 랭킹</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Do Hyeon', sans-serif;
+            background-color: #f0f0f0;
+        }
+        body {
+            display: flex;
+        }
+        .sidebar {
+            left: 0; /* 왼쪽에 고정 */
+            top: 0; /* 위에 고정 */
+            flex-direction: column;
+            display: flex;
+            align-items: center;
+            width: 200px;
+            height: 100vh;
+            background-color: white;
+            padding: 20px;
+            position: fixed;
+            color: #384459;
+            font-style: italic;
+            border-right: 1px solid #DEE1EB; /* 오른쪽 테두리 추가 */
+        }
+        .logo {
+            width: 180px; /* Adjusted size for better visibility */
+            height: 40px;
+            object-fit: cover;
+            padding-bottom: 20px;
+        }
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            text-decoration: none;
+            color: #384459;
+            font-weight: bold;
+        }
+        .sidebar a img {
+            margin-right: 10px;
+            width: 20px; /* Icon size */
+            height: 20px; /* Icon size */
+        }
+        .ranking-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            margin-left: 200px; /* 사이드바 너비만큼 왼쪽 여백 */
+            overflow: auto;
+            background: white;
+        }
+        .ranking-section {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .book-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #F4F1FF;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            text-align: center;
+        }
+        .book-item img {
+            width: 100px;
+            height: 150px;
+            margin-bottom: 10px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .book-title {
+            font-size: 1.2em;
+            color: #4A3F8C;
+            margin-top: 10px;
+        }
+        .ranking-title {
+            font-size: 1.2em;
+            color: #4A3F8C;
+            text-align: center;
+            margin: 20px 0;
+            background-color: #6C3483;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 30px;
+            display: inline-block;
+        }
+        .rank-badge {
+            font-size: 1em;
+            /*background-color: white;*/
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .rank-emoji {
+            font-size: 1.7em; /* 원하는 크기로 설정 */
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar" th:replace="~{sidebar :: sidevarFragment}"></div>
+
+<div class="ranking-container">
+    <h1 class="ranking-title">Daily</h1>
+    <div class="ranking-section">
+        <div th:each="book, iterStat : ${books}">
+            <div th:if="${iterStat.index < 3}" class="book-item">
+                <div class="rank-badge">
+                    <div th:switch="${iterStat.index + 1}">
+                        <div class="rank-emoji" th:case="1">🥇</div>
+                        <div class="rank-emoji" th:case="2">🥈</div>
+                        <div class="rank-emoji" th:case="3">🥉</div>
+                    </div>
+                </div>
+                <img th:src="${book.image}" alt="책 이미지">
+                <div class="book-info">
+                    <div class="book-title" th:text="${book.title}">책 제목</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h1 class="ranking-title">Weekly</h1>
+    <div class="ranking-section">
+        <div th:each="book, iterStat : ${books}">
+            <div th:if="${iterStat.index >= 3}">
+                <div th:if="${iterStat.index < 6}" class="book-item">
+                    <div class="rank-badge">
+                        <div th:switch="${iterStat.index - 2}">
+                            <div class="rank-emoji" th:case="1">🥇</div>
+                            <div class="rank-emoji" th:case="2">🥈</div>
+                            <div class="rank-emoji" th:case="3">🥉</div>
+                        </div>
+                    </div>
+                    <img th:src="${book.image}" alt="책 이미지">
+                    <div class="book-info">
+                        <div class="book-title" th:text="${book.title}">책 제목</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h1 class="ranking-title">Monthly</h1>
+    <div class="ranking-section">
+        <div th:each="book, iterStat : ${books}">
+            <div th:if="${iterStat.index >= 6}">
+                <div th:if="${iterStat.index < 9}" class="book-item">
+                    <div class="rank-badge">
+                        <div th:switch="${iterStat.index - 5}">
+                            <div class="rank-emoji" th:case="1">🥇</div>
+                            <div class="rank-emoji" th:case="2">🥈</div>
+                            <div class="rank-emoji" th:case="3">🥉</div>
+                        </div>
+                    </div>
+                    <img th:src="${book.image}" alt="책 이미지">
+                    <div class="book-info">
+                        <div class="book-title" th:text="${book.title}">책 제목</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

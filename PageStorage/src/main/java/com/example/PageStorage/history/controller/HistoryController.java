@@ -1,5 +1,8 @@
 package com.example.PageStorage.history.controller;
 
+import com.example.PageStorage.api.naverbook.BookApiClient;
+import com.example.PageStorage.api.naverbook.BooksResponseDto;
+import com.example.PageStorage.api.naverbook.ResultResponseDto;
 import com.example.PageStorage.comment.dto.CommentRequestDto;
 import com.example.PageStorage.comment.dto.response.CommentResponseDto;
 import com.example.PageStorage.comment.service.CommentService;
@@ -13,6 +16,7 @@ import com.example.PageStorage.history.dto.HistoryDeleteDto;
 import com.example.PageStorage.history.dto.HistoryRequestDto;
 import com.example.PageStorage.history.dto.response.HistoryDetailResponseDto;
 import com.example.PageStorage.history.dto.response.HistoryResponseDto;
+import com.example.PageStorage.history.dto.response.RankingResponseDto;
 import com.example.PageStorage.history.service.HistoryService;
 import com.example.PageStorage.member.service.MemberService;
 import com.example.PageStorage.security.login.dto.CustomUserDetails;
@@ -47,6 +51,42 @@ public class HistoryController {
     private final MemberService memberService;
     private final HistoryService historyService;
     private final CommentService commentService;
+    private final BookApiClient bookApiClient;
+
+    /*
+    히스토리 랭킹
+     */
+    @GetMapping("/ranking")
+    public String getTopBookNamesLast24Hours(Model model) {
+        List<String> bookTitles = historyService.readBookRanking();
+        List<BooksResponseDto> booksResponseDtos = new ArrayList<>();
+        for (String bookTitle : bookTitles) {
+            booksResponseDtos.add(bookApiClient.requestBook(bookTitle));
+        }
+
+        List<RankingResponseDto> rankingResponseDtos = new ArrayList<>();
+        for (BooksResponseDto booksResponseDto : booksResponseDtos){
+            log.info("답변={}", booksResponseDto.getItems()[0]);
+            BooksResponseDto.Item firstItem = booksResponseDto.getItems()[0];
+
+            // ResultResponseDto의 빌더를 사용하여 객체 생성
+            RankingResponseDto resultResponseDto = RankingResponseDto.builder()
+                    .title(firstItem.getTitle())
+                    .image(firstItem.getImage())
+                    .build();
+
+            rankingResponseDtos.add(resultResponseDto);
+        }
+
+        model.addAttribute("books", rankingResponseDtos);  // 책 정보를 모델에 추가
+        return "ranking_view";  // 같은 페이지로 리디렉트하지 않고, 뷰 이름 반환
+//        return "a";
+    }
+
+    @GetMapping("/top3")
+    public List<String> getTop3Books() {
+        return historyService.getTop3Books();
+    }
 
     /*
     히스토리 수정
