@@ -121,7 +121,7 @@
 <div class="sidebar" th:replace="~{sidebar :: sidevarFragment}"></div>
 
 <div class="ranking-container">
-    <h1 class="ranking-title">Daily</h1>
+    <h1 class="ranking-title">Daily Ranking</h1>
     <div class="ranking-section">
         <div th:each="book, iterStat : ${books}">
             <div th:if="${iterStat.index < 3}" class="book-item">
@@ -140,7 +140,7 @@
         </div>
     </div>
 
-    <h1 class="ranking-title">Weekly</h1>
+    <h1 class="ranking-title">Weekly Ranking</h1>
     <div class="ranking-section">
         <div th:each="book, iterStat : ${books}">
             <div th:if="${iterStat.index >= 3}">
@@ -161,7 +161,7 @@
         </div>
     </div>
 
-    <h1 class="ranking-title">Monthly</h1>
+    <h1 class="ranking-title">Monthly Ranking</h1>
     <div class="ranking-section">
         <div th:each="book, iterStat : ${books}">
             <div th:if="${iterStat.index >= 6}">
