@@ -20,7 +20,7 @@
             top: 0; /* 위에 고정 */
             flex-direction: column;
             display: flex;
-            align-items: center;
+            align-items: flex-start; /* 내부 요소들을 왼쪽 정렬 */
             width: 200px;
             height: 100vh;
             background-color: white;
@@ -43,6 +43,7 @@
             text-decoration: none;
             color: #384459;
             font-weight: bold;
+            width: 100%; /* 전체 너비 사용 */
         }
         .sidebar a img {
             margin-right: 10px;

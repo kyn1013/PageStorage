@@ -69,7 +69,7 @@ public class MemberController {
         return "members/updateForm";
     }
 
-    @PostMapping("/update/username")
+    @PostMapping("/update/user")
     public String createHistory(@ModelAttribute("memberUpdateForm") MemberUpdateRequestDto memberUpdateRequestDto,
                                 @AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
 

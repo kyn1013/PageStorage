@@ -6,17 +6,18 @@
 </head>
 <body>
 <h1>회원 정보 수정</h1>
-<form th:action="@{/members/update/username}" th:object="${memberUpdateForm}" enctype="multipart/form-data" method="post">
-
-    <!-- 기존 닉네임 표시 -->
-    <label for="nickName">닉네임:</label>
-    <input type="text" id="nickName" name="nickName" th:field="*{nickName}" required><br>
-
+<form th:action="@{/members/update/user}" th:object="${memberUpdateForm}" enctype="multipart/form-data" method="post">
     <div>
+        <label for="nickName">닉네임:</label>
+        <input type="text" id="nickName" name="nickName" th:field="*{nickName}" required>
+    </div>
+    <div>
+        <label for="imageFile">프로필 이미지:</label>
         <input type="file" name="imageFile" th:field="*{imageFile}">
     </div>
-
-    <button type="submit">수정하기</button>
+    <div>
+        <button type="submit">수정하기</button>
+    </div>
 </form>
 </body>
 </html>

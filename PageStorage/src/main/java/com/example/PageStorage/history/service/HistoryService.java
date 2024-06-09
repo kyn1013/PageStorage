@@ -322,9 +322,13 @@ public class HistoryService {
         LocalDateTime startDate720Hours = LocalDateTime.now().minusHours(720);
 
         // 각 시간 범위별로 책 제목 조회
-        List<String> bookRankList24Hours = historyDao.findTopBookNamesLast24Hours(startDate24Hours);
-        List<String> bookRankList168Hours = historyDao.findTopBookNamesLast24Hours(startDate168Hours);
         List<String> bookRankList720Hours = historyDao.findTopBookNamesLast24Hours(startDate720Hours);
+        List<String> bookRankList168Hours = historyDao.findTopBookNamesLast24Hours(startDate168Hours);
+        List<String> bookRankList24Hours = historyDao.findTopBookNamesLast24Hours(startDate24Hours);
+
+        if (bookRankList24Hours.isEmpty()) {
+            bookRankList24Hours = bookRankList168Hours;
+        }
 
         // 하나의 리스트에 모든 결과 합치기
         List<String> bookRankList = new ArrayList<>();
@@ -332,6 +336,7 @@ public class HistoryService {
         bookRankList.addAll(bookRankList168Hours);
         bookRankList.addAll(bookRankList720Hours);
 
+        System.out.println(bookRankList);
         return bookRankList;
     }
 
