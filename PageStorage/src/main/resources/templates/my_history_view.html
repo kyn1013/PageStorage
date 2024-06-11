@@ -21,16 +21,6 @@
       display: flex;
     }
 
-    /*.sidebar {*/
-    /*  width: 200px;*/
-    /*  height: 100vh;*/
-    /*  background-color: #f0f0f0;*/
-    /*  padding: 20px;*/
-    /*  position: fixed;*/
-    /*  top: 0;*/
-    /*  left: 0;*/
-    /*}*/
-
     .main-content {
       flex-grow: 1;
       padding-top: 40px;
@@ -85,65 +75,47 @@
     }
 
     .history-content {
-      margin: 15px;
-      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* 수평 가운데 정렬 */
+      justify-content: center; /* 수직 가운데 정렬 */
+      margin: 10px; /* 간격을 줄임 */
+      padding: 15px; /* 간격을 줄임 */
       border-radius: 40px;
       border: 3px solid #B6B2E9;
       width: calc(33.333% - 30px); /* 가로 3개 배치, 각 요소 사이 여백 포함 */
       box-sizing: border-box;
+      text-align: center; /* 텍스트 가운데 정렬 */
     }
 
     .history-image {
-      margin-top: 3px;
-      margin-right: 20px; /* 왼쪽으로 이동 */
+      margin-top: 5px; /* 간격을 줄임 */
       width: 200px;
       height: 200px;
       object-fit: cover;
-    }
-
-    #a {
-      display: flex;
-      flex-direction: column;
-      margin-left: 20px;
-    }
-
-    #a h2,
-    #a ul {
-      margin: 0;
-      padding: 0;
+      border-radius: 5px;
     }
 
     #bookName {
-      margin-left: 20px;
+      margin-top: 0px; /* 상단 간격을 줄임 */
+      margin-bottom: 0px; /* 하단 간격을 0px로 줄임 */
     }
 
-    #keywords {
-      color: darkgray;
-      margin-left: 20px;
-    }
-
-    a {
-      display: block;
-      text-decoration: none;
-      color: black;
-    }
-
-    .book-icon {
-      width: 24px;
-      height: 23px;
-    }
-
-    ul.tag-list {
+    .tag-list {
       display: flex;
+      justify-content: center; /* 키워드 가운데 정렬 */
+      flex-wrap: wrap; /* 키워드가 여러 줄로 배치될 수 있도록 함 */
       padding: 0;
       list-style: none;
+      margin-top: 2px; /* 간격을 2px로 줄임 */
+      margin-bottom: 5px; /* 간격을 줄임 */
     }
 
-    ul.tag-list li {
-      margin-right: 10px;
+    .tag-list li {
+      margin-right: 5px; /* 간격을 줄임 */
     }
 
-    ul.tag-list li::before {
+    .tag-list li::before {
       content: "#";
       margin-right: 1px;
     }
@@ -184,6 +156,7 @@
       font-style: italic;
       border-right: 1px solid #DEE1EB; /* 오른쪽 테두리 추가 */
     }
+
     .logo {
       width: 180px; /* Adjusted size for better visibility */
       height: 40px;
@@ -192,6 +165,7 @@
       /*display: block;*/
       /*margin: 0 auto 20px;*/
     }
+
     .sidebar a {
       display: flex;
       align-items: center;
@@ -200,11 +174,24 @@
       color: #384459;
       font-weight: bold;
     }
+
     .sidebar a img {
       margin-right: 10px;
       width: 20px; /* Icon size */
       height: 20px; /* Icon size */
     }
+
+    .book-icon {
+      width: 24px;
+      height: 23px;
+    }
+
+    a {
+      display: block;
+      text-decoration: none;
+      color: black;
+    }
+
   </style>
 </head>
 <body>
@@ -231,17 +218,15 @@
 
   <div class="content">
     <div th:each="history : ${history}" class="history-content">
-      <div class="a" id="a">
-        <h2 id="bookName">
-          <a th:href="@{|/histories/read/${history.historySeq}|}">
-            <img th:src="@{/image/bookicon.png}" alt="책 제목 아이콘" class="book-icon">
-            <span th:text="${history.bookName}">책 이름</span>
-          </a>
-        </h2>
-        <ul class="tag-list" id="keywords">
-          <li th:each="keyword : ${history.keywords}" th:text="${keyword}">#키워드명</li>
-        </ul>
-      </div>
+      <h2 id="bookName">
+        <a th:href="@{|/histories/read/${history.historySeq}|}">
+          <img th:src="@{/image/bookicon.png}" alt="책 제목 아이콘" class="book-icon">
+          <span th:text="${history.bookName}">책 이름</span>
+        </a>
+      </h2>
+      <ul class="tag-list" id="keywords">
+        <li th:each="keyword : ${history.keywords}" th:text="${keyword}">#키워드명</li>
+      </ul>
       <div class="history-image">
         <img th:src="@{/historyImage/{imageFile}(imageFile=${history.getHistoryImage()})}" alt="히스토리 이미지" class="history-image"/>
       </div>

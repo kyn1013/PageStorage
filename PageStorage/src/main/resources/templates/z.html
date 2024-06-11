@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="UTF-8">
+  <title>히스토리 전체 조회</title>
+  <style>
+    /* 외부 폰트를 사용할 경우 */
+    @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
+    .do-hyeon-regular {
+      font-family: "Do Hyeon", sans-serif;
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    body {
+      font-family: "Do Hyeon", sans-serif;
+      font-weight: 400;
+      font-style: normal;
+      display: flex;
+      margin: 0; /* 여백 제거 */
+      padding: 0; /* 여백 제거 */
+    }
+
+    /*.sidebar {*/
+    /*  width: 200px; !* 사이드바 너비 고정 *!*/
+    /*  height: 100vh; !* 전체 화면 높이 *!*/
+    /*  background-color: white;*/
+    /*  padding: 20px;*/
+    /*  position: fixed;*/
+    /*  border-right: 1px solid #DEE1EB; !* 오른쪽 테두리 추가 *!*/
+    /*}*/
+
+    .content {
+      flex-grow: 1; /* 나머지 공간 모두 사용 */
+      padding: 20px;
+      margin-left: 250px; /* 사이드바 너비만큼 왼쪽 여백 */
+      overflow: auto; /* 내용이 넘칠 경우 스크롤바 생성 */
+    }
+
+    .history {
+      margin-left: 130px; /* 왼쪽 여백 */
+      margin-right: 150px; /* 오른쪽 여백 */
+    }
+
+    .history-content {
+      margin-bottom: 40px;
+      padding: 10px;
+      border-radius: 40px;
+      border: 3px solid #B6B2E9;
+      width: 50vw; /* 뷰포트 너비의 50% */
+      height: 43vh; /* 뷰포트 높이의 40% */
+    }
+
+    .history-writer {
+      padding-left: 20px;
+      padding-right: 20px;
+      padding-bottom: 10px;
+      padding-top: 10px;
+      background-color: #A281C3;
+      font-style: italic;
+      color: #E6EAF4;
+      border-radius: 40px;
+      display: inline-block;
+    }
+
+    .writer-image {
+      width: 50px; /* 이미지 크기 조정 */
+      height: 50px; /* 이미지 크기 조정 */
+      border-radius: 50%; /* 이미지를 원형으로 만듦 */
+      object-fit: cover; /* 이미지 비율을 유지하면서 요소에 맞춤 */
+      margin-right: 10px; /* 텍스트와의 여백 설정 */
+    }
+
+    .history-text {
+      flex: 1;
+    }
+
+    .history-image {
+      margin-right: 20px;
+      margin-bottom: 20px; /* 아래 간격 추가 */
+      width: 200px; /* 이미지 크기 조정 */
+      height: 200px; /* 이미지 크기 조정 */
+      border-radius: 20%; /* 이미지를 원형으로 만듦 */
+      object-fit: cover;
+    }
+
+    .book-image {
+      margin-right: 10px;
+      width: 120px; /* 이미지 크기 조정 */
+      height: 200px; /* 이미지 크기 조정 */
+      border-radius: 2%; /* 이미지를 둥글게 */
+      object-fit: fill;
+    }
+
+    .inline-icon {
+      width: 24px;
+      height: 25px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .inline-text {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    #nickname {
+      float: right;
+    }
+
+    #profile {
+      float: left;
+    }
+
+    #tags {
+      float: left;
+      margin-left: auto;
+      color: #837AB9;
+    }
+
+    #b {
+      display: flex; /* 이 부분이 요소들을 가로로 나란히 배치함 */
+    }
+
+    #a {
+      display: flex; /* 이 부분이 요소들을 가로로 나란히 배치함 */
+    }
+
+    #bookName {
+      margin-right: 230px; /* 텍스트와의 여백 설정 */
+    }
+
+    #keywords {
+      color: #611DA5;
+    }
+
+    .logo {
+      width: 135px;
+      height: 43px;
+      object-fit: fill;
+    }
+
+    a {
+      display: block;
+      margin-bottom: 10px;
+      text-decoration: none; /* 밑줄 제거 */
+      color: black;
+    }
+
+    ul.tag-list {
+      display: flex; /* 리스트 항목들을 가로로 나열 */
+      padding: 0; /* 기본 패딩 제거 */
+      list-style: none; /* 기본 목록 스타일 제거 */
+    }
+
+    ul.tag-list li {
+      margin-right: 10px; /* 태그 사이의 간격 */
+    }
+
+    ul.tag-list li::before {
+      content: "#"; /* 각 태그 앞에 # 추가 */
+      margin-right: 1px; /* #과 태그 이름 사이의 간격 */
+    }
+
+    .sidebar {
+      flex-direction: column;
+      display: flex;
+      align-items: flex-start;
+      width: 200px;
+      height: 100vh;
+      background-color: white;
+      padding: 20px;
+      position: fixed;
+      color: #384459;
+      font-style: italic;
+      border-right: 1px solid #DEE1EB; /* 오른쪽 테두리 추가 */
+    }
+    .logo {
+      width: 180px; /* Adjusted size for better visibility */
+      height: 40px;
+      object-fit: cover;
+      padding-bottom: 20px;
+      /*display: block;*/
+      /*margin: 0 auto 20px;*/
+    }
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+      text-decoration: none;
+      color: #384459;
+      font-weight: bold;
+    }
+    .sidebar a img {
+      margin-right: 10px;
+      width: 20px; /* Icon size */
+      height: 20px; /* Icon size */
+    }
+    /*.sidebar .selected {*/
+    /*  background-color: #6A329F;*/
+    /*  color: white;*/
+    /*  padding: 10px;*/
+    /*  border-radius: 10px;*/
+    /*}*/
+    /*.sidebar .selected img {*/
+    /*  filter: brightness(0) invert(1);*/
+    /*}*/
+  </style>
+</head>
+<body>
+
+<div th:replace="~{sidebar :: sidevarFragment}"></div>
+
+<div class="content">
+  <!--  <div id="profile">-->
+  <!--    &lt;!&ndash; 사용자 이미지가 존재하는 경우 &ndash;&gt;-->
+  <!--    <img th:if="${member.getMemberImage() != null}"-->
+  <!--         th:src="@{/profileImage/{imageFile}(imageFile=${member.getMemberImage().getStoreFilename()})}"-->
+  <!--         alt="사용자 지정 프로필 이미지"-->
+  <!--         class="writer-image"/>-->
+
+  <!--    &lt;!&ndash; 사용자 이미지가 존재하지 않는 경우 &ndash;&gt;-->
+  <!--    <img th:unless="${member.getMemberImage() != null}"-->
+  <!--         th:src="@{/image/nn.jpeg}"-->
+  <!--         alt="기본프로필 이미지"-->
+  <!--         class="writer-image"/>-->
+  <!--  </div>-->
+  <!--  <div>ID: <span th:text="${id}"></span></div>-->
+  <!--  <div>Role: <span th:text="${role}"></span></div>-->
+  <!--  <div>Nickname: <span th:text="${nickName}"></span></div>-->
+
+  <!--  <form th:action="@{http://localhost:8080/members/logout}" method="post">-->
+  <!--    <button type="submit">로그아웃</button>-->
+  <!--  </form>-->
+
+  <!--  <hr/>-->
+  <div th:each="history : ${history}" class="history">
+
+    <div class="history-writer">
+      <div id="profile">
+        <!-- 사용자 이미지가 존재하는 경우 -->
+        <img th:if="${history.getProfileImage() != null}"
+             th:src="@{/profileImage/{imageFile}(imageFile=${history.getProfileImage()})}"
+             alt="사용자 지정 프로필 이미지"
+             class="writer-image"/>
+
+        <!-- 사용자 이미지가 존재하지 않는 경우 -->
+        <img th:unless="${history.getProfileImage() != null}"
+             th:src="@{/image/nn.jpeg}"
+             alt="기본프로필 이미지"
+             class="writer-image"/>
+      </div>
+      <div id="nickname"><p><span th:text="${history.nickName}">작성자 이름</span></p></div>
+    </div>
+
+    <div class="history-content">
+      <div class="a" id="a">
+        <h2 id="bookName">
+          <a th:href="@{|/histories/read/${history.historySeq}|}">
+            <img th:src="@{/image/bookicon.png}" alt="책 이미지" class="inline-icon">
+            <span th:text="${history.bookName}" class="inline-text">책 이름</span>
+          </a>
+        </h2>
+        <ul class="tag-list" id="tags">
+          <li th:each="tagName : ${history.tagNames}" th:text="${tagName}">#태그명</li>
+        </ul>
+        <ul class="tag-list" id="keywords">
+          <li th:each="keyword : ${history.keywords}" th:text="${keyword}">#키워드명</li>
+        </ul>
+      </div>
+
+      <div class="b" id="b">
+        <!--        <div class="book-image">-->
+        <!--          <img th:src="@{/image/ㅌ.jpeg}" alt="히스토리 책 이미지" class="book-image"/>-->
+        <!--        </div>-->
+        <div class="history-image">
+          <img th:src="@{/historyImage/{imageFile}(imageFile=${history.getHistoryImage()})}" alt="히스토리 이미지" class="history-image"/>
+        </div>
+        <div class="history-text">
+          <p>
+            <img th:src="@{/image/difficulty.png}" alt="난이도 이미지" class="inline-icon">
+            난이도: <span th:text="${history.difficulty}" class="inline-text">난이도</span>
+          </p>
+          <p>
+            <img th:src="@{/image/bookRecommender.png}" alt="추천인 이미지" class="inline-icon">
+            책을 추천하고 싶은 사람: <span th:text="${history.bookRecommender}" class="inline-text">추천인</span></p>
+          <p>
+            <img th:src="@{/image/phrase.png}" alt="구절 이미지" class="inline-icon">
+            인상깊은 구절: <span th:text="${history.phrase}" class="inline-text">구절 내용</span></p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
+
+

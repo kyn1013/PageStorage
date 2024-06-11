@@ -21,9 +21,12 @@ public class HistoryRequestDto {
     private String bookName;
     @NotEmpty(message="내용은 필수 항목입니다.")
     private String historyContent;
+    @Size(max=65)
     private String phrase;
+    @Size(max=35)
     private String difficulty;
     private String applicationToLife;
+    @Size(max=35)
     private String bookRecommender;
     @ValidFile(message = "이미지 파일은 필수 항목입니다.")
     private MultipartFile imageFile;

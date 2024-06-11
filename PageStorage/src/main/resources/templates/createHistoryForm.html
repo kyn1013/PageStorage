@@ -182,7 +182,7 @@
 <div class="content">
   <h1>히스토리를 기록해보세요🥰</h1>
   <form th:action="@{/histories/new}" th:object="${historyForm}" enctype="multipart/form-data" method="post">
-<!--    <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">-->
+<!--    <div class="error-message" role="alert" th:if="${#fields.hasAnyErrors()}">-->
 <!--      <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>-->
 <!--    </div>-->
 
@@ -201,21 +201,25 @@
     <div class="form-group">
       <label for="phrase"><i class="fas fa-quote-right"></i>인상깊은 구절</label>
       <input type="text" id="phrase" th:field="*{phrase}">
+        <div th:if="${#fields.hasErrors('phrase')}" class="error-message" th:errors="*{phrase}"></div>
     </div>
 
     <div class="form-group">
       <label for="difficulty"><i class="fas fa-signal"></i>독서 난이도</label>
       <input type="text" id="difficulty" th:field="*{difficulty}">
+        <div th:if="${#fields.hasErrors('difficulty')}" class="error-message" th:errors="*{difficulty}"></div>
     </div>
 
     <div class="form-group">
       <label for="applicationToLife"><i class="fas fa-heart"></i>삶에 적용할 점</label>
+        <div th:if="${#fields.hasErrors('applicationToLife')}" class="error-message" th:errors="*{applicationToLife}"></div>
       <textarea id="applicationToLife" th:field="*{applicationToLife}" rows="3"></textarea>
     </div>
 
     <div class="form-group">
       <label for="bookRecommender"><i class="fas fa-user"></i>책을 추천하고 싶은 사람</label>
       <input type="text" id="bookRecommender" th:field="*{bookRecommender}">
+        <div th:if="${#fields.hasErrors('bookRecommender')}" class="error-message" th:errors="*{bookRecommender}"></div>
     </div>
 
     <div class="form-group">
