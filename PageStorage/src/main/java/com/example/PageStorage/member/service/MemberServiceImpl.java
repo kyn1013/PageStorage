@@ -1,5 +1,8 @@
 package com.example.PageStorage.member.service;
 
+import com.example.PageStorage.common.exception.member.BothLoginIdAndMailExistsException;
+import com.example.PageStorage.common.exception.member.LoginIdAlreadyExistsException;
+import com.example.PageStorage.common.exception.member.MailAlreadyExistsException;
 import com.example.PageStorage.entity.HistoryImage;
 import com.example.PageStorage.entity.Login;
 import com.example.PageStorage.entity.Member;
@@ -18,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,6 +42,17 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public Member saveMember(MemberSaveRequestDto memberSaveRequestDto) {
+        boolean loginIdExists = loginDao.existsByUserLoginId(memberSaveRequestDto.getUserLoginId());
+        boolean mailExists = memberDao.existsByMail(memberSaveRequestDto.getMail());
+
+        if (loginIdExists && mailExists) {
+            throw new BothLoginIdAndMailExistsException("이미 존재하는 아이디와 메일입니다.");
+        } else if (loginIdExists) {
+            throw new LoginIdAlreadyExistsException("이미 존재하는 아이디입니다.");
+        } else if (mailExists) {
+            throw new MailAlreadyExistsException("이미 존재하는 메일입니다.");
+        }
+
         Member member = Member.builder()
                 .name(memberSaveRequestDto.getName())
                 .nickName(memberSaveRequestDto.getNickName())
@@ -53,9 +69,34 @@ public class MemberServiceImpl implements MemberService{
                 .build();
 
         login.addMember(savedMember);
+
+//        existsByUserLoginId(login.getUserLoginId());
+//        existsByMail(member.getMail());
+
         loginDao.save(login); //로그인, 비밀번호 저장
         return savedMember;
     }
+
+    /*
+    로그인 아이디 중복 검사
+     */
+    private void existsByUserLoginId(String loginId) {
+        Boolean result = loginDao.existsByUserLoginId(loginId);
+        if (result) {
+            throw new LoginIdAlreadyExistsException("이미 존재하는 아이디입니다.");
+        }
+    }
+
+    /*
+    회원 이메일 중복 검사
+     */
+    private void existsByMail(String mail) {
+        Boolean result = memberDao.existsByMail(mail);
+        if (result) {
+            throw new MailAlreadyExistsException("이미 존재하는 메일입니다.");
+        }
+    }
+
 
     @Override
     public Member find(String userLoginId) {
@@ -86,30 +127,48 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public Member update(MemberSaveRequestDto memberSaveRequestDto) {
         Member member = memberDao.findName(memberSaveRequestDto.getName());
-        member.changeInfo(memberSaveRequestDto);
+//        member.changeInfo(memberSaveRequestDto);
         return member;
     }
 
     @Override
     public Member updateProfile(MemberUpdateRequestDto memberUpdateRequestDto) throws IOException {
         Member member = find(memberUpdateRequestDto.getUserLoginId());
+        System.out.println(member);
+        member.changeInfo(memberUpdateRequestDto);
+
+        if (member.getMemberImage() != null && member.getMemberImage().getFilePath() != null) {
+            //저장된 이미지 삭제
+            Files.deleteIfExists(Paths.get(member.getMemberImage().getFilePath()));
+        }
 
         String originalFilename = memberUpdateRequestDto.getImageFile().getOriginalFilename();
         String storeFilename = createStoreFilename(originalFilename);
         String filePath = createPath(storeFilename);
 
-        MemberImage memberImage = MemberImage.builder()
-                .originFilename(originalFilename)
-                .storeFilename(storeFilename)
-                .type(memberUpdateRequestDto.getImageFile().getContentType())
-                .filePath(filePath)
-                .member(member)
-                .build();
+        MemberImage memberImage;
 
-        //멤버에 이미지 정보 추가
-        member.changeProfile(memberUpdateRequestDto, memberImage);
+        if (member.getMemberImage() == null) {
+            memberImage = MemberImage.builder()
+                    .originFilename(originalFilename)
+                    .storeFilename(storeFilename)
+                    .type(memberUpdateRequestDto.getImageFile().getContentType())
+                    .filePath(filePath)
+                    .member(member)
+                    .build();
+        } else {
+            memberImage = memberImageDao.findByMemberSeq(member.getMemberSeq());
+            memberImage.changeInfo(originalFilename, storeFilename, memberUpdateRequestDto.getImageFile().getContentType(), filePath);
+        }
+
+        member.addMemberImage(memberImage);
         memberImageDao.save(memberImage);
-        memberDao.save(member);
+
+        // 멤버에 이미지 정보 추가
+        // member.changeProfile(memberUpdateRequestDto, memberImage);
+
+        // memberImageDao.save(memberImage);
+        // memberDao.save(member);
 
         memberUpdateRequestDto.getImageFile().transferTo(new File(filePath));
 

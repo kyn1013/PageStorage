@@ -1,6 +1,9 @@
 package com.example.PageStorage.member.controller;
 
 import com.example.PageStorage.common.PsResponse;
+import com.example.PageStorage.common.exception.member.BothLoginIdAndMailExistsException;
+import com.example.PageStorage.common.exception.member.LoginIdAlreadyExistsException;
+import com.example.PageStorage.common.exception.member.MailAlreadyExistsException;
 import com.example.PageStorage.entity.Member;
 import com.example.PageStorage.history.dto.HistoryRequestDto;
 import com.example.PageStorage.member.dto.MemberSaveRequestDto;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.PageStorage.common.code.SuccessCode;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 
 //@RestController
@@ -52,10 +56,28 @@ public class MemberController {
 
     @PostMapping("/join")
     public String join(@ModelAttribute("joinForm") @Valid MemberSaveRequestDto memberSaveRequestDto, BindingResult bindingResult) {
+//        if (bindingResult.hasErrors()) {
+//            return "members/createJoinForm";
+//        }
+//        memberService.saveMember(memberSaveRequestDto);
+//        return "redirect:/members/login";
         if (bindingResult.hasErrors()) {
             return "members/createJoinForm";
         }
-        memberService.saveMember(memberSaveRequestDto);
+        try {
+            memberService.saveMember(memberSaveRequestDto);
+        } catch (BothLoginIdAndMailExistsException e) {
+            bindingResult.rejectValue("userLoginId", "error.userLoginId", e.getMessage());
+            bindingResult.rejectValue("mail", "error.mail", e.getMessage());
+        } catch (LoginIdAlreadyExistsException e) {
+            bindingResult.rejectValue("userLoginId", "error.userLoginId", e.getMessage());
+        } catch (MailAlreadyExistsException e) {
+            bindingResult.rejectValue("mail", "error.mail", e.getMessage());
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "members/createJoinForm";
+        }
         return "redirect:/members/login";
     }
 
@@ -63,9 +85,19 @@ public class MemberController {
     회원프로필 수정
      */
     @GetMapping("/update/username")
-    public String updateUsernameForm(Model model) {
-        model.addAttribute("memberUpdateForm", new MemberUpdateRequestDto());
-        System.out.println("sssssss");
+    public String updateUsernameForm(@ModelAttribute("memberUpdateForm") MemberUpdateRequestDto memberUpdateRequestDto
+    , @AuthenticationPrincipal CustomUserDetails userDetails) {
+//        model.addAttribute("memberUpdateForm", new MemberUpdateRequestDto());
+//        System.out.println("sssssss");
+        Member member = memberService.find(userDetails.getUserLoginId());
+        memberUpdateRequestDto.setNickName(member.getNickName());
+
+        if(member.getMemberImage() != null && member.getMemberImage().getOriginFilename() != null) {
+            memberUpdateRequestDto.setFileName(member.getMemberImage().getOriginFilename());
+        } else {
+            memberUpdateRequestDto.setFileName(null); // null 처리
+        }
+
         return "members/updateForm";
     }
 
@@ -73,7 +105,8 @@ public class MemberController {
     public String createHistory(@ModelAttribute("memberUpdateForm") MemberUpdateRequestDto memberUpdateRequestDto,
                                 @AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
 
-        memberUpdateRequestDto.setUserLoginId(userDetails.getMail());
+        memberUpdateRequestDto.setUserLoginId(userDetails.getUserLoginId());
+        System.out.println("여깃!!!"+memberUpdateRequestDto.getUserLoginId());
         memberService.updateProfile(memberUpdateRequestDto);
         System.out.println("afdasfad");
         return "redirect:/histories/all";

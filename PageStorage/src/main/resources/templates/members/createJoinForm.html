@@ -81,21 +81,28 @@
             margin: 0 auto; /* Center horizontally */
         }
 
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 0.5em;
+        }
+
     </style>
 </head>
 <body>
 <div class="signup-container">
     <img th:src="@{/image/logo.png}" alt="책 이미지" class="logo">
     <form th:action="@{/members/join}" th:object="${joinForm}" method="post">
-        <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
-            <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
-        </div>
+<!--        <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">-->
+<!--            <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>-->
+<!--        </div>-->
         <div class="form-group">
             <label for="userLoginId"></label>
             <input type="text" id="userLoginId" th:field="*{userLoginId}" placeholder="Enter your ID" required>
-            <div style="display: flex; justify-content: flex-end;">
-                <button type="button" class="small-button" >Check ID</button>
-            </div>
+<!--            <div style="display: flex; justify-content: flex-end;">-->
+<!--                <button type="button" class="small-button">Check ID</button>-->
+<!--            </div>-->
+            <div th:if="${#fields.hasErrors('userLoginId')}" class="error-message" th:errors="*{userLoginId}"></div>
         </div>
         <div class="form-group">
             <label for="userLoginPassword"></label>
@@ -116,9 +123,10 @@
         <div class="form-group">
             <label for="mail"></label>
             <input type="email" id="mail" th:field="*{mail}" placeholder="Enter your email" required>
-            <div style="display: flex; justify-content: flex-end;">
-                <button type="button" class="small-button">Check Email</button>
-            </div>
+<!--            <div style="display: flex; justify-content: flex-end;">-->
+<!--                <button type="button" class="small-button">Check Email</button>-->
+<!--            </div>-->
+            <div th:if="${#fields.hasErrors('mail')}" class="error-message" th:errors="*{mail}"></div>
         </div>
         <div class="form-group">
             <button type="submit">Sign Up</button>

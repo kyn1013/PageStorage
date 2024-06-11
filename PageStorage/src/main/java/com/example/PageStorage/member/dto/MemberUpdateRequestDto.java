@@ -10,5 +10,6 @@ public class MemberUpdateRequestDto {
 
     private String userLoginId;
     private String nickName;
+    private String fileName;
     private MultipartFile imageFile;
 }

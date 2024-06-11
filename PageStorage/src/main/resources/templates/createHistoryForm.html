@@ -169,6 +169,10 @@
       width: 20px; /* Icon size */
       height: 20px; /* Icon size */
     }
+    .error-message{
+      color: red;
+      margin-top: 4px;
+    }
 
   </style>
 </head>
@@ -178,18 +182,20 @@
 <div class="content">
   <h1>히스토리를 기록해보세요🥰</h1>
   <form th:action="@{/histories/new}" th:object="${historyForm}" enctype="multipart/form-data" method="post">
-    <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
-      <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
-    </div>
+<!--    <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">-->
+<!--      <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>-->
+<!--    </div>-->
 
     <div class="form-group">
       <label for="bookName"><i class="fas fa-pencil-alt"></i> 책 이름</label>
       <input type="text" id="bookName" th:field="*{bookName}">
+      <div th:if="${#fields.hasErrors('bookName')}" class="error-message" th:errors="*{bookName}"></div>
     </div>
 
     <div class="form-group">
       <label for="historyContent"><i class="fas fa-book"></i>기록내용</label>
       <textarea id="historyContent" th:field="*{historyContent}" rows="5"></textarea>
+      <div th:if="${#fields.hasErrors('historyContent')}" class="error-message" th:errors="*{historyContent}"></div>
     </div>
 
     <div class="form-group">
@@ -215,6 +221,7 @@
     <div class="form-group">
       <label for="imageFile"><i class="fas fa-upload"></i> 이미지 업로드</label>
       <input type="file" name="imageFile" th:field="*{imageFile}">
+      <div th:if="${#fields.hasErrors('imageFile')}" class="error-message" th:errors="*{imageFile}"></div> <!-- 오류 메시지 표시 -->
     </div>
 
     <div class="tag-group">

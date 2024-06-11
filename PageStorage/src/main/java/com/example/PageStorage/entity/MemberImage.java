@@ -35,4 +35,13 @@ public class MemberImage {
         this.filePath = filePath;
         this.member = member;
     }
+
+    public void changeInfo(String originFilename, String storeFilename, String type, String filePath) {
+        this.originFilename = originFilename;
+        this.storeFilename = storeFilename;
+        this.type = type;
+        this.filePath = filePath;
+    }
+
+
 }

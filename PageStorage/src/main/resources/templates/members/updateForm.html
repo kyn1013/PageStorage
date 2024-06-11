@@ -3,21 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <title>회원 정보 수정</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
+        .do-hyeon-regular {
+            font-family: "Do Hyeon", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        body {
+            font-family: "Do Hyeon", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .main-container {
+            display: flex;
+            flex-grow: 1;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin-left: 200px; /* 사이드바 너비만큼 왼쪽 여백 */
+            background-color: #f0f0f0;
+        }
+
+        .content {
+            width: 50%; /* 적절한 너비 설정 */
+            padding: 40px 90px;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 30px;
+        }
+
+        h1 {
+            font-size: 2em;
+            color: #4A3F8C;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: start; /* 버튼을 가운데 정렬 */
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #4A3F8C;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="file"],
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            font-size: 1em;
+        }
+
+        .form-group input[type="file"] {
+            padding: 3px;
+        }
+
+        .form-group button {
+            background-color: #4A3F8C;
+            font-family: 'Do Hyeon', sans-serif; /* 폰트 스타일 명시 */
+            width: 250px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            display: inline-block; /* inline-block으로 설정 */
+        }
+
+        #update{
+            text-align: center;
+        }
+
+        .form-group button:hover {
+            background-color: #3a2f7d;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            flex-direction: column;
+            display: flex;
+            align-items: flex-start;
+            width: 200px;
+            height: 100vh;
+            background-color: white;
+            padding: 20px;
+            color: #384459;
+            font-style: italic;
+            border-right: 1px solid #DEE1EB;
+        }
+
+        .logo {
+            width: 180px;
+            height: 40px;
+            object-fit: cover;
+            padding-bottom: 20px;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            text-decoration: none;
+            color: #384459;
+            font-weight: bold;
+        }
+
+        .sidebar a img {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+        }
+    </style>
 </head>
 <body>
-<h1>회원 정보 수정</h1>
-<form th:action="@{/members/update/user}" th:object="${memberUpdateForm}" enctype="multipart/form-data" method="post">
-    <div>
-        <label for="nickName">닉네임:</label>
-        <input type="text" id="nickName" name="nickName" th:field="*{nickName}" required>
+<div class="sidebar" th:replace="~{sidebar :: sidevarFragment}"></div>
+<div class="main-container">
+    <div class="content">
+        <h1>프로필 수정</h1>
+
+        <form th:action="@{/members/update/user}" th:object="${memberUpdateForm}" enctype="multipart/form-data" method="post">
+            <div class="form-group">
+                <label for="nickName">닉네임</label>
+                <input type="text" id="nickName" name="nickName" th:field="*{nickName}" required>
+            </div>
+            <div class="form-group">
+                <label for="imageFile">프로필 이미지</label>
+                <input type="file" name="imageFile" th:field="*{imageFile}">
+<!--                <h6 th:text="*{fileName}"></h6>-->
+            </div>
+            <div class="form-group" id="update">
+                <button type="submit">수정하기</button>
+            </div>
+        </form>
     </div>
-    <div>
-        <label for="imageFile">프로필 이미지:</label>
-        <input type="file" name="imageFile" th:field="*{imageFile}">
-    </div>
-    <div>
-        <button type="submit">수정하기</button>
-    </div>
-</form>
+</div>
 </body>
 </html>

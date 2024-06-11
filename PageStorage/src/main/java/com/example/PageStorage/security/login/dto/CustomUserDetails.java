@@ -40,6 +40,10 @@ public class CustomUserDetails implements UserDetails {
         return userEntity.getUserLoginId();
     }
 
+    public String getUserLoginId() {
+        return userEntity.getUserLoginId();
+    }
+
     public String getNickname() {
         return userEntity.getMember().getNickName();
     }

@@ -58,10 +58,10 @@ public class Member {
         this.mail = mail;
     }
 
-    public void changeInfo (MemberSaveRequestDto memberSaveRequestDto) {
-        this.nickName = memberSaveRequestDto.getNickName();
-        this.phoneNumber = memberSaveRequestDto.getPhoneNumber();
-        this.mail = memberSaveRequestDto.getMail();
+    public void changeInfo (MemberUpdateRequestDto memberUpdateRequestDto) {
+        this.nickName = memberUpdateRequestDto.getNickName();
+//        this.phoneNumber = memberSaveRequestDto.getPhoneNumber();
+//        this.mail = memberSaveRequestDto.getMail();
     }
 
     public void addMemberImage(MemberImage memberImage) {

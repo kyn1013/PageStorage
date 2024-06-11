@@ -18,4 +18,10 @@ public class MemberImageDao {
     public MemberImage save(MemberImage memberImage) {
         return memberImageRepository.save(memberImage);
     }
+
+    public MemberImage findByMemberSeq(Long memberSeq) {
+        return memberImageRepository.findByMemberMemberSeq(memberSeq);
+    }
+
+
 }

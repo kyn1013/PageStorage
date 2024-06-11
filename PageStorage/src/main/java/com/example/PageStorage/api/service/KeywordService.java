@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +16,7 @@ import java.util.List;
 public class KeywordService {
     private final KeywordRepository keywordRepository;
 
-    public List<String> getKeywordsForMember(String memberMail) {
+    public Set<String> getKeywordsForMember(String memberMail) {
         return keywordRepository.findKeywordsByMemberMail(memberMail);
     }
 }

@@ -101,10 +101,6 @@ public class HistoryService {
         historyImageDao.save(historyImagee);
         historyRequestDto.getImageFile().transferTo(new File(filePath));
 
-
-
-
-
         return history;
     }
 

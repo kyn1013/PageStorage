@@ -21,6 +21,10 @@ public class MemberDao {
         return savedMember;
     }
 
+    public Boolean existsByMail(String mail) {
+        return memberRepository.existsByMail(mail);
+    }
+
 
 //    public Member findByMemberId(String memberId) {
 //        return memberRepository.findByMemberId(memberId).orElseThrow(() -> new DataNotFoundException("존재하지 않은 회원입니다."));

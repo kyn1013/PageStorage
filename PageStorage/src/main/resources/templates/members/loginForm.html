@@ -6,8 +6,14 @@
     <title>Login Page</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
+        .do-hyeon-regular {
+            font-family: "Do Hyeon", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: "Do Hyeon", sans-serif;
             background: linear-gradient(222.64deg, #dacde8 9.54%, rgba(77,61,93,0.15) 89.92%);
             display: flex;
             justify-content: center;
@@ -15,11 +21,14 @@
             height: 100vh;
             margin: 0;
         }
+        .form-group {
+            text-align: center; /* 부모 요소에 중앙 정렬 추가 */
+        }
         .login-container {
             background: white;
             padding: 2em;
-            border-radius: 30px; //모서리
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 30px; /* 모서리 */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             width: 100%;
             max-width: 400px; /* Set the max width for larger screens */
         }
@@ -40,16 +49,30 @@
         }
         .form-group button {
             border: none;
-            border-radius: 4px;
+            border-radius: 20px; /* 회원가입 페이지와 동일한 스타일 적용 */
             background-color: #a281c3;
             color: white;
-            margin-top: 20px; /* Spacing above the button */
+            /*margin-top: 20px; !* Spacing above the button *!*/
+            cursor: pointer;
+            width: 200px;
+            text-align: center;
+            margin: 20px auto; /* 버튼을 중앙으로 정렬 */
+        }
+        .form-group button:hover {
+            background-color: #7f66a1;
+        }
+        .logo {
+            width: 140px;
+            height: 40px;
+            object-fit: fill;
+            display: block; /* Block level element */
+            margin: 0 auto; /* Center horizontally */
         }
     </style>
 </head>
 <body>
 <div class="login-container">
-    <h1 class="text-center font-bold">Login Page</h1>
+    <img th:src="@{/image/logo.png}" alt="로고 이미지" class="logo">
     <form th:action="@{/loginProc}" method="post" name="loginForm">
         <div class="form-group">
             <label for="username"></label>
@@ -63,6 +86,11 @@
             <button type="submit">Login</button>
         </div>
     </form>
+    <div class="form-group">
+        <a href="/members/join">
+            <button class="join-button">Join</button>
+        </a>
+    </div>
 </div>
 </body>
 </html>

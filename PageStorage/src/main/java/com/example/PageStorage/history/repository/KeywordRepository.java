@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface KeywordRepository extends JpaRepository<Keyword, Long> {
 
@@ -16,7 +17,7 @@ public interface KeywordRepository extends JpaRepository<Keyword, Long> {
             "JOIN hk.history h " +
             "JOIN h.member m " +
             "WHERE m.mail = :memberMail")
-    List<String> findKeywordsByMemberMail(String memberMail);
+    Set<String> findKeywordsByMemberMail(String memberMail);
 
     Optional<Keyword> findByKeyword(String keyword);
 }
