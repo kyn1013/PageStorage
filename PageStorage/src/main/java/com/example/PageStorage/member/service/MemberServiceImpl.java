@@ -135,42 +135,50 @@ public class MemberServiceImpl implements MemberService{
     public Member updateProfile(MemberUpdateRequestDto memberUpdateRequestDto) throws IOException {
         Member member = find(memberUpdateRequestDto.getUserLoginId());
         System.out.println(member);
+
         member.changeInfo(memberUpdateRequestDto);
 
-        if (member.getMemberImage() != null && member.getMemberImage().getFilePath() != null) {
-            //저장된 이미지 삭제
-            Files.deleteIfExists(Paths.get(member.getMemberImage().getFilePath()));
+        //사진을 등록하지 않았다면 닉네임만 바꾸고 종료
+        if (memberUpdateRequestDto.getImageFile().isEmpty()){
+            return member;
         }
 
-        String originalFilename = memberUpdateRequestDto.getImageFile().getOriginalFilename();
-        String storeFilename = createStoreFilename(originalFilename);
-        String filePath = createPath(storeFilename);
+            if (member.getMemberImage() != null && member.getMemberImage().getFilePath() != null) {
+                //저장된 이미지 삭제
+                Files.deleteIfExists(Paths.get(member.getMemberImage().getFilePath()));
+            }
 
-        MemberImage memberImage;
+            String originalFilename = memberUpdateRequestDto.getImageFile().getOriginalFilename();
+            String storeFilename = createStoreFilename(originalFilename);
+            String filePath = createPath(storeFilename);
 
-        if (member.getMemberImage() == null) {
-            memberImage = MemberImage.builder()
-                    .originFilename(originalFilename)
-                    .storeFilename(storeFilename)
-                    .type(memberUpdateRequestDto.getImageFile().getContentType())
-                    .filePath(filePath)
-                    .member(member)
-                    .build();
-        } else {
-            memberImage = memberImageDao.findByMemberSeq(member.getMemberSeq());
-            memberImage.changeInfo(originalFilename, storeFilename, memberUpdateRequestDto.getImageFile().getContentType(), filePath);
-        }
+            MemberImage memberImage;
 
-        member.addMemberImage(memberImage);
-        memberImageDao.save(memberImage);
+            //이미지가 없었는데 새로 등록할 떄
+            if (member.getMemberImage() == null) {
+                memberImage = MemberImage.builder()
+                        .originFilename(originalFilename)
+                        .storeFilename(storeFilename)
+                        .type(memberUpdateRequestDto.getImageFile().getContentType())
+                        .filePath(filePath)
+                        .member(member)
+                        .build();
+            } else {
+                //기존 이미지에서 새로운 이미지로 변경할 때
+                memberImage = memberImageDao.findByMemberSeq(member.getMemberSeq());
+                memberImage.changeInfo(originalFilename, storeFilename, memberUpdateRequestDto.getImageFile().getContentType(), filePath);
+            }
 
-        // 멤버에 이미지 정보 추가
-        // member.changeProfile(memberUpdateRequestDto, memberImage);
+            member.addMemberImage(memberImage);
+            memberImageDao.save(memberImage);
 
-        // memberImageDao.save(memberImage);
-        // memberDao.save(member);
+            // 멤버에 이미지 정보 추가
+            // member.changeProfile(memberUpdateRequestDto, memberImage);
 
-        memberUpdateRequestDto.getImageFile().transferTo(new File(filePath));
+            // memberImageDao.save(memberImage);
+            // memberDao.save(member);
+
+            memberUpdateRequestDto.getImageFile().transferTo(new File(filePath));
 
         return member;
     }

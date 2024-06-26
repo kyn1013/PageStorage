@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -20,6 +21,10 @@ import java.util.List;
 public class HistoryDao {
 
     private final HistoryRepository historyRepository;
+
+    public Slice<History> slice(Long cursor, Pageable pageable){
+        return historyRepository.findByHistorySeqGreaterThan(cursor, pageable);
+    }
 
     public History save(History history) {
         return historyRepository.save(history);

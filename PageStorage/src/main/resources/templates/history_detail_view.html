@@ -446,16 +446,16 @@
             <!--                 alt="기본 프로필 이미지">-->
             <div class="history-writer clearfix">
                 <div class="profile">
-                    <img th:if="${history.getProfileImage() != null}"
-                         th:src="@{/profileImage/{imageFile}(imageFile=${history.getProfileImage()})}"
+                    <img th:if="${loginMember.getMemberImage() != null}"
+                         th:src="@{/profileImage/{imageFile}(imageFile=${loginMember.getMemberImage().getStoreFilename()})}"
                          alt="사용자 지정 프로필 이미지"
                          class="writer-image"/>
-                    <img th:unless="${history.getProfileImage() != null}"
+                    <img th:unless="${loginMember.getMemberImage() != null}"
                          th:src="@{/image/nn.jpeg}"
                          alt="기본프로필 이미지"
                          class="writer-image"/>
                 </div>
-                <div class="nickname"><p><span th:text="${history.memberNickname}">작성자 이름</span></p></div>
+                <div class="nickname"><p><span th:text="${loginMember.getNickName()}">작성자 이름</span></p></div>
             </div>
 
 
@@ -487,14 +487,14 @@
                                  alt="기본프로필 이미지"
                                  class="writer-image"/>
                         </div>
-                        <div class="nickname"><p><span th:text="${history.memberNickname}">작성자 이름</span></p></div>
+                        <div class="nickname"><p><span th:text="${realComments.memberName}">작성자 이름</span></p></div>
                     </div>
 
                     <div class="comment-content">
                         <span class="comment-text" th:text="${realComments.content}"></span>
                         <div class="comment-actions">
                             <a th:href="@{|/comments/delete/${realComments.getCommentSeq()}|}"
-                               th:if="${ userNickName == history.memberNickname}">
+                               th:if="${ loginMember.getNickName() == realComments.memberName}">
                                 <img th:src="@{/image/delete.png}" alt="댓글 삭제">
                             </a>
                         </div>

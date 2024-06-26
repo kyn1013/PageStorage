@@ -222,7 +222,102 @@
       margin-right: 5px;
       color: white;
     }
+
+    #loadMore {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #6a329f;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #loadMore:hover {
+      background-color: #5a1f80;
+    }
   </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      var nextCursor = 0;
+      var size = 10;
+
+      function loadHistories() {
+        $.ajax({
+          url: "/histories/b",
+          type: "GET",
+          data: {
+            cursor: nextCursor,
+            size: size
+          },
+          success: function (response) {
+            var hasNext = response.length === size;
+            nextCursor = hasNext ? response[response.length - 1].id : null;
+
+            response.forEach(function (history) {
+              var historyHtml = `
+                                <div class="history">
+                                    <div class="history-writer">
+                                        <div id="profile">
+                                            <img ${history.profileImage ? `src="/profileImage/${history.profileImage}"` : `src="/image/nn.jpeg"`} alt="프로필 이미지" class="writer-image"/>
+                                        </div>
+                                        <div id="nickname"><p><span>${history.nickName}</span></p></div>
+                                    </div>
+                                    <div class="history-title">
+                                        <a href="/histories/read/${history.historySeq}">
+                                            <img src="/image/bookicon.png" alt="책 이미지" class="history-icon">
+                                            <h2>${history.bookName}</h2>
+                                        </a>
+                                    </div>
+                                    <div class="history-content">
+                                        <div class="history-image">
+                                            <img src="/historyImage/${history.historyImage}" alt="${history.bookName} 이미지">
+                                        </div>
+                                        <div class="history-text">
+                                            <p class="inline-icon-text">
+                                                <img src="/image/difficulty.png" alt="난이도 아이콘">
+                                                <span class="block-text">${history.difficulty}</span>
+                                            </p>
+                                            <p class="inline-icon-text">
+                                                <img src="/image/bookRecommender.png" alt="추천인 아이콘">
+                                                <span class="block-text">${history.bookRecommender}</span>
+                                            </p>
+                                            <p class="highlighted-quote">${history.phrase}</p>
+                                        </div>
+                                    </div>
+                                    <div class="history-tags">
+                                        ${history.tagNames.map(tag => `<span>${tag}</span>`).join('')}
+                                        ${history.keywords.map(keyword => `<span id="keyword">${keyword}</span>`).join('')}
+                                    </div>
+                                </div>
+                            `;
+              $(".content").append(historyHtml);
+            });
+
+            if (!hasNext) {
+              $("#loadMore").hide();
+            } else {
+              $("#loadMore").show();
+            }
+          },
+          error: function (xhr, status, error) {
+            console.error("AJAX 요청 오류:", status, error);
+            $("#loadMore").show();  // 오류 발생 시 버튼을 보여줍니다.
+          }
+        });
+      }
+
+      $("#loadMore").click(function () {
+        loadHistories();
+      });
+
+      // 초기 로드
+      loadHistories();
+    });
+  </script>
 </head>
 <body>
 <div class="sidebar" th:replace="~{sidebar :: sidevarFragment}"></div>
@@ -273,9 +368,8 @@
         <span th:each="keyword : ${history.keywords}" th:text="${keyword}" id="keyword">#반항</span>
       </div>
     </div>
-
-
   </div>
+  <button id="loadMore">Next</button>
 </div>
 </body>
 </html>

@@ -42,7 +42,7 @@ public class CommentResponseDto {
         return CommentResponseDto.builder()
                 .content(comment.getContent())
                 .historySeq(comment.getHistory().getHistorySeq())
-                .memberName(comment.getMember().getName())
+                .memberName(comment.getMember().getNickName())
                 .commentSeq(comment.getCommentSeq())
                 .profileImage(profileFilename)
                 .build();

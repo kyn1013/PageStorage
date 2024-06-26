@@ -15,6 +15,9 @@ import com.example.PageStorage.tag.dao.TagDao;
 import com.example.PageStorage.tag.dto.TagRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +34,9 @@ import java.util.stream.Collectors;
 @Slf4j
 @Transactional
 public class HistoryService {
+
+    //페이징 테스트
+
 
     private final HistoryDao historyDao;
     private final HistoryImageDao historyImageDao;
@@ -260,6 +266,12 @@ public class HistoryService {
 
     public List<History> findAll() {
         return historyDao.findAllByCreatedDate();
+    }
+
+    //페이징
+    public Slice<History> findAll(Long cursor, int size) {
+        Pageable pageable = PageRequest.of(0, size);
+        return historyDao.slice(cursor, pageable);
     }
 
 //    public History update(HistoryRequestDto historyRequestDto) {

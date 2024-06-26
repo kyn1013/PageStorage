@@ -26,6 +26,7 @@ import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.json.JSONParser;
 import org.json.JSONObject;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -276,16 +277,18 @@ public class HistoryController {
         String mail = userDetails.getMail();
         String userNickName = userDetails.getNickname();
 
+        System.out.println(userNickName);
+
 //        String id = "mm";
 //        String mail = "mm";
 //        String userNickName = "mm";
 
         List<History> histories = historyService.findByMail(mail);
         List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(histories);
-        model.addAttribute("history", historyResponseDtos);
-        model.addAttribute("nickName", userNickName);
 
         Member member = memberService.find(id);
+        model.addAttribute("history", historyResponseDtos);
+        model.addAttribute("nickName", member.getNickName());
         model.addAttribute("member", member);
 
         return "my_history_view"; // Thymeleaf 템플릿 파일 이름 반환
@@ -333,9 +336,59 @@ public class HistoryController {
         return "history_view"; // Thymeleaf 템플릿 파일 이름 반환
     }
 
+    @GetMapping("/a")
+    public String findAll(@AuthenticationPrincipal CustomUserDetails userDetails,
+                          @RequestParam(required = false) Long cursor,
+                          @RequestParam(defaultValue = "10") int size,
+                          Model model) {
+        if (cursor == null) {
+            cursor = 0L; // 첫 페이지를 위해 기본 값을 0으로 설정
+        }
+
+        Slice<History> historySlice = historyService.findAll(cursor, size);
+        List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(historySlice.getContent());
+
+        model.addAttribute("history", historyResponseDtos);
+        model.addAttribute("hasNext", historySlice.hasNext());
+        if (historySlice.hasNext()) {
+            model.addAttribute("nextCursor", historyResponseDtos.get(historyResponseDtos.size() - 1).getHistorySeq());
+        }
+
+        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
+        GrantedAuthority auth = iter.next();
+        String role = auth.getAuthority();
+
+        model.addAttribute("id", id);
+        model.addAttribute("role", role);
+
+        String nickname = userDetails.getNickname();
+        model.addAttribute("nickName", nickname);
+
+        Member member = memberService.find(id);
+        model.addAttribute("member", member);
+
+        return "2"; // Thymeleaf 템플릿 파일 이름 반환
+    }
+
+    @GetMapping("/b")
+    @ResponseBody
+    public ResponseEntity<List<HistoryResponseDto>> getHistories(@RequestParam(required = false) Long cursor,
+                                                                 @RequestParam(defaultValue = "10") int size) {
+        Slice<History> historySlice = historyService.findAll(cursor, size);
+        List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(historySlice.getContent());
+
+        return ResponseEntity.ok(historyResponseDtos);
+    }
+
     @GetMapping(value = "/read/{historySeq}")
     public String findBySeq(Model model, @PathVariable Long historySeq, CommentRequestDto commentRequestDto,@AuthenticationPrincipal CustomUserDetails userDetails) {
-        String userNickName = userDetails.getNickname();
+        String loginId = userDetails.getUserLoginId();
+        Member member = memberService.find(loginId);
 //        String userNickName = "mm";
 
         History history = historyService.find(historySeq);
@@ -343,7 +396,7 @@ public class HistoryController {
         List<CommentResponseDto> commentResponseDtos = CommentResponseDto.buildDtoList(comments);
         HistoryDetailResponseDto historyDetailResponseDto = HistoryDetailResponseDto.buildDto(history);
 
-        model.addAttribute("userNickName", userNickName);
+        model.addAttribute("loginMember", member);
         model.addAttribute("history", historyDetailResponseDto);
         model.addAttribute("realComment", commentResponseDtos);
         model.addAttribute("commentForm", commentRequestDto);
