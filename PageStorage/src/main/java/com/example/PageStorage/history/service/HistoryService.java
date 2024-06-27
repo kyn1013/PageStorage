@@ -8,6 +8,8 @@ import com.example.PageStorage.history.dao.HistoryKeywordDao;
 import com.example.PageStorage.history.dao.KeywordDao;
 import com.example.PageStorage.history.dto.HistoryDeleteDto;
 import com.example.PageStorage.history.dto.HistoryRequestDto;
+import com.example.PageStorage.history.dto.response.HistoryResponseDto;
+import com.example.PageStorage.history.repository.HistoryRepository;
 import com.example.PageStorage.historytag.dao.HistoryTagDao;
 import com.example.PageStorage.member.dao.MemberDao;
 import com.example.PageStorage.security.login.dao.LoginDao;
@@ -15,6 +17,7 @@ import com.example.PageStorage.tag.dao.TagDao;
 import com.example.PageStorage.tag.dto.TagRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -29,6 +32,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -36,7 +41,7 @@ import java.util.stream.Collectors;
 public class HistoryService {
 
     //페이징 테스트
-
+    private final HistoryRepository historyRepository;
 
     private final HistoryDao historyDao;
     private final HistoryImageDao historyImageDao;
@@ -269,10 +274,41 @@ public class HistoryService {
     }
 
     //페이징
-    public Slice<History> findAll(Long cursor, int size) {
+    public List<History> findAlll(Long cursor, int size) {
         Pageable pageable = PageRequest.of(0, size);
         return historyDao.slice(cursor, pageable);
     }
+
+    public Page<History> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return historyDao.findAll(pageable);
+    }
+
+
+    public List<History> findByCursor(Long lastHistorySeq, int size) {
+        Pageable pageable = PageRequest.of(0, size);
+        return historyRepository.findHistoriesAfter(lastHistorySeq, pageable);
+    }
+
+
+//    public List<HistoryResponseDto> test(Long cursor) {
+//        PageRequest pageRequest = PageRequest.of(0,10);
+//        Slice<History> historyList;
+//
+//        if(cursor == 0) {
+//            historyList = historyRepository.findHistoriesTopByHistorySeqOrderByCreatedDateDesc(historySeq, pageRequest);
+//        } else {
+//            historyList = historyRepository.findHistoryNextPage(cursor, historySeq, pageRequest);
+//        }
+//
+//        List<HistoryResponseDto> historyResponseDtos = new ArrayList<>();
+//
+//        for (History history : historyList.getContent()){
+//            historyResponseDtos.add(HistoryResponseDto.buildDto(history));
+//        }
+//
+//        return historyResponseDtos;
+//    }
 
 //    public History update(HistoryRequestDto historyRequestDto) {
 //        History history = historyDao.findByMemberNameAndBookName(

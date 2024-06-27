@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.Slice;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -48,6 +49,7 @@ public class HistoryResponseDto {
         this.profileImage = profileImage;
         this.keywords = keywords;
     }
+
 
     public static HistoryResponseDto buildDto(History history) {
         Set<String> tagNames = new HashSet<>(); // 태그 이름을 수집할 HashSet 초기화

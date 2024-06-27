@@ -242,27 +242,26 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     $(document).ready(function () {
-      var currentPage = 1;  // 초기 페이지를 1로 설정
+      var cursor = 13;  // 초기 커서 값을 0으로 설정
       var size = 10;
-      var totalPages = 1;
       var isLoading = false;
 
       function loadHistories() {
-        if (isLoading || currentPage > totalPages) {
+        if (isLoading) {
           return;
         }
 
         isLoading = true;
 
         $.ajax({
-          url: "/histories/b",
+          url: "/histories/histories",
           type: "GET",
           data: {
-            page: currentPage,
+            cursor: cursor,
             size: size
           },
           success: function (response) {
-            response.content.forEach(function (history) {
+            response.forEach(function (history) {
               var historyHtml = `
                                 <div class="history">
                                     <div class="history-writer">
@@ -302,8 +301,11 @@
               $(".content").append(historyHtml);
             });
 
-            totalPages = response.totalPages;
-            currentPage++;
+            // 마지막으로 가져온 항목의 ID를 커서로 설정
+            if (response.length > 0) {
+              cursor = response[response.length - 1].historySeq;
+            }
+
             isLoading = false;
           },
           error: function (xhr, status, error) {
@@ -378,3 +380,4 @@
 </div>
 </body>
 </html>
+

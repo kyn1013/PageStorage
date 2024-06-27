@@ -2,6 +2,8 @@ package com.example.PageStorage.history.repository;
 
 import com.example.PageStorage.entity.History;
 import com.example.PageStorage.entity.Member;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,7 +16,31 @@ import java.util.Optional;
 
 public interface HistoryRepository extends JpaRepository<History, Long> {
 
-    Slice<History> findByHistorySeqGreaterThan(Long cursor, Pageable pageable);
+//    Slice<History> findByHistorySeqGreaterThan(Long cursor, Pageable pageable);
+    List<History> findByHistorySeqGreaterThan(Long id, Pageable pageable);
+
+    Page<History> findAll(Pageable pageable);
+
+
+
+    @Query("SELECT h FROM History h WHERE h.historySeq <= :lastHistorySeq ORDER BY h.historySeq desc ")
+    List<History> findHistoriesAfter(@Param("lastHistorySeq") Long lastHistorySeq, Pageable pageable);
+
+
+
+
+    @Query("SELECT h FROM History h where h.historySeq <= ?1 and h.historySeq = ?2 order by h.createdDate desc")
+    Slice<History> findHistoryNextPage(Long lastHistorySeq, Long historySeq, PageRequest pageRequest);
+
+    Slice<History> findHistoriesTopByHistorySeqOrderByCreatedDateDesc(Long historySeq, PageRequest pageRequest);
+
+
+
+
+
+
+
+
 
 
     List<History> findByBookName(String bookName);

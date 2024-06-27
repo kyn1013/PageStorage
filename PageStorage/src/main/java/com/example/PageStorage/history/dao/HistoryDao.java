@@ -6,6 +6,7 @@ import com.example.PageStorage.common.exception.DataNotFoundException;
 import com.example.PageStorage.entity.History;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -22,8 +23,12 @@ public class HistoryDao {
 
     private final HistoryRepository historyRepository;
 
-    public Slice<History> slice(Long cursor, Pageable pageable){
+    public List<History> slice(Long cursor, Pageable pageable){
         return historyRepository.findByHistorySeqGreaterThan(cursor, pageable);
+    }
+
+    public Page<History> findAll(Pageable pageable) {
+        return historyRepository.findAll(pageable);
     }
 
     public History save(History history) {
