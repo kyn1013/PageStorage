@@ -8,6 +8,7 @@ import com.example.PageStorage.history.dao.HistoryKeywordDao;
 import com.example.PageStorage.history.dao.KeywordDao;
 import com.example.PageStorage.history.dto.HistoryDeleteDto;
 import com.example.PageStorage.history.dto.HistoryRequestDto;
+import com.example.PageStorage.history.dto.response.HistoryAllResponseDto;
 import com.example.PageStorage.history.dto.response.HistoryResponseDto;
 import com.example.PageStorage.history.repository.HistoryRepository;
 import com.example.PageStorage.historytag.dao.HistoryTagDao;
@@ -289,6 +290,53 @@ public class HistoryService {
         Pageable pageable = PageRequest.of(0, size);
         return historyRepository.findHistoriesAfter(lastHistorySeq, pageable);
     }
+
+
+
+    public HistoryAllResponseDto findAllByIdCursorBased(Long cursorId, int pageSize) {
+        Pageable pageable = PageRequest.of(0, pageSize + 1);
+        List<History> histories = findAllByCursorIdCheckExistsCursor(cursorId, pageable);
+        boolean hasNext = hasNext(histories.size(), pageSize);
+        // 스트림 대신 for 문 사용하여 PostResponse 리스트 생성
+//        List<PostResponse> postResponses = new ArrayList<>();
+//        List<Post> subList = toSubListIfHasNext(hasNext, pageSize, posts);
+//        for (Post post : subList) {
+//            postResponses.add(new PostResponse(post));
+//        }
+//
+//        return new PostResponses(postResponses, cursorId, hasNext);
+
+        List<History> subList = toSubListIfHasNext(hasNext, pageSize, histories);
+        List<HistoryResponseDto> responseDtos = HistoryResponseDto.buildDtoAllList(subList);
+//        for (History history : subList) {
+//            historyAllResponseDtos.add(HistoryResponseDto.buildDto(history));
+//        }
+
+        return new HistoryAllResponseDto(responseDtos, cursorId, hasNext);
+    }
+
+
+
+    private List<History> findAllByCursorIdCheckExistsCursor(Long cursorId, Pageable pageable) {
+        return cursorId == null ? historyRepository.findAllByOrderByHistorySeqDescCreatedDateDesc(pageable)
+                : historyRepository.findByHistorySeqLessThanOrderByHistorySeqDescCreatedDateDesc(cursorId, pageable);
+    }
+
+
+
+    private boolean hasNext(int postsSize, int pageSize) {
+//        if (postsSize == 0) {
+//            throw new EntityNotFoundException(Post.class);
+//        }
+        return postsSize > pageSize;
+    }
+
+
+
+    private List<History> toSubListIfHasNext(boolean hasNext, int pageSize, List<History> histories) {
+        return hasNext ? histories.subList(0, pageSize) : histories;
+    }
+
 
 
 //    public List<HistoryResponseDto> test(Long cursor) {

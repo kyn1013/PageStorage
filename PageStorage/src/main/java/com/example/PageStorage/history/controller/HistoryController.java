@@ -14,6 +14,7 @@ import com.example.PageStorage.entity.History;
 import com.example.PageStorage.entity.Member;
 import com.example.PageStorage.history.dto.HistoryDeleteDto;
 import com.example.PageStorage.history.dto.HistoryRequestDto;
+import com.example.PageStorage.history.dto.response.HistoryAllResponseDto;
 import com.example.PageStorage.history.dto.response.HistoryDetailResponseDto;
 import com.example.PageStorage.history.dto.response.HistoryResponseDto;
 import com.example.PageStorage.history.dto.response.RankingResponseDto;
@@ -420,7 +421,7 @@ public class HistoryController {
 
     @GetMapping("/d")
     @ResponseBody
-    public List<HistoryResponseDto> getHistories(@RequestParam Long cursor, @RequestParam int size) {
+    public List<HistoryResponseDto> getsHistories(@RequestParam Long cursor, @RequestParam int size) {
         List<History> histories = historyService.findAlll(cursor, size);
 
         List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(histories);
@@ -431,7 +432,7 @@ public class HistoryController {
 
     @GetMapping("/pp")
     public String findAgll(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
-        List<History> histories = historyService.findByCursor(0L, 10); // 초기 로드는 cursor를 0으로 설정
+        List<History> histories = historyService.findAlll(0L, 10); // 초기 로드는 cursor를 0으로 설정
         List<HistoryResponseDto> historyResponseDtos = new ArrayList<>();
 
         for (History history : histories) {
@@ -473,6 +474,39 @@ public class HistoryController {
 
 
         return historyResponseDtos;
+    }
+
+    @GetMapping("/ppp")
+    public String findAxll(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
+        HistoryAllResponseDto historyResponseDto = historyService.findAllByIdCursorBased(0L, 10); // 초기 로드는 cursor를 0으로 설정
+
+        model.addAttribute("history", historyResponseDto.getHistoryResponseDtos());
+
+        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
+        GrantedAuthority auth = iter.next();
+        String role = auth.getAuthority();
+
+        model.addAttribute("id", id);
+        model.addAttribute("role", role);
+
+        String nickname = userDetails.getNickname();
+        model.addAttribute("nickName", nickname);
+
+        Member member = memberService.find(id);
+        model.addAttribute("member", member);
+
+        return "d"; // Thymeleaf 템플릿 파일 이름 반환
+    }
+
+    @GetMapping("/hhh")
+    @ResponseBody
+    public HistoryAllResponseDto getHistoriesss(@RequestParam Long cursor, @RequestParam int size) {
+        HistoryAllResponseDto historyAllResponseDto = historyService.findAllByIdCursorBased(cursor, size);
+        return historyAllResponseDto;
     }
 
 

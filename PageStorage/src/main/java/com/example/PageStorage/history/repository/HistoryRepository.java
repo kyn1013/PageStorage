@@ -35,6 +35,9 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
     Slice<History> findHistoriesTopByHistorySeqOrderByCreatedDateDesc(Long historySeq, PageRequest pageRequest);
 
 
+    //ttt
+    List<History> findAllByOrderByHistorySeqDescCreatedDateDesc(Pageable pageable);
+    List<History> findByHistorySeqLessThanOrderByHistorySeqDescCreatedDateDesc(@Param("historySeq") long historySeq, Pageable pageable);
 
 
 

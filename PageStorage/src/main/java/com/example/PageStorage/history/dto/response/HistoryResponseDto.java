@@ -99,4 +99,12 @@ public class HistoryResponseDto {
         return dtoList;
     }
 
+    public static List<HistoryResponseDto> buildDtoAllList(List<History> histories) { //오호?
+        List<HistoryResponseDto> dtoList = new ArrayList<>();
+        for (History history : histories) {
+            dtoList.add(buildDto(history));
+        }
+        return dtoList;
+    }
+
 }
