@@ -340,143 +340,143 @@ public class HistoryController {
         return "history_view"; // Thymeleaf 템플릿 파일 이름 반환
     }
 
-    @GetMapping("/a")
-    public String findA(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
-        // 초기 페이지는 0번째 페이지로 설정하고, 크기를 10으로 설정
-        Page<History> historyPage = historyService.findAll(0, 10);
-        List<HistoryResponseDto> historyResponseDtos = new ArrayList<>();
-
-        for (History history : historyPage.getContent()) {
-            historyResponseDtos.add(HistoryResponseDto.buildDto(history));
-        }
-
-        model.addAttribute("history", historyResponseDtos);
-        model.addAttribute("currentPage", historyPage.getNumber());
-        model.addAttribute("totalPages", historyPage.getTotalPages());
-
-        String id = SecurityContextHolder.getContext().getAuthentication().getName();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
-        GrantedAuthority auth = iter.next();
-        String role = auth.getAuthority();
-
-        model.addAttribute("id", id);
-        model.addAttribute("role", role);
-
-        String nickname = userDetails.getNickname();
-        model.addAttribute("nickName", nickname);
-
-        Member member = memberService.find(id);
-        model.addAttribute("member", member);
-
-        return "a"; // Thymeleaf 템플릿 파일 이름 반환
-    }
-
-    @GetMapping("/b")
-    @ResponseBody
-    public Page<HistoryResponseDto> getHistories(@RequestParam int page, @RequestParam int size) {
-        Page<History> historyPage = historyService.findAll(page, size);
-
-//        List<History> histories = historyService.findAll();
+//    @GetMapping("/a")
+//    public String findA(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
+//        // 초기 페이지는 0번째 페이지로 설정하고, 크기를 10으로 설정
+//        Page<History> historyPage = historyService.findAll(0, 10);
+//        List<HistoryResponseDto> historyResponseDtos = new ArrayList<>();
+//
+//        for (History history : historyPage.getContent()) {
+//            historyResponseDtos.add(HistoryResponseDto.buildDto(history));
+//        }
+//
+//        model.addAttribute("history", historyResponseDtos);
+//        model.addAttribute("currentPage", historyPage.getNumber());
+//        model.addAttribute("totalPages", historyPage.getTotalPages());
+//
+//        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+//        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
+//        GrantedAuthority auth = iter.next();
+//        String role = auth.getAuthority();
+//
+//        model.addAttribute("id", id);
+//        model.addAttribute("role", role);
+//
+//        String nickname = userDetails.getNickname();
+//        model.addAttribute("nickName", nickname);
+//
+//        Member member = memberService.find(id);
+//        model.addAttribute("member", member);
+//
+//        return "a"; // Thymeleaf 템플릿 파일 이름 반환
+//    }
+//
+//    @GetMapping("/b")
+//    @ResponseBody
+//    public Page<HistoryResponseDto> getHistories(@RequestParam int page, @RequestParam int size) {
+//        Page<History> historyPage = historyService.findAll(page, size);
+//
+////        List<History> histories = historyService.findAll();
+////        List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(histories);
+//
+//        List<HistoryResponseDto> historyResponseDtos = new ArrayList<>();
+//
+//        for (History history : historyPage.getContent()) {
+//            historyResponseDtos.add(HistoryResponseDto.buildDto(history));
+//        }
+//
+//        return new PageImpl<>(historyResponseDtos, historyPage.getPageable(), historyPage.getTotalElements());
+//    }
+//
+//    @GetMapping("/c")
+//    public String findAllc(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
+//        List<History> histories = historyService.findAlll(0L, 10);
 //        List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(histories);
+//
+//
+//        model.addAttribute("history", historyResponseDtos);
+//
+//        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+//        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
+//        GrantedAuthority auth = iter.next();
+//        String role = auth.getAuthority();
+//
+//        model.addAttribute("id", id);
+//        model.addAttribute("role", role);
+//
+//        String nickname = userDetails.getNickname();
+//        model.addAttribute("nickName", nickname);
+//
+//        Member member = memberService.find(id);
+//        model.addAttribute("member", member);
+//
+//        return "c"; // Thymeleaf 템플릿 파일 이름 반환
+//    }
+//
+//    @GetMapping("/d")
+//    @ResponseBody
+//    public List<HistoryResponseDto> getsHistories(@RequestParam Long cursor, @RequestParam int size) {
+//        List<History> histories = historyService.findAlll(cursor, size);
+//
+//        List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(histories);
+//
+//
+//        return historyResponseDtos;
+//    }
+//
+//    @GetMapping("/pp")
+//    public String findAgll(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
+//        List<History> histories = historyService.findAlll(0L, 10); // 초기 로드는 cursor를 0으로 설정
+//        List<HistoryResponseDto> historyResponseDtos = new ArrayList<>();
+//
+//        for (History history : histories) {
+//            historyResponseDtos.add(HistoryResponseDto.buildDto(history));
+//        }
+//
+//        model.addAttribute("history", historyResponseDtos);
+//
+//        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+//        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
+//        GrantedAuthority auth = iter.next();
+//        String role = auth.getAuthority();
+//
+//        model.addAttribute("id", id);
+//        model.addAttribute("role", role);
+//
+//        String nickname = userDetails.getNickname();
+//        model.addAttribute("nickName", nickname);
+//
+//        Member member = memberService.find(id);
+//        model.addAttribute("member", member);
+//
+//        return "d"; // Thymeleaf 템플릿 파일 이름 반환
+//    }
+//
+//    @GetMapping("/histories")
+//    @ResponseBody
+//    public List<HistoryResponseDto> getHistoㅑries(@RequestParam Long cursor, @RequestParam int size) {
+//        List<History> histories = historyService.findByCursor(cursor, size);
+//        List<HistoryResponseDto> historyResponseDtos = new ArrayList<>();
+//
+//        for (History history : histories) {
+//            historyResponseDtos.add(HistoryResponseDto.buildDto(history));
+//            System.out.println(history.getBookName());
+//        }
+//
+//
+//        return historyResponseDtos;
+//    }
 
-        List<HistoryResponseDto> historyResponseDtos = new ArrayList<>();
-
-        for (History history : historyPage.getContent()) {
-            historyResponseDtos.add(HistoryResponseDto.buildDto(history));
-        }
-
-        return new PageImpl<>(historyResponseDtos, historyPage.getPageable(), historyPage.getTotalElements());
-    }
-
-    @GetMapping("/c")
-    public String findAllc(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
-        List<History> histories = historyService.findAlll(0L, 10);
-        List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(histories);
-
-
-        model.addAttribute("history", historyResponseDtos);
-
-        String id = SecurityContextHolder.getContext().getAuthentication().getName();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
-        GrantedAuthority auth = iter.next();
-        String role = auth.getAuthority();
-
-        model.addAttribute("id", id);
-        model.addAttribute("role", role);
-
-        String nickname = userDetails.getNickname();
-        model.addAttribute("nickName", nickname);
-
-        Member member = memberService.find(id);
-        model.addAttribute("member", member);
-
-        return "c"; // Thymeleaf 템플릿 파일 이름 반환
-    }
-
-    @GetMapping("/d")
-    @ResponseBody
-    public List<HistoryResponseDto> getsHistories(@RequestParam Long cursor, @RequestParam int size) {
-        List<History> histories = historyService.findAlll(cursor, size);
-
-        List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(histories);
-
-
-        return historyResponseDtos;
-    }
-
-    @GetMapping("/pp")
-    public String findAgll(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
-        List<History> histories = historyService.findAlll(0L, 10); // 초기 로드는 cursor를 0으로 설정
-        List<HistoryResponseDto> historyResponseDtos = new ArrayList<>();
-
-        for (History history : histories) {
-            historyResponseDtos.add(HistoryResponseDto.buildDto(history));
-        }
-
-        model.addAttribute("history", historyResponseDtos);
-
-        String id = SecurityContextHolder.getContext().getAuthentication().getName();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
-        GrantedAuthority auth = iter.next();
-        String role = auth.getAuthority();
-
-        model.addAttribute("id", id);
-        model.addAttribute("role", role);
-
-        String nickname = userDetails.getNickname();
-        model.addAttribute("nickName", nickname);
-
-        Member member = memberService.find(id);
-        model.addAttribute("member", member);
-
-        return "d"; // Thymeleaf 템플릿 파일 이름 반환
-    }
-
-    @GetMapping("/histories")
-    @ResponseBody
-    public List<HistoryResponseDto> getHistoㅑries(@RequestParam Long cursor, @RequestParam int size) {
-        List<History> histories = historyService.findByCursor(cursor, size);
-        List<HistoryResponseDto> historyResponseDtos = new ArrayList<>();
-
-        for (History history : histories) {
-            historyResponseDtos.add(HistoryResponseDto.buildDto(history));
-            System.out.println(history.getBookName());
-        }
-
-
-        return historyResponseDtos;
-    }
-
-    @GetMapping("/ppp")
+    @GetMapping("/all")
     public String findAxll(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         HistoryAllResponseDto historyResponseDto = historyService.findAllByIdCursorBased(0L, 10); // 초기 로드는 cursor를 0으로 설정
 
