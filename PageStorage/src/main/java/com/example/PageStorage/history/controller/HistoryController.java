@@ -312,33 +312,33 @@ public class HistoryController {
 //        return PsResponse.toResponse(SuccessCode.SUCCES,historyResponseDtos);
 //    }
 
-    @GetMapping("/all")
-    public String findAll (@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
-        List<History> histories = historyService.findAll();
-        List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(histories);
-
-        model.addAttribute("history", historyResponseDtos);
-
-        String id = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
-        GrantedAuthority auth = iter.next();
-        String role = auth.getAuthority();
-
-        model.addAttribute("id", id);
-        model.addAttribute("role", role);
-
-        String nickname = userDetails.getNickname();
-        model.addAttribute("nickName", nickname);
-
-        Member member = memberService.find(id);
-        model.addAttribute("member", member);
-
-        return "history_view"; // Thymeleaf 템플릿 파일 이름 반환
-    }
+//    @GetMapping("/all")
+//    public String findAll (@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
+//        List<History> histories = historyService.findAll();
+//        List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(histories);
+//
+//        model.addAttribute("history", historyResponseDtos);
+//
+//        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+//
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+//        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
+//        GrantedAuthority auth = iter.next();
+//        String role = auth.getAuthority();
+//
+//        model.addAttribute("id", id);
+//        model.addAttribute("role", role);
+//
+//        String nickname = userDetails.getNickname();
+//        model.addAttribute("nickName", nickname);
+//
+//        Member member = memberService.find(id);
+//        model.addAttribute("member", member);
+//
+//        return "history_view"; // Thymeleaf 템플릿 파일 이름 반환
+//    }
 
 //    @GetMapping("/a")
 //    public String findA(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
@@ -477,7 +477,7 @@ public class HistoryController {
 //    }
 
     @GetMapping("/all")
-    public String findAxll(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
+    public String findAll(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         HistoryAllResponseDto historyResponseDto = historyService.findAllByIdCursorBased(0L, 10); // 초기 로드는 cursor를 0으로 설정
 
         model.addAttribute("history", historyResponseDto.getHistoryResponseDtos());
