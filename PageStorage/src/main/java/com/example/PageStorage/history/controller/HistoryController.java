@@ -281,12 +281,6 @@ public class HistoryController {
         String mail = userDetails.getMail();
         String userNickName = userDetails.getNickname();
 
-        System.out.println(userNickName);
-
-//        String id = "mm";
-//        String mail = "mm";
-//        String userNickName = "mm";
-
         List<History> histories = historyService.findByMail(mail);
         List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(histories);
 
@@ -295,7 +289,7 @@ public class HistoryController {
         model.addAttribute("nickName", member.getNickName());
         model.addAttribute("member", member);
 
-        return "my_history_view"; // Thymeleaf 템플릿 파일 이름 반환
+        return "my_history_view";
     }
 
     @GetMapping("/bookName/{bookName}")
@@ -504,7 +498,7 @@ public class HistoryController {
 
     @GetMapping("/hhh")
     @ResponseBody
-    public HistoryAllResponseDto getHistoriesss(@RequestParam Long cursor, @RequestParam int size) {
+    public HistoryAllResponseDto getHistories(@RequestParam Long cursor, @RequestParam int size) {
         HistoryAllResponseDto historyAllResponseDto = historyService.findAllByIdCursorBased(cursor, size);
         return historyAllResponseDto;
     }
