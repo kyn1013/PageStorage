@@ -499,8 +499,8 @@ public class HistoryController {
     @GetMapping("/hhh")
     @ResponseBody
     public HistoryAllResponseDto getHistories(@RequestParam Long cursor, @RequestParam int size) {
-        HistoryAllResponseDto historyResponseDto = historyService.findAllByIdCursorBased(cursor, size);
-        return historyResponseDto;
+        HistoryAllResponseDto historyResponseDtos = historyService.findAllByIdCursorBased(cursor, size);
+        return historyResponseDtos;
     }
 
 
