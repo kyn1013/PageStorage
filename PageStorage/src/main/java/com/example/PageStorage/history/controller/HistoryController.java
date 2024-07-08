@@ -83,28 +83,20 @@ public class HistoryController {
             rankingResponseDtos.add(resultResponseDto);
         }
 
-        model.addAttribute("books", rankingResponseDtos);  // 책 정보를 모델에 추가
-        return "ranking_view";  // 같은 페이지로 리디렉트하지 않고, 뷰 이름 반환
-//        return "a";
+        model.addAttribute("books", rankingResponseDtos);
+        return "ranking_view";
     }
 
-    @GetMapping("/top3")
-    public List<String> getTop3Books() {
-        return historyService.getTop3Books();
-    }
 
     /*
-    히스토리 수정
+    히스토리 기록 수정
      */
     @GetMapping("/update/{id}")
     public String updateHistory(@ModelAttribute("historyForm") HistoryRequestDto historyRequestDto
     ,@PathVariable("id") Long id, Principal principal ){
         History history = historyService.find(id);
         HistoryResponseDto historyResponseDto = HistoryResponseDto.buildDto(history);
-        log.info("name={}", principal.getName());
-//        if(!history.getMember().getLogin().getUserLoginId().equals(principal.getName())) { //login id?
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
-//        }
+
         historyRequestDto.setBookName(history.getBookName());
         historyRequestDto.setHistoryContent(history.getHistoryContent());
         historyRequestDto.setPhrase(history.getPhrase());
@@ -129,10 +121,6 @@ public class HistoryController {
         historyRequestDto.setFileName(history.getHistoryImage().getOriginFilename());
 
         return "history_modify_view";
-
-//        History history = historyService.update(historyRequestDto);
-//        HistoryResponseDto historyResponseDto = HistoryResponseDto.buildDto(history);
-//        return PsResponse.toResponse(SuccessCode.SUCCES,historyResponseDto);
     }
 
     @PostMapping("/update/{id}")
@@ -143,16 +131,14 @@ public class HistoryController {
         }
 
         historyRequestDto.setUserLoginId( userDetails.getUsername());
-//        historyService.saveHistory(historyRequestDto).getHistorySeq();
         History savedHistory = historyService.update(historyRequestDto, id);
         Long historySeq = savedHistory.getHistorySeq();
 
-        // 여기에서 sendText 메소드 호출
-        sendTextUpdate(historyRequestDto.getHistoryContent(), historySeq); // 실제 전송할 텍스트는 적절히 조정 필요
+        //sendText 메소드 호출, 장고서버로 보냄
+        sendTextUpdate(historyRequestDto.getHistoryContent(), historySeq);
 
         return "redirect:/histories/all";
     }
-
 
 
     /*
@@ -173,17 +159,18 @@ public class HistoryController {
         }
 
         historyRequestDto.setUserLoginId(userDetails.getUsername());
-//        historyService.saveHistory(historyRequestDto).getHistorySeq();
         History savedHistory = historyService.saveHistory(historyRequestDto);
         Long historySeq = savedHistory.getHistorySeq();
 
-        // 여기에서 sendText 메소드 호출
-        sendText(historyRequestDto.getHistoryContent(), historySeq); // 실제 전송할 텍스트는 적절히 조정 필요
+        //장고서버로 전송
+        sendText(historyRequestDto.getHistoryContent(), historySeq);
 
         return "redirect:/histories/all";
     }
 
-    //장고 서버로 보냄
+    /*
+    장고 서버로 히스토리 기록 전송
+     */
     @PostMapping("/sendText")
     public ResponseEntity<String> sendText(String text, Long historySeq) {
         RestTemplate restTemplate = new RestTemplate();
@@ -195,7 +182,7 @@ public class HistoryController {
 
         // JSONObject를 사용하여 JSON 형식의 데이터 생성
         JSONObject json = new JSONObject();
-        json.put("text", text); // 'text'라는 키에 text 변수의 값을 할당
+        json.put("text", text);
 
         // JSON 문자열로 변환
         String jsonString = json.toString();
@@ -209,14 +196,10 @@ public class HistoryController {
 
         JSONObject jsonObject = new JSONObject(keywordData);
         log.info("응답내용 = {}", keywordData);
-        // Set 집합 생성
+
+        // Set 집합 생성 후 JSON 객체의 키 추출 및 Set에 추가
         Set<String> keysSet = new HashSet<>();
-
-        // JSON 객체의 키 추출 및 Set에 추가
         jsonObject.keys().forEachRemaining(keysSet::add);
-
-        // 추출된 키 출력
-        System.out.println("Extracted Keys: " + keysSet);
 
         Long seq = historySeq;
 
@@ -235,9 +218,8 @@ public class HistoryController {
 
         // JSONObject를 사용하여 JSON 형식의 데이터 생성
         JSONObject json = new JSONObject();
-        json.put("text", text); // 'text'라는 키에 text 변수의 값을 할당
+        json.put("text", text);
 
-        // JSON 문자열로 변환
         String jsonString = json.toString();
 
         // HttpEntity에 JSON 문자열과 헤더를 포함
@@ -248,15 +230,12 @@ public class HistoryController {
         String keywordData = response.getBody();
 
         JSONObject jsonObject = new JSONObject(keywordData);
-        log.info("응답내용 = {}", keywordData);
         // Set 집합 생성
         Set<String> keysSet = new HashSet<>();
 
         // JSON 객체의 키 추출 및 Set에 추가
         jsonObject.keys().forEachRemaining(keysSet::add);
 
-        // 추출된 키 출력
-        System.out.println("Extracted Keys: " + keysSet);
 
         Long seq = historySeq;
 
@@ -266,15 +245,8 @@ public class HistoryController {
 
 
     /*
-    히스토리 조회
+    마이 히스토리 페이지 조회
      */
-//    @GetMapping("/read/{historySeq}")
-//    public ResponseEntity<ResBodyModel> findBySeq(@PathVariable Long historySeq) {
-//        History history = historyService.find(historySeq);
-//        HistoryResponseDto historyResponseDto = HistoryResponseDto.buildDto(history);
-//        return PsResponse.toResponse(SuccessCode.SUCCES,historyResponseDto);
-//    }
-
     @GetMapping("/myPage")
     public String myPage(Model model, @AuthenticationPrincipal CustomUserDetails userDetails) {
         String id = userDetails.getUsername();
@@ -292,184 +264,9 @@ public class HistoryController {
         return "my_history_view";
     }
 
-    @GetMapping("/bookName/{bookName}")
-    public ResponseEntity<ResBodyModel> findByBookName(@PathVariable String bookName) {
-        List<History> histories = historyService.findHistoriesByBookName(bookName);
-        List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(histories);
-        return PsResponse.toResponse(SuccessCode.SUCCES,historyResponseDtos);
-    }
-
-//    @GetMapping("/all")
-//    public ResponseEntity<ResBodyModel> findAll () {
-//        List<History> histories = historyService.findAll();
-//        List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(histories);
-//        return PsResponse.toResponse(SuccessCode.SUCCES,historyResponseDtos);
-//    }
-
-//    @GetMapping("/all")
-//    public String findAll (@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
-//        List<History> histories = historyService.findAll();
-//        List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(histories);
-//
-//        model.addAttribute("history", historyResponseDtos);
-//
-//        String id = SecurityContextHolder.getContext().getAuthentication().getName();
-//
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-//        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
-//        GrantedAuthority auth = iter.next();
-//        String role = auth.getAuthority();
-//
-//        model.addAttribute("id", id);
-//        model.addAttribute("role", role);
-//
-//        String nickname = userDetails.getNickname();
-//        model.addAttribute("nickName", nickname);
-//
-//        Member member = memberService.find(id);
-//        model.addAttribute("member", member);
-//
-//        return "history_view"; // Thymeleaf 템플릿 파일 이름 반환
-//    }
-
-//    @GetMapping("/a")
-//    public String findA(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
-//        // 초기 페이지는 0번째 페이지로 설정하고, 크기를 10으로 설정
-//        Page<History> historyPage = historyService.findAll(0, 10);
-//        List<HistoryResponseDto> historyResponseDtos = new ArrayList<>();
-//
-//        for (History history : historyPage.getContent()) {
-//            historyResponseDtos.add(HistoryResponseDto.buildDto(history));
-//        }
-//
-//        model.addAttribute("history", historyResponseDtos);
-//        model.addAttribute("currentPage", historyPage.getNumber());
-//        model.addAttribute("totalPages", historyPage.getTotalPages());
-//
-//        String id = SecurityContextHolder.getContext().getAuthentication().getName();
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-//        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
-//        GrantedAuthority auth = iter.next();
-//        String role = auth.getAuthority();
-//
-//        model.addAttribute("id", id);
-//        model.addAttribute("role", role);
-//
-//        String nickname = userDetails.getNickname();
-//        model.addAttribute("nickName", nickname);
-//
-//        Member member = memberService.find(id);
-//        model.addAttribute("member", member);
-//
-//        return "a"; // Thymeleaf 템플릿 파일 이름 반환
-//    }
-//
-//    @GetMapping("/b")
-//    @ResponseBody
-//    public Page<HistoryResponseDto> getHistories(@RequestParam int page, @RequestParam int size) {
-//        Page<History> historyPage = historyService.findAll(page, size);
-//
-////        List<History> histories = historyService.findAll();
-////        List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(histories);
-//
-//        List<HistoryResponseDto> historyResponseDtos = new ArrayList<>();
-//
-//        for (History history : historyPage.getContent()) {
-//            historyResponseDtos.add(HistoryResponseDto.buildDto(history));
-//        }
-//
-//        return new PageImpl<>(historyResponseDtos, historyPage.getPageable(), historyPage.getTotalElements());
-//    }
-//
-//    @GetMapping("/c")
-//    public String findAllc(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
-//        List<History> histories = historyService.findAlll(0L, 10);
-//        List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(histories);
-//
-//
-//        model.addAttribute("history", historyResponseDtos);
-//
-//        String id = SecurityContextHolder.getContext().getAuthentication().getName();
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-//        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
-//        GrantedAuthority auth = iter.next();
-//        String role = auth.getAuthority();
-//
-//        model.addAttribute("id", id);
-//        model.addAttribute("role", role);
-//
-//        String nickname = userDetails.getNickname();
-//        model.addAttribute("nickName", nickname);
-//
-//        Member member = memberService.find(id);
-//        model.addAttribute("member", member);
-//
-//        return "c"; // Thymeleaf 템플릿 파일 이름 반환
-//    }
-//
-//    @GetMapping("/d")
-//    @ResponseBody
-//    public List<HistoryResponseDto> getsHistories(@RequestParam Long cursor, @RequestParam int size) {
-//        List<History> histories = historyService.findAlll(cursor, size);
-//
-//        List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(histories);
-//
-//
-//        return historyResponseDtos;
-//    }
-//
-//    @GetMapping("/pp")
-//    public String findAgll(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
-//        List<History> histories = historyService.findAlll(0L, 10); // 초기 로드는 cursor를 0으로 설정
-//        List<HistoryResponseDto> historyResponseDtos = new ArrayList<>();
-//
-//        for (History history : histories) {
-//            historyResponseDtos.add(HistoryResponseDto.buildDto(history));
-//        }
-//
-//        model.addAttribute("history", historyResponseDtos);
-//
-//        String id = SecurityContextHolder.getContext().getAuthentication().getName();
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-//        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
-//        GrantedAuthority auth = iter.next();
-//        String role = auth.getAuthority();
-//
-//        model.addAttribute("id", id);
-//        model.addAttribute("role", role);
-//
-//        String nickname = userDetails.getNickname();
-//        model.addAttribute("nickName", nickname);
-//
-//        Member member = memberService.find(id);
-//        model.addAttribute("member", member);
-//
-//        return "d"; // Thymeleaf 템플릿 파일 이름 반환
-//    }
-//
-//    @GetMapping("/histories")
-//    @ResponseBody
-//    public List<HistoryResponseDto> getHistoㅑries(@RequestParam Long cursor, @RequestParam int size) {
-//        List<History> histories = historyService.findByCursor(cursor, size);
-//        List<HistoryResponseDto> historyResponseDtos = new ArrayList<>();
-//
-//        for (History history : histories) {
-//            historyResponseDtos.add(HistoryResponseDto.buildDto(history));
-//            System.out.println(history.getBookName());
-//        }
-//
-//
-//        return historyResponseDtos;
-//    }
-
+    /*
+    커서 기반 페이징으로 모든 히스토리 조회
+     */
     @GetMapping("/all")
     public String findAll(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         HistoryAllResponseDto historyResponseDto = historyService.findAllByIdCursorBased(0L, 10); // 초기 로드는 cursor를 0으로 설정
@@ -493,52 +290,27 @@ public class HistoryController {
         Member member = memberService.find(id);
         model.addAttribute("member", member);
 
-        return "d"; // Thymeleaf 템플릿 파일 이름 반환
+        return "history_view";
     }
 
-    @GetMapping("/hhh")
+    /*
+    커서 기반 페이징 조회시 추가적으로 데이터를 불러오는 곳
+     */
+    @GetMapping("/addition")
     @ResponseBody
     public HistoryAllResponseDto getHistories(@RequestParam Long cursor, @RequestParam int size) {
-        HistoryAllResponseDto historyResponseDt = historyService.findAllByIdCursorBased(cursor, size);
-        return historyResponseDt;
+        HistoryAllResponseDto historyResponseDto = historyService.findAllByIdCursorBased(cursor, size);
+        return historyResponseDto;
     }
 
 
-//    @GetMapping("/test")
-//    public String find (@AuthenticationPrincipal CustomUserDetails userDetails, Model model, @RequestParam(value = "cursor") Long cursor) {
-//        List<History> histories = historyService.test(cursor);
-//        List<HistoryResponseDto> historyResponseDtos = HistoryResponseDto.buildDtoList(histories);
-//
-//        model.addAttribute("history", historyResponseDtos);
-//
-//        String id = SecurityContextHolder.getContext().getAuthentication().getName();
-//
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-//        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
-//        GrantedAuthority auth = iter.next();
-//        String role = auth.getAuthority();
-//
-//        model.addAttribute("id", id);
-//        model.addAttribute("role", role);
-//
-//        String nickname = userDetails.getNickname();
-//        model.addAttribute("nickName", nickname);
-//
-//        Member member = memberService.find(id);
-//        model.addAttribute("member", member);
-//
-//        return "history_view"; // Thymeleaf 템플릿 파일 이름 반환
-//    }
-
-
-
+    /*
+    히스토리 상세 조회
+     */
     @GetMapping(value = "/read/{historySeq}")
     public String findBySeq(Model model, @PathVariable Long historySeq, CommentRequestDto commentRequestDto,@AuthenticationPrincipal CustomUserDetails userDetails) {
         String loginId = userDetails.getUserLoginId();
         Member member = memberService.find(loginId);
-//        String userNickName = "mm";
 
         History history = historyService.find(historySeq);
         List<Comment> comments = commentService.findByHistory(historySeq);
@@ -552,8 +324,6 @@ public class HistoryController {
         return "history_detail_view";
     }
 
-
-
     /*
     히스토리 삭제
      */
@@ -563,24 +333,4 @@ public class HistoryController {
         return "redirect:/histories/all";
     }
 
-    @DeleteMapping()
-    public ResponseEntity<ResBodyModel> delete(@RequestBody HistoryDeleteDto historyDeleteDto) {
-        historyService.delete(historyDeleteDto);
-        return PsResponse.toResponse(SuccessCode.SUCCES);
-    }
-
-    /*
-    이미지 삭제
-     */
-    @DeleteMapping("/image/{imageSeq}")
-    public ResponseEntity<ResBodyModel> deleteByImageSeq(@PathVariable Long imageSeq) {
-        historyService.deleteImage(imageSeq);
-        return PsResponse.toResponse(SuccessCode.SUCCES);
-    }
-
-    @DeleteMapping("/delete/keyword")
-    public ResponseEntity<ResBodyModel> deleteKeyword() {
-        historyService.deleteKeyword();
-        return PsResponse.toResponse(SuccessCode.SUCCES);
-    }
 }
