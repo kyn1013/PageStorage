@@ -1,4 +1,4 @@
-package com.example.PageStorage.api.service;
+package com.example.PageStorage.recommendation.service;
 
 import com.example.PageStorage.history.repository.KeywordRepository;
 import lombok.RequiredArgsConstructor;

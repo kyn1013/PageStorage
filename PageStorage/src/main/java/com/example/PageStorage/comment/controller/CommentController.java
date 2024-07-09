@@ -30,18 +30,10 @@ import java.util.List;
 @RequestMapping("/comments")
 public class CommentController {
     private final CommentService commentService;
-    private final HistoryService historyService;
 
     /*
    댓글 추가
     */
-//    @PostMapping()
-//    public ResponseEntity<ResBodyModel> commentSave(@RequestBody CommentRequestDto commentRequestDto) {
-//
-//        Comment comment = commentService.saveComment(commentRequestDto);
-//        CommentResponseDto commentResponseDto = CommentResponseDto.buildDto(comment);
-//        return PsResponse.toResponse(SuccessCode.SUCCES,commentResponseDto);
-//    }
 
     @PostMapping("/create/{id}")
     public String commentSave(@PathVariable Long id, @ModelAttribute("commentForm") CommentRequestDto commentRequestDto,
@@ -50,6 +42,15 @@ public class CommentController {
         commentRequestDto.setUserLoginId(userDetails.getUsername());
         commentService.saveComment(id, commentRequestDto);
         return String.format("redirect:/histories/read/%s", id);
+    }
+
+    /*
+    삭제
+     */
+    @GetMapping("/delete/{commentSeq}")
+    public String delete(@PathVariable Long commentSeq) {
+        commentService.delete(commentSeq);
+        return "redirect:/histories/all";
     }
 
     /*
@@ -96,14 +97,4 @@ public class CommentController {
         CommentResponseDto commentResponseDto = CommentResponseDto.buildDto(comment);
         return PsResponse.toResponse(SuccessCode.SUCCES,commentResponseDto);
     }
-
-    /*
-    삭제
-     */
-    @GetMapping("/delete/{commentSeq}")
-    public String delete(@PathVariable Long commentSeq) {
-        commentService.delete(commentSeq);
-        return "redirect:/histories/all";
-    }
-
 }

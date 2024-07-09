@@ -1,13 +1,15 @@
 package com.example.PageStorage.recommendation.controller;
 
-import com.example.PageStorage.api.gpt.ChatGptResponse;
-import com.example.PageStorage.api.gpt.ChatGptService;
-import com.example.PageStorage.api.gpt.ClientResponse;
-import com.example.PageStorage.api.gpt.QuestionRequestDto;
-import com.example.PageStorage.api.naverbook.BookApiClient;
-import com.example.PageStorage.api.naverbook.BooksResponseDto;
-import com.example.PageStorage.api.naverbook.ResultResponseDto;
-import com.example.PageStorage.api.service.KeywordService;
+import com.example.PageStorage.recommendation.api.gpt.ChatGptResponse;
+import com.example.PageStorage.recommendation.api.gpt.ChatGptService;
+import com.example.PageStorage.recommendation.api.gpt.ClientResponse;
+import com.example.PageStorage.recommendation.api.gpt.QuestionRequestDto;
+import com.example.PageStorage.recommendation.api.naverbook.BookApiClient;
+import com.example.PageStorage.recommendation.api.naverbook.BooksResponseDto;
+import com.example.PageStorage.recommendation.api.naverbook.ResultResponseDto;
+import com.example.PageStorage.recommendation.service.KeywordService;
+import com.example.PageStorage.common.exception.recommendation.BookItemsNotFoundException;
+import com.example.PageStorage.recommendation.service.RecommendationService;
 import com.example.PageStorage.security.login.dto.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +31,7 @@ public class RecommendationController {
     private final ChatGptService chatGptService;
     private final BookApiClient bookApiClient;
     private final KeywordService keywordService;
+    private final RecommendationService recommendationService;
 
     @GetMapping("/recommendations")
     public String createHistoryForm(Model model) {
@@ -90,46 +93,6 @@ public class RecommendationController {
         return "recommendationForm";
     }
 
-    /*
-    test
-     */
-
-    private static final int MAX_RETRIES = 5;
-    private static final int RETRY_DELAY_MS = 1000;
-
-    public BooksResponseDto requestBookWithRetry(String bookTitle) {
-        int attempt = 0;
-        while (attempt < MAX_RETRIES) {
-            try {
-                return bookApiClient.requestBook(bookTitle);
-            } catch (ArrayIndexOutOfBoundsException e) {
-                attempt++;
-                if (attempt >= MAX_RETRIES) {
-                    throw e;
-                }
-                try {
-                    Thread.sleep(RETRY_DELAY_MS * attempt); // 점점 증가하는 대기 시간
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                    throw new RuntimeException("Thread interrupted during backoff delay", ie);
-                }
-            }
-        }
-        throw new RuntimeException("Max retries exceeded");
-    }
-
-
-    private Map<String, BooksResponseDto> cache = new HashMap<>();
-
-    public BooksResponseDto requestBookWithCacheAndRetry(String bookTitle) {
-        if (cache.containsKey(bookTitle)) {
-            return cache.get(bookTitle);
-        }
-        BooksResponseDto response = requestBookWithRetry(bookTitle);
-        cache.put(bookTitle, response);
-        return response;
-    }
-
     @GetMapping("/keyword")
     public String keyword(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         String mail = userDetails.getMail();
@@ -139,10 +102,9 @@ public class RecommendationController {
         model.addAttribute("keywords", keywordList);
         model.addAttribute("nickName", userNickName);
 
-        ChatGptResponse chatGptResponse = null;
         QuestionRequestDto questionRequestDto = new QuestionRequestDto();
         questionRequestDto.setQuestion(keywordList.toString());
-        chatGptResponse = chatGptService.askKeywordQuestion(questionRequestDto);
+        ChatGptResponse chatGptResponse = chatGptService.askKeywordQuestion(questionRequestDto);
 
         List<ChatGptResponse.Choice> choices = chatGptResponse.getChoices();
         List<String> contents = new ArrayList<>();
@@ -150,8 +112,6 @@ public class RecommendationController {
             String content = choice.getMessage().getContent();
             contents.add(content);
         }
-
-        System.out.println("책 제목 = " + contents.toString());
 
         ClientResponse clientResponse = ClientResponse.builder().contents(contents).build();
 
@@ -166,19 +126,14 @@ public class RecommendationController {
             bookTitles.add(matcher.group(1));
         }
 
-        System.out.println("책 제목 " + bookTitles.toString());
-
         List<BooksResponseDto> booksResponseDtos = new ArrayList<>();
         for (String bookTitle : bookTitles) {
-            booksResponseDtos.add(requestBookWithCacheAndRetry(bookTitle));
+            booksResponseDtos.add(recommendationService.requestBookWithCacheAndRetry(bookTitle));
         }
 
         List<ResultResponseDto> resultResponseDtos = new ArrayList<>();
         for (BooksResponseDto booksResponseDto : booksResponseDtos) {
             if (booksResponseDto.getItems() != null && booksResponseDto.getItems().length > 0) {
-                log.info("!!!!!!!!!!!!!!답변={}", booksResponseDto.getItems()[0]);
-                log.info("!!!!!!!!!!!!!!!!이미지={}", booksResponseDto.getItems()[0].getTitle());
-                log.info("!!!!!!!!!!!!!!!!이미지={}", booksResponseDto.getItems()[0].getDescription());
                 BooksResponseDto.Item firstItem = booksResponseDto.getItems()[0];
 
                 ResultResponseDto resultResponseDto = ResultResponseDto.builder()
@@ -191,7 +146,7 @@ public class RecommendationController {
 
                 resultResponseDtos.add(resultResponseDto);
             } else {
-                log.warn("No items found for the book response");
+                throw new BookItemsNotFoundException("책 응답 데이터가 없습니다.");
             }
         }
 

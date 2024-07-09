@@ -1,4 +1,4 @@
-package com.example.PageStorage.api.gpt;
+package com.example.PageStorage.recommendation.api.gpt;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

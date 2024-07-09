@@ -1,4 +1,4 @@
-package com.example.PageStorage.api.gpt;
+package com.example.PageStorage.recommendation.api.gpt;
 
 import lombok.Builder;
 import lombok.Getter;

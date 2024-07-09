@@ -1,7 +1,7 @@
 package com.example.PageStorage.history.controller;
 
-import com.example.PageStorage.api.naverbook.BookApiClient;
-import com.example.PageStorage.api.naverbook.BooksResponseDto;
+import com.example.PageStorage.recommendation.api.naverbook.BookApiClient;
+import com.example.PageStorage.recommendation.api.naverbook.BooksResponseDto;
 import com.example.PageStorage.comment.dto.CommentRequestDto;
 import com.example.PageStorage.comment.dto.response.CommentResponseDto;
 import com.example.PageStorage.comment.service.CommentService;

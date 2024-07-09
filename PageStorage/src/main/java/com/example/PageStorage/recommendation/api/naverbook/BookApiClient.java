@@ -1,4 +1,4 @@
-package com.example.PageStorage.api.naverbook;
+package com.example.PageStorage.recommendation.api.naverbook;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
