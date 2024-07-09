@@ -17,7 +17,6 @@ public class ChatGptResponse {
     private String model;
     private Usage usage;
     private List<Choice> choices;
-//    private ChatGptMessage message; //이렇게두고
 
     @Getter
     @Setter
@@ -34,9 +33,6 @@ public class ChatGptResponse {
     @Setter
     public static class Choice {
         private ChatGptMessage message;
-//        @JsonProperty("finish_reason")
-//        private String finishReason;
-//        private int index;
     }
 }
 

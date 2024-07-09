@@ -35,7 +35,7 @@ public class ChatGptService {
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
         requestFactory.setConnectTimeout(60000);
         //답변이 길어질 경우 TimeOut Error가 발생하므로 1분정도 설정
-        requestFactory.setReadTimeout(60 * 1000);   //  1min = 60 sec * 1,000ms
+        requestFactory.setReadTimeout(60 * 1000);
         restTemplate.setRequestFactory(requestFactory);
 
         ResponseEntity<ChatGptResponse> responseEntity = restTemplate.postForEntity(

@@ -12,11 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ClientResponse {
 
-//    private List<ChatGptResponse.Choice> choices;
-
     private List<String> contents;
-
-//    private ChatGptMessage message;
 
     @Builder
     public ClientResponse(List<String> contents){

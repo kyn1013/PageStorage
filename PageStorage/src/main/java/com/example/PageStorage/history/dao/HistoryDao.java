@@ -23,12 +23,14 @@ public class HistoryDao {
 
     private final HistoryRepository historyRepository;
 
-    public List<History> slice(Long cursor, Pageable pageable){
-        return historyRepository.findByHistorySeqGreaterThan(cursor, pageable);
+    public List<History> findAllByOrderByHistorySeqDescCreatedDateDesc(Pageable pageable) {
+        List<History> histories = historyRepository.findAllByOrderByHistorySeqDescCreatedDateDesc(pageable);
+        return histories;
     }
 
-    public Page<History> findAll(Pageable pageable) {
-        return historyRepository.findAll(pageable);
+    public List<History> findByHistorySeqLessThanOrderByHistorySeqDescCreatedDateDesc(@Param("historySeq") long historySeq, Pageable pageable) {
+        List<History> histories = historyRepository.findByHistorySeqLessThanOrderByHistorySeqDescCreatedDateDesc(historySeq, pageable);
+        return histories;
     }
 
     public History save(History history) {
@@ -37,11 +39,6 @@ public class HistoryDao {
 
     public History find(Long historySeq) {
         History history = historyRepository.findById(historySeq).orElseThrow(() -> new DataNotFoundException("찾을 수 없습니다."));
-        return history;
-    }
-
-    public History findByMemberNameAndBookName(String memberName, String bookName) {
-        History history = historyRepository.findByMemberNameAndBookName(memberName, bookName).orElseThrow(() -> new DataNotFoundException("찾을 수 없습니다."));
         return history;
     }
 
@@ -54,16 +51,6 @@ public class HistoryDao {
         List<History> histories = historyRepository.findAll();
         return histories;
     }
-
-    public List<History> findAllByCreatedDate() {
-        List<History> histories = historyRepository.findAllOrderByCreatedDateDesc();
-        return histories;
-    }
-
-//    public void delete(String bookName) {
-//        History history = historyRepository.findByBookName(bookName).orElseThrow(() -> new DataNotFoundException("찾을 수 없습니다."));
-//        historyRepository.delete(history);
-//    }
 
     public void delete(Long historySeq) {
         History history = historyRepository.findById(historySeq).orElseThrow(() -> new DataNotFoundException("찾을 수 없습니다."));
@@ -80,14 +67,10 @@ public class HistoryDao {
     }
 
     public List<String> findTopBookNamesLast24Hours(LocalDateTime startDate){
-        PageRequest pageRequest = PageRequest.of(0, 3); // 상위 3개 결과만 가져오기 위한 페이지 요청
+        PageRequest pageRequest = PageRequest.of(0, 3); // 상위 3개 결과만 가져오기 위한 페이지
         return historyRepository.findTopBookNamesLast24Hours(startDate, pageRequest);
     }
 
-    public List<String> getTop3Books(){
-        Pageable topThree = PageRequest.of(0, 3);
-        return historyRepository.findTop3BookNames(topThree);
-    }
 
 
 }

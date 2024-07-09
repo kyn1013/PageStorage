@@ -2,17 +2,12 @@ package com.example.PageStorage.history.controller;
 
 import com.example.PageStorage.api.naverbook.BookApiClient;
 import com.example.PageStorage.api.naverbook.BooksResponseDto;
-import com.example.PageStorage.api.naverbook.ResultResponseDto;
 import com.example.PageStorage.comment.dto.CommentRequestDto;
 import com.example.PageStorage.comment.dto.response.CommentResponseDto;
 import com.example.PageStorage.comment.service.CommentService;
-import com.example.PageStorage.common.PsResponse;
-import com.example.PageStorage.common.code.SuccessCode;
-import com.example.PageStorage.common.model.ResBodyModel;
 import com.example.PageStorage.entity.Comment;
 import com.example.PageStorage.entity.History;
 import com.example.PageStorage.entity.Member;
-import com.example.PageStorage.history.dto.HistoryDeleteDto;
 import com.example.PageStorage.history.dto.HistoryRequestDto;
 import com.example.PageStorage.history.dto.response.HistoryAllResponseDto;
 import com.example.PageStorage.history.dto.response.HistoryDetailResponseDto;
@@ -23,13 +18,8 @@ import com.example.PageStorage.member.service.MemberService;
 import com.example.PageStorage.security.login.dto.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.json.JSONParser;
 import org.json.JSONObject;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Slice;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -40,12 +30,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
