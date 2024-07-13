@@ -25,14 +25,9 @@ public class MemberDao {
         return memberRepository.existsByMail(mail);
     }
 
-
-//    public Member findByMemberId(String memberId) {
-//        return memberRepository.findByMemberId(memberId).orElseThrow(() -> new DataNotFoundException("존재하지 않은 회원입니다."));
-//    }
     public Member find(Long memberSeq) {
         Member member = memberRepository.findById(memberSeq).orElseThrow(() -> new DataNotFoundException("사용자를 찾을 수 없습니다."));
         return member;
-
     }
 
     public Member findNickName(String nickName) {
@@ -59,13 +54,6 @@ public class MemberDao {
         Member member = memberRepository.findById(memberSeq).orElseThrow(() -> new DataNotFoundException("존재하지 않는 회원입니다."));
         memberRepository.delete(member);
     }
-
-//    public void delete(String userLoginId) {
-//        Member member = memberRepository.findById(memberSeq).orElseThrow(() -> new DataNotFoundException("존재하지 않는 회원입니다."));
-//        memberRepository.delete(member);
-//    }
-
-
 
 //    public Boolean existsByMemberId(String memberId) {
 //        return memberRepository.existsByMemberId(memberId);

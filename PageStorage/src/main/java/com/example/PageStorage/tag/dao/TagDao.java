@@ -1,8 +1,6 @@
 package com.example.PageStorage.tag.dao;
 
 import com.example.PageStorage.common.exception.DataNotFoundException;
-import com.example.PageStorage.entity.Genre;
-import com.example.PageStorage.entity.Member;
 import com.example.PageStorage.entity.Tag;
 import com.example.PageStorage.tag.repository.TagRepository;
 import lombok.RequiredArgsConstructor;

@@ -201,17 +201,6 @@ public class HistoryService {
     }
 
 
-//    public List<History> findAll() {
-//        return historyDao.findAllByCreatedDate();
-//    }
-//
-//
-//    public Page<History> findAll(int page, int size) {
-//        Pageable pageable = PageRequest.of(page, size);
-//        return historyDao.findAll(pageable);
-//    }
-
-
     /*
     커서기반 페이징 히스토리 조회
      */

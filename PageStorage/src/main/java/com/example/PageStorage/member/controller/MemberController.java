@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
-//@RestController
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/members")
@@ -40,14 +39,6 @@ public class MemberController {
     /*
     회원 가입
      */
-//    @PostMapping("/join")
-//    public ResponseEntity<ResBodyModel> joinMember(@RequestBody MemberSaveRequestDto memberSaveRequestDto) {
-//
-//        Member member = memberService.saveMember(memberSaveRequestDto);
-//        ResponseMemberInfoDto memberResponseInfoDto = ResponseMemberInfoDto.buildDto(member);
-//        return PsResponse.toResponse(SuccessCode.SUCCES, memberResponseInfoDto);
-//    }
-
     @GetMapping("/join")
     public String createJoinForm(Model model) {
         model.addAttribute("joinForm", new MemberSaveRequestDto());
@@ -56,11 +47,6 @@ public class MemberController {
 
     @PostMapping("/join")
     public String join(@ModelAttribute("joinForm") @Valid MemberSaveRequestDto memberSaveRequestDto, BindingResult bindingResult) {
-//        if (bindingResult.hasErrors()) {
-//            return "members/createJoinForm";
-//        }
-//        memberService.saveMember(memberSaveRequestDto);
-//        return "redirect:/members/login";
         if (bindingResult.hasErrors()) {
             return "members/createJoinForm";
         }
@@ -87,8 +73,7 @@ public class MemberController {
     @GetMapping("/update/username")
     public String updateUsernameForm(@ModelAttribute("memberUpdateForm") MemberUpdateRequestDto memberUpdateRequestDto
     , @AuthenticationPrincipal CustomUserDetails userDetails) {
-//        model.addAttribute("memberUpdateForm", new MemberUpdateRequestDto());
-//        System.out.println("sssssss");
+
         Member member = memberService.find(userDetails.getUserLoginId());
         memberUpdateRequestDto.setNickName(member.getNickName());
 
@@ -106,68 +91,8 @@ public class MemberController {
                                 @AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
 
         memberUpdateRequestDto.setUserLoginId(userDetails.getUserLoginId());
-        System.out.println("여깃!!!"+memberUpdateRequestDto.getUserLoginId());
         memberService.updateProfile(memberUpdateRequestDto);
-        System.out.println("afdasfad");
         return "redirect:/histories/all";
     }
-
-
-
-    /*
-    로그인
-     */
-
-
-
-    /*
-    회원 조회
-     */
-    @GetMapping("/user/{memberId}") //단일 회원 조회
-    public ResponseEntity<ResBodyModel> readMemberId(@PathVariable String memberId) {
-        Member member = memberService.find(memberId);
-        ResponseMemberInfoDto memberResponseInfoDto = ResponseMemberInfoDto.buildDto(member);
-        return PsResponse.toResponse(SuccessCode.SUCCES, memberResponseInfoDto);
-    }
-
-    @GetMapping("/{nickName}") //단일 회원 조회
-    public ResponseEntity<ResBodyModel> readNickName(@PathVariable String nickName) {
-        Member member = memberService.findNickName(nickName);
-        ResponseMemberInfoDto memberResponseInfoDto = ResponseMemberInfoDto.buildDto(member);
-        return PsResponse.toResponse(SuccessCode.SUCCES, memberResponseInfoDto);
-    }
-
-    @GetMapping("/all") //회원 전체 조회
-    public ResponseEntity<ResBodyModel> readAll() {
-        List<Member> members = memberService.findAll();
-        List<ResponseMemberInfoDto> memberResponseInfoDtoList = ResponseMemberInfoDto.buildResponseMemberDtoList(members);
-        return PsResponse.toResponse(SuccessCode.SUCCES, memberResponseInfoDtoList);
-    }
-
-    /*
-    회원 수정
-     */
-    @PatchMapping("/")
-    public ResponseEntity<ResBodyModel> updateMember(@RequestBody MemberSaveRequestDto memberSaveRequestDto){
-        Member member = memberService.update(memberSaveRequestDto);
-        ResponseMemberInfoDto memberResponseInfoDto = ResponseMemberInfoDto.buildDto(member);
-        return PsResponse.toResponse(SuccessCode.SUCCES, memberResponseInfoDto);
-    }
-
-    /*
-    회원 삭제
-     */
-    @DeleteMapping("delete/{memberSeq}") //회원 삭제
-    public ResponseEntity<ResBodyModel> delete(@PathVariable Long memberSeq) {
-        memberService.delete(memberSeq);
-        return PsResponse.toResponse(SuccessCode.SUCCES);
-    }
-
-//    @DeleteMapping("/{userLoginId}") //회원 삭제
-//    public ResponseEntity<ResBodyModel> delete(@PathVariable String userLoginId) {
-//        Login login = memberService.delete(userLoginId);
-//        return PsResponse.toResponse(SuccessCode.SUCCES, login);
-//    }
-
 
 }

@@ -70,9 +70,6 @@ public class MemberServiceImpl implements MemberService{
 
         login.addMember(savedMember);
 
-//        existsByUserLoginId(login.getUserLoginId());
-//        existsByMail(member.getMail());
-
         loginDao.save(login); //로그인, 비밀번호 저장
         return savedMember;
     }

@@ -34,7 +34,6 @@ public class CommentController {
     /*
    댓글 추가
     */
-
     @PostMapping("/create/{id}")
     public String commentSave(@PathVariable Long id, @ModelAttribute("commentForm") CommentRequestDto commentRequestDto,
                               @AuthenticationPrincipal CustomUserDetails userDetails) {

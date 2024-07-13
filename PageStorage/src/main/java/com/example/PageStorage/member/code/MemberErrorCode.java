@@ -7,7 +7,6 @@ import lombok.Getter;
 public enum MemberErrorCode implements BodyCode {
     Member_NOT_FOUND("MEM01", "유저를 찾을 수 없습니다."),
     Member_ID_ALREADY_EXISTS("MEM02","아이디가 이미 존재합니다."),
-    POINT_NOT_FOUND("MEM03","포인트를 찾을 수 없습니다.")
     ;
 
     private final String message;

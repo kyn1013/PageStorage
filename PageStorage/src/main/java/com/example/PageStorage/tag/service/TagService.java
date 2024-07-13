@@ -1,9 +1,6 @@
 package com.example.PageStorage.tag.service;
 
-import com.example.PageStorage.entity.Genre;
 import com.example.PageStorage.entity.Tag;
-import com.example.PageStorage.genre.dto.GenreRequestDto;
-import com.example.PageStorage.genre.dto.GenreUpdateRequestDto;
 import com.example.PageStorage.tag.dao.TagDao;
 import com.example.PageStorage.tag.dto.TagRequestDto;
 import com.example.PageStorage.tag.dto.TagUpdateRequestDto;

@@ -1,6 +1,5 @@
 package com.example.PageStorage.tag.repository;
 
-import com.example.PageStorage.entity.Genre;
 import com.example.PageStorage.entity.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 

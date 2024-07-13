@@ -26,16 +26,4 @@ public class HistoryTagController {
         return PsResponse.toResponse(SuccessCode.SUCCES);
     }
 
-    //장고 서버로 보냄
-    @PostMapping("/sendText")
-    public ResponseEntity<String> sendText(@RequestBody String text) {
-        RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8000/analyze"; // 장고 서버 URL
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> request = new HttpEntity<>(text, headers);
-        log.info("text 내용 : {}", text);
-        ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
-        return ResponseEntity.ok("Keywords received from Django: " + response.getBody());
-    }
 }

@@ -1,8 +1,6 @@
 package com.example.PageStorage.tag.dto.response;
 
-import com.example.PageStorage.entity.Genre;
 import com.example.PageStorage.entity.Tag;
-import com.example.PageStorage.genre.dto.response.GenreResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
