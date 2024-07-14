@@ -74,59 +74,12 @@ public class MemberServiceImpl implements MemberService{
         return savedMember;
     }
 
-    /*
-    로그인 아이디 중복 검사
-     */
-    private void existsByUserLoginId(String loginId) {
-        Boolean result = loginDao.existsByUserLoginId(loginId);
-        if (result) {
-            throw new LoginIdAlreadyExistsException("이미 존재하는 아이디입니다.");
-        }
-    }
-
-    /*
-    회원 이메일 중복 검사
-     */
-    private void existsByMail(String mail) {
-        Boolean result = memberDao.existsByMail(mail);
-        if (result) {
-            throw new MailAlreadyExistsException("이미 존재하는 메일입니다.");
-        }
-    }
-
-
     @Override
     public Member find(String userLoginId) {
         Member member = loginDao.findByUserLoginId(userLoginId);
         return member;
     }
 
-    @Override
-    public Member find(Long memberSeq) {
-        return memberDao.find(memberSeq);
-    }
-
-    @Override
-    public Member findNickName(String nickName) {
-        return memberDao.findNickName(nickName);
-    }
-
-    @Override
-    public Member findName(String name) {
-        return memberDao.findName(name);
-    }
-
-    @Override
-    public List<Member> findAll() {
-        return memberDao.findAll();
-    }
-
-    @Override
-    public Member update(MemberSaveRequestDto memberSaveRequestDto) {
-        Member member = memberDao.findName(memberSaveRequestDto.getName());
-//        member.changeInfo(memberSaveRequestDto);
-        return member;
-    }
 
     @Override
     public Member updateProfile(MemberUpdateRequestDto memberUpdateRequestDto) throws IOException {
@@ -169,17 +122,14 @@ public class MemberServiceImpl implements MemberService{
             member.addMemberImage(memberImage);
             memberImageDao.save(memberImage);
 
-            // 멤버에 이미지 정보 추가
-            // member.changeProfile(memberUpdateRequestDto, memberImage);
-
-            // memberImageDao.save(memberImage);
-            // memberDao.save(member);
-
             memberUpdateRequestDto.getImageFile().transferTo(new File(filePath));
 
         return member;
     }
 
+    /*
+    이미지 관련 메서드
+     */
     public String createPath(String storeFilename) {
         return FOLDER_PATH+storeFilename;
     }
@@ -198,13 +148,4 @@ public class MemberServiceImpl implements MemberService{
         return ext;
     }
 
-    @Override
-    public Login delete(String userLoginId) {
-        return loginDao.delete(userLoginId);
-    }
-
-    @Override
-    public void delete(Long memberSeq) {
-        memberDao.delete(memberSeq);
-    }
 }

@@ -1,6 +1,5 @@
 package com.example.PageStorage.member.controller;
 
-import com.example.PageStorage.common.PsResponse;
 import com.example.PageStorage.common.exception.member.BothLoginIdAndMailExistsException;
 import com.example.PageStorage.common.exception.member.LoginIdAlreadyExistsException;
 import com.example.PageStorage.common.exception.member.MailAlreadyExistsException;
@@ -8,8 +7,6 @@ import com.example.PageStorage.entity.Member;
 import com.example.PageStorage.history.dto.HistoryRequestDto;
 import com.example.PageStorage.member.dto.MemberSaveRequestDto;
 import com.example.PageStorage.member.dto.MemberUpdateRequestDto;
-import com.example.PageStorage.member.dto.response.MemberResponseDTO;
-import com.example.PageStorage.member.dto.response.ResponseMemberInfoDto;
 import com.example.PageStorage.member.service.MemberService;
 import com.example.PageStorage.common.model.ResBodyModel;
 import com.example.PageStorage.security.login.dto.CustomUserDetails;
@@ -80,7 +77,7 @@ public class MemberController {
         if(member.getMemberImage() != null && member.getMemberImage().getOriginFilename() != null) {
             memberUpdateRequestDto.setFileName(member.getMemberImage().getOriginFilename());
         } else {
-            memberUpdateRequestDto.setFileName(null); // null 처리
+            memberUpdateRequestDto.setFileName(null);
         }
 
         return "members/updateForm";

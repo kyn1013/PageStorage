@@ -10,21 +10,9 @@ import java.util.List;
 
 public interface MemberService {
     Member saveMember(MemberSaveRequestDto memberSaveRequestDto);
+
     Member find(String userLoginId);
-
-    Member findNickName(String nickName);
-
-    Member findName(String name);
-
-    Member find(Long memberSeq);
-
-    List<Member> findAll();
-
-    Member update(MemberSaveRequestDto memberSaveRequestDto);
 
     Member updateProfile(MemberUpdateRequestDto memberUpdateRequestDto) throws IOException;
 
-    Login delete(String userLoginid);
-
-    void delete(Long memberSeq);
 }

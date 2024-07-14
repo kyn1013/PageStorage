@@ -20,6 +20,10 @@ import org.springframework.web.client.RestTemplate;
 public class HistoryTagController {
     private final HistoryTagService historyTagService;
 
+    /*
+    테스트용
+     */
+
     @DeleteMapping("/{historytags}")
     public ResponseEntity<ResBodyModel> deleteBySeq(@PathVariable Long historytags) {
         historyTagService.delete(historytags);

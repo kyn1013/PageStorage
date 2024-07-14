@@ -33,12 +33,11 @@ public class TagDao {
     public Tag findOrCreate(String tagName) {
         Tag tag;
         try {
-            // tagRepository의 findByTagName 메소드를 호출하여 태그를 찾습니다.
-            // 태그가 존재하면 반환하고, 존재하지 않으면 DataNotFoundException 예외를 던집니다.
+            // 태그가 존재하면 반환, 존재하지 않으면 예외 던짐
             tag = tagRepository.findByTagName(tagName).orElseThrow(() ->
                     new DataNotFoundException("존재하지 않는 태그입니다."));
         } catch (DataNotFoundException e) {
-            // 태그가 존재하지 않을 경우, 새로운 태그를 생성하고 저장합니다.
+            // 태그가 존재하지 않을 경우, 새로운 태그를 생성하고 저장함
             tag = new Tag(tagName);
             tagRepository.save(tag);
         }

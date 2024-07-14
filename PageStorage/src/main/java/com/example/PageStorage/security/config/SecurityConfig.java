@@ -22,7 +22,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 
 //        http
-//                .authorizeHttpRequests((auth) -> auth //순서를 잘 기켜야 ㅗㅅ세
+//                .authorizeHttpRequests((auth) -> auth //순서를 잘 기켜야 함
 //                        .requestMatchers("/", "/members/login", "/members/join", "joinProc").permitAll()
 //                        .requestMatchers("/admin").hasRole("ADMIN")
 ////                        .requestMatchers("/my/**").hasAnyRole("ADMIN", "USER")
