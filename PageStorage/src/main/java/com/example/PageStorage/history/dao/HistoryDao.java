@@ -1,5 +1,6 @@
 package com.example.PageStorage.history.dao;
 
+import com.example.PageStorage.common.exception.history.HistoryNotFoundException;
 import com.example.PageStorage.entity.Member;
 import com.example.PageStorage.history.repository.HistoryRepository;
 import com.example.PageStorage.common.exception.DataNotFoundException;
@@ -38,7 +39,7 @@ public class HistoryDao {
     }
 
     public History find(Long historySeq) {
-        History history = historyRepository.findById(historySeq).orElseThrow(() -> new DataNotFoundException("찾을 수 없습니다."));
+        History history = historyRepository.findById(historySeq).orElseThrow(() -> new HistoryNotFoundException("존재하지 않는 히스토리입니다."));
         return history;
     }
 
@@ -53,7 +54,7 @@ public class HistoryDao {
     }
 
     public void delete(Long historySeq) {
-        History history = historyRepository.findById(historySeq).orElseThrow(() -> new DataNotFoundException("찾을 수 없습니다."));
+        History history = historyRepository.findById(historySeq).orElseThrow(() -> new HistoryNotFoundException("존재하지 않는 히스토리입니다."));
         historyRepository.delete(history);
     }
 

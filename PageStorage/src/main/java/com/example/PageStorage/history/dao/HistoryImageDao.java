@@ -19,7 +19,6 @@ public class HistoryImageDao {
         return historyImageRepository.save(historyImage);
     }
 
-    //히스토리아이디로 히스토리 이미지 찾기
     public HistoryImage findByHistorySeq(Long historySeq) {
         return historyImageRepository.findByHistoryHistorySeq(historySeq);
     }

@@ -1,6 +1,7 @@
 package com.example.PageStorage.historytag.dao;
 
 import com.example.PageStorage.common.exception.DataNotFoundException;
+import com.example.PageStorage.common.exception.historytag.HistoryTagNotFoundException;
 import com.example.PageStorage.entity.HistoryTag;
 import com.example.PageStorage.historytag.repository.HistoryTagRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class HistoryTagDao {
     }
 
     public void delete(Long historyTagSeq) {
-        HistoryTag historyTag = historyTagRepository.findById(historyTagSeq).orElseThrow(() -> new DataNotFoundException("존재하지 않는 회원입니다."));
+        HistoryTag historyTag = historyTagRepository.findById(historyTagSeq).orElseThrow(() -> new HistoryTagNotFoundException("존재하지 않는 회원입니다."));
         historyTagRepository.delete(historyTag);
     }
 
