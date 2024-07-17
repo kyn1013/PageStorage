@@ -1,6 +1,5 @@
 package com.example.PageStorage.entity;
 
-import com.example.PageStorage.genre.dto.GenreUpdateRequestDto;
 import com.example.PageStorage.history.dto.HistoryRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

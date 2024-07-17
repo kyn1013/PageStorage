@@ -1,5 +1,7 @@
 package com.example.PageStorage.member.dao;
 
+import com.example.PageStorage.common.exception.member.MailNotFoundException;
+import com.example.PageStorage.common.exception.member.MemberNotFoundException;
 import com.example.PageStorage.entity.Member;
 import com.example.PageStorage.common.exception.DataNotFoundException;
 import com.example.PageStorage.member.repository.MemberRepository;
@@ -26,13 +28,13 @@ public class MemberDao {
     }
 
     public Member find(Long memberSeq) {
-        Member member = memberRepository.findById(memberSeq).orElseThrow(() -> new DataNotFoundException("사용자를 찾을 수 없습니다."));
+        Member member = memberRepository.findById(memberSeq).orElseThrow(() -> new MemberNotFoundException("회원을 찾을 수 없습니다."));
         return member;
     }
 
 
     public Member findMail(String mail) {
-        Member member = memberRepository.findByMail(mail).orElseThrow(() -> new DataNotFoundException("사용자를 찾을 수 없습니다."));
+        Member member = memberRepository.findByMail(mail).orElseThrow(() -> new MailNotFoundException("메일을 찾을 수 없습니다."));
         return member;
     }
 

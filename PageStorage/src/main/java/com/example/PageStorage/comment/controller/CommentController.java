@@ -12,7 +12,6 @@ import com.example.PageStorage.entity.Member;
 import com.example.PageStorage.history.dto.HistoryRequestDto;
 import com.example.PageStorage.history.service.HistoryService;
 import com.example.PageStorage.member.dto.MemberSaveRequestDto;
-import com.example.PageStorage.member.dto.response.ResponseMemberInfoDto;
 import com.example.PageStorage.security.login.dto.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -52,48 +51,5 @@ public class CommentController {
         return "redirect:/histories/all";
     }
 
-    /*
-    댓글 조회
-     */
-    @GetMapping("/read/{commentSeq}")
-    public ResponseEntity<ResBodyModel> readCommentBySeq(@PathVariable Long commentSeq) {
 
-        Comment comment = commentService.find(commentSeq);
-        CommentResponseDto commentResponseDto = CommentResponseDto.buildDto(comment);
-        return PsResponse.toResponse(SuccessCode.SUCCES,commentResponseDto);
-    }
-
-    @GetMapping("/readMember/{memberName}")
-    public ResponseEntity<ResBodyModel> readCommentByMemberName(@PathVariable String memberName) {
-
-        List<Comment> comments = commentService.findByMember(memberName);
-        List<CommentResponseDto> commentResponseDtos = CommentResponseDto.buildDtoList(comments);
-        return PsResponse.toResponse(SuccessCode.SUCCES,commentResponseDtos);
-    }
-
-    @GetMapping("/{historySeq}")
-    public ResponseEntity<ResBodyModel> readCommentByHistorySeq(@PathVariable Long historySeq) {
-
-        List<Comment> comments = commentService.findByHistory(historySeq);
-        List<CommentResponseDto> commentResponseDtos = CommentResponseDto.buildDtoList(comments);
-        return PsResponse.toResponse(SuccessCode.SUCCES,commentResponseDtos);
-    }
-
-    @GetMapping("/all")
-    public ResponseEntity<ResBodyModel> readAll() {
-
-        List<Comment> comments = commentService.findAll();
-        List<CommentResponseDto> commentResponseDtos = CommentResponseDto.buildDtoList(comments);
-        return PsResponse.toResponse(SuccessCode.SUCCES,commentResponseDtos);
-    }
-
-    /*
-    수정
-     */
-    @PatchMapping()
-    public ResponseEntity<ResBodyModel> updateComment(@RequestBody CommentRequestDto commentRequestDto){
-        Comment comment = commentService.update(commentRequestDto);
-        CommentResponseDto commentResponseDto = CommentResponseDto.buildDto(comment);
-        return PsResponse.toResponse(SuccessCode.SUCCES,commentResponseDto);
-    }
 }

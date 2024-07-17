@@ -12,7 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Bean //암호화 방식을 변경할 수 있기 때문에 인터페이스로 선언, BCryptPasswordEncoder의 인터페이스
+    @Bean //암호화 방식을 변경할 수 있기 때문에 인터페이스로 선언
     PasswordEncoder passwordEncoder() {
 
         return new BCryptPasswordEncoder();
@@ -21,21 +21,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 
+        http
+                .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/members/login", "/members/join", "joinProc").permitAll()
+                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .anyRequest().authenticated()
+                );
+
 //        http
-//                .authorizeHttpRequests((auth) -> auth //순서를 잘 기켜야 함
-//                        .requestMatchers("/", "/members/login", "/members/join", "joinProc").permitAll()
-//                        .requestMatchers("/admin").hasRole("ADMIN")
-////                        .requestMatchers("/my/**").hasAnyRole("ADMIN", "USER")
-//                        .anyRequest().authenticated() //로그인한 사용자만 허용
+//                .authorizeHttpRequests((auth) -> auth
+//                        .anyRequest().permitAll() // 모든 요청에 대해 접근 허용
 //                );
 
         http
-                .authorizeHttpRequests((auth) -> auth
-                        .anyRequest().permitAll() // 모든 요청에 대해 접근 허용
-                );
-
-        http
-                .formLogin((auth) -> auth.loginPage("/members/login") //admin page에 접근하려고 할때 로그인 페이지 뜨게 함
+                .formLogin((auth) -> auth.loginPage("/members/login")
                         .loginProcessingUrl("/loginProc")
                         .defaultSuccessUrl("/histories/all")
                 );

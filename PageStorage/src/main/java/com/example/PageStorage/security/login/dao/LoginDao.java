@@ -1,5 +1,6 @@
 package com.example.PageStorage.security.login.dao;
 
+import com.example.PageStorage.common.exception.member.LoginIdNotFoundException;
 import com.example.PageStorage.entity.Login;
 import com.example.PageStorage.common.exception.DataNotFoundException;
 import com.example.PageStorage.entity.Member;
@@ -20,7 +21,7 @@ public class LoginDao {
     }
 
     public Member findByUserLoginId(String userLoginId) {
-        Login login = loginRepository.findByUserLoginId(userLoginId).orElseThrow(() -> new DataNotFoundException("존재하지 않은 회원아이디!!입니다."));
+        Login login = loginRepository.findByUserLoginId(userLoginId).orElseThrow(() -> new LoginIdNotFoundException("존재하지 않는 회원 로그인 아이디입니다."));
         return login.getMember();
     }
 
@@ -29,7 +30,7 @@ public class LoginDao {
     }
 
     public Login delete(String userLoginId) {
-        Login login = loginRepository.findByUserLoginId(userLoginId).orElseThrow(() -> new DataNotFoundException("존재하지 않는 회원입니다."));
+        Login login = loginRepository.findByUserLoginId(userLoginId).orElseThrow(() -> new LoginIdNotFoundException("존재하지 않는 회원 로그인 아이디입니다."));
         loginRepository.delete(login);
         return login;
     }

@@ -1,6 +1,5 @@
 package com.example.PageStorage.entity;
 
-import com.example.PageStorage.genre.dto.GenreUpdateRequestDto;
 import com.example.PageStorage.tag.dto.TagRequestDto;
 import com.example.PageStorage.tag.dto.TagUpdateRequestDto;
 import jakarta.persistence.*;

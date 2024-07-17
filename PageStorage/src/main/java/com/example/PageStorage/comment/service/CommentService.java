@@ -25,7 +25,6 @@ import java.util.List;
 public class CommentService {
 
     private final CommentDao commentDao;
-    private final MemberDao memberDao;
     private final LoginDao loginDao;
     private final HistoryDao historyDao;
 
@@ -47,18 +46,10 @@ public class CommentService {
         return commentDao.find(commentSeq);
     }
 
-    public List<Comment> findByMember(String memberName) {
-        Member member = memberDao.findName(memberName);
-        return commentDao.findByMemberSeq(member.getMemberSeq());
-    }
-
     public List<Comment> findByHistory(Long historySeq) {
         return commentDao.findByHistorySeq(historySeq);
     }
 
-    public List<Comment> findAll() {
-        return commentDao.findAll();
-    }
 
     public Comment update(CommentRequestDto commentRequestDto) {
         Comment comment = commentDao.find(commentRequestDto.getHistorySeq());
