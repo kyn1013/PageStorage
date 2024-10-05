@@ -8,8 +8,11 @@ import com.example.PageStorage.history.dao.KeywordDao;
 import com.example.PageStorage.history.dto.HistoryRequestDto;
 import com.example.PageStorage.history.dto.response.HistoryAllResponseDto;
 import com.example.PageStorage.history.dto.response.HistoryResponseDto;
+import com.example.PageStorage.history.dto.response.RankingResponseDto;
 import com.example.PageStorage.historytag.dao.HistoryTagDao;
 import com.example.PageStorage.member.dao.MemberDao;
+import com.example.PageStorage.recommendation.api.naverbook.BookApiClient;
+import com.example.PageStorage.recommendation.api.naverbook.BooksResponseDto;
 import com.example.PageStorage.security.login.dao.LoginDao;
 import com.example.PageStorage.tag.dao.TagDao;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +47,7 @@ public class HistoryService {
 
     private final KeywordDao keywordDao;
     private final HistoryKeywordDao historyKeywordDao;
+    private final BookApiClient bookApiClient;
 
     private final String FOLDER_PATH="/Users/gim-yena/Desktop/history/";
 
@@ -91,6 +95,10 @@ public class HistoryService {
     }
 
     public History saveHistory(HistoryRequestDto historyRequestDto) throws IOException {
+
+        BooksResponseDto booksResponseDto = bookApiClient.requestBook(historyRequestDto.getBookName());
+        BooksResponseDto.Item firstItem = booksResponseDto.getItems()[0];
+
         History history = History.builder()
                 .bookName(historyRequestDto.getBookName())
                 .historyContent(historyRequestDto.getHistoryContent())
@@ -101,7 +109,7 @@ public class HistoryService {
                 .build();
         Member member = loginDao.findByUserLoginId(historyRequestDto.getUserLoginId());
         history.addMember(member);
-
+        history.addBookImage(firstItem.getImage());
         // History 객체 저장
         history = historyDao.save(history);
 
@@ -123,24 +131,42 @@ public class HistoryService {
         }
 
 
-        //사진 저장 로직
-        String originalFilename = historyRequestDto.getImageFile().getOriginalFilename();
-        String storeFilename = createStoreFilename(originalFilename);
-        String filePath = createPath(storeFilename);
 
-        HistoryImage historyImage = HistoryImage.builder()
-                .originFilename(originalFilename)
-                .storeFilename(storeFilename)
-                .type(historyRequestDto.getImageFile().getContentType())
-                .filePath(filePath)
-                .history(history)
-                .build();
 
-        //히스토리에 이미지 정보 추가
-        history.addHistoryImage(historyImage);
-        historyImageDao.save(historyImage);
+//        //사진 저장 로직
+//        String originalFilename = historyRequestDto.getImageFile().getOriginalFilename();
+//        String storeFilename = createStoreFilename(originalFilename);
+//        String filePath = createPath(storeFilename);
 
-        historyRequestDto.getImageFile().transferTo(new File(filePath));
+//        HistoryImage historyImage = HistoryImage.builder()
+//                .originFilename(originalFilename)
+//                .storeFilename(storeFilename)
+//                .type(historyRequestDto.getImageFile().getContentType())
+//                .filePath(filePath)
+//                .history(history)
+//                .build();
+//        BooksResponseDto booksResponseDto = bookApiClient.requestBook(historyRequestDto.getBookName());
+//        BooksResponseDto.Item firstItem = booksResponseDto.getItems()[0];
+
+//        // ResultResponseDto의 빌더를 사용하여 객체 생성
+//        RankingResponseDto resultResponseDto = RankingResponseDto.builder()
+//                .title(firstItem.getTitle())
+//                .image(firstItem.getImage())
+//                .build();
+
+//        HistoryImage historyImage = HistoryImage.builder()
+//                .originFilename("originalFilename")
+//                .storeFilename("storeFilename")
+//                .type("historyRequestDto.getImageFile().getContentType()")
+//                .filePath(firstItem.getImage())
+//                .history(history)
+//                .build();
+//
+//        //히스토리에 이미지 정보 추가
+//        history.addHistoryImage(historyImage);
+//        historyImageDao.save(historyImage);
+
+//        historyRequestDto.getImageFile().transferTo(new File(filePath));
 
         return history;
     }

@@ -28,7 +28,8 @@ public class HistoryRequestDto {
     private String applicationToLife;
     @Size(max=35)
     private String bookRecommender;
-    @ValidFile(message = "이미지 파일은 필수 항목입니다.")
+    private String bookImage;
+//    @ValidFile(message = "이미지 파일은 필수 항목입니다.")
     private MultipartFile imageFile;
     private String fileName;
 //    private Set<TagRequestDto> tagRequestDtos;

@@ -42,6 +42,9 @@ public class History extends BaseTimeEntity {
     @Column(name = "book_recommender")
     private String bookRecommender;
 
+    @Column(name = "book_image")
+    private String bookImage;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_seq")
     private Member member;
@@ -75,6 +78,10 @@ public class History extends BaseTimeEntity {
 
     public void addHistoryImage(HistoryImage historyImage) {
         this.historyImage = historyImage;
+    }
+
+    public void addBookImage(String bookImage) {
+        this.bookImage = bookImage;
     }
 
     public void changeInfo (HistoryRequestDto historyRequestDto) {

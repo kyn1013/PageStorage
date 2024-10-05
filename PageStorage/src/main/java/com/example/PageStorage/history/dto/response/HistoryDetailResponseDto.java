@@ -32,6 +32,7 @@ public class HistoryDetailResponseDto {
     private List<String> comments;
     private Set<String> keywords;
     private LocalDateTime createdDate;
+    private String bookImage;
     private String historyImage;
     private String profileImage;
 
@@ -40,7 +41,7 @@ public class HistoryDetailResponseDto {
     public HistoryDetailResponseDto(String historySeq, String bookName, String historyContent, String phrase,
                               String difficulty, String applicationToLife, String bookRecommender,
                               String memberNickname, Set<String> tagNames, List<String> comments, Set<String> keywords,
-                                    LocalDateTime createdDate, String historyImage, String profileImage){
+                                    LocalDateTime createdDate, String historyImage, String profileImage, String bookImage){
         this.historySeq = historySeq;
         this.bookName = bookName;
         this.historyContent = historyContent;
@@ -55,6 +56,7 @@ public class HistoryDetailResponseDto {
         this.createdDate = createdDate;
         this.historyImage = historyImage;
         this.profileImage = profileImage;
+        this.bookImage = bookImage;
     }
 
     public static HistoryDetailResponseDto buildDto(History history) {
@@ -93,8 +95,9 @@ public class HistoryDetailResponseDto {
                 .tagNames(tagNames)
                 .keywords(keywords)
                 .createdDate(history.getCreatedDate())
-                .historyImage(history.getHistoryImage().getStoreFilename())
+//                .historyImage(history.getHistoryImage().getStoreFilename())
                 .profileImage(profileFilename)
+                .bookImage(history.getBookImage())
                 .build();
     }
 }

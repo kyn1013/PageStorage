@@ -415,7 +415,7 @@
         </ul>
 
         <div class="history-image-container">
-            <img th:src="@{/historyImage/{imageFile}(imageFile=${history.getHistoryImage()})}" alt="히스토리 이미지" class="history-image"/>
+            <img th:src="${history.bookImage}" alt="히스토리 이미지" class="history-image"/>
         </div>
     </div>
 

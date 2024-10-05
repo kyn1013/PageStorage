@@ -278,7 +278,7 @@
                 </div>
                 <div class="history-content">
                   <div class="history-image">
-                    <img src="/historyImage/${history.historyImage}" alt="${history.bookName} 이미지">
+                    <img src="${history.bookImage}" alt="${history.bookName} 이미지">
                   </div>
                   <div class="history-text">
                     <p class="inline-icon-text">
@@ -358,7 +358,8 @@
       </div>
       <div class="history-content">
         <div class="history-image">
-          <img th:src="@{/historyImage/{imageFile}(imageFile=${history.historyImage})}" alt="호밀밭의 파수꾼 책 이미지">
+<!--          <img th:src="@{/historyImage/{imageFile}(imageFile=${history.historyImage})}" alt="호밀밭의 파수꾼 책 이미지">-->
+          <img th:src="${history.bookImage}" alt="호밀밭의 파수꾼 책 이미지">
         </div>
         <div class="history-text">
           <p class="inline-icon-text">

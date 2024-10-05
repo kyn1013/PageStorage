@@ -27,6 +27,7 @@ public class HistoryResponseDto {
     private String nickName;
     private String profileImage;
     private String historyImage;
+    private String bookImage;
     private Set<String> tagNames;
     private List<String> comments;
     private Set<String> keywords;
@@ -34,7 +35,7 @@ public class HistoryResponseDto {
     @Builder
     public HistoryResponseDto(String historySeq, String bookName, String historyContent, String phrase,
                              String difficulty, String applicationToLife, String bookRecommender,
-                              String nickName, Set<String> tagNames, List<String> comments, String historyImage, String profileImage, Set<String> keywords){
+                              String nickName, Set<String> tagNames, List<String> comments, String historyImage, String bookImage ,String profileImage, Set<String> keywords){
         this.historySeq = historySeq;
         this.bookName = bookName;
         this.historyContent = historyContent;
@@ -48,6 +49,7 @@ public class HistoryResponseDto {
         this.historyImage = historyImage;
         this.profileImage = profileImage;
         this.keywords = keywords;
+        this.bookImage = bookImage;
     }
 
 
@@ -85,7 +87,8 @@ public class HistoryResponseDto {
                 .nickName(history.getMember().getNickName())
                 .comments(comments)
                 .tagNames(tagNames)
-                .historyImage(history.getHistoryImage().getStoreFilename())
+//                .historyImage(history.getHistoryImage().getStoreFilename())
+                .bookImage(history.getBookImage())
                 .profileImage(profileFilename)
                 .keywords(keywords)
                 .build();
