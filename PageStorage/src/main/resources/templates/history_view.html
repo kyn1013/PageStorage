@@ -53,10 +53,15 @@
     }
 
     .history-content img {
-      border-radius: 20px;
-      width: 200px;
+      border-radius: 10px;
+      width: 140px;
       height: 200px;
       margin-left: 15px;
+      /*width: 100px;*/
+      /*height: 150px;*/
+      /*margin-bottom: 10px;*/
+      object-fit: cover;
+      /*border-radius: 10px;*/
     }
 
     .history-text {
@@ -192,6 +197,15 @@
       margin-right: 10px; /* 텍스트와의 여백 설정 */
     }
 
+
+    /*#history-image {*/
+    /*  width: 100px;*/
+    /*  !*height: 150px;*!*/
+    /*  !*margin-bottom: 10px;*!*/
+    /*  object-fit: cover;*/
+    /*  !*border-radius: 10px;*!*/
+    /*}*/
+
     .inline-icon-text {
       display: flex;
       align-items: center;
@@ -277,7 +291,7 @@
                   </a>
                 </div>
                 <div class="history-content">
-                  <div class="history-image">
+                  <div id="history-image">
                     <img src="${history.bookImage}" alt="${history.bookName} 이미지">
                   </div>
                   <div class="history-text">
